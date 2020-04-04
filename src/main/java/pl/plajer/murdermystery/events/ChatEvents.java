@@ -41,6 +41,7 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
@@ -61,6 +62,7 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
+    FileConfiguration ranks = ConfigUtils.getConfig(plugin, "ranks");
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
     FileConfiguration filter = ConfigUtils.getConfig(plugin, "filter");
     if (arena == null) {
@@ -86,8 +88,8 @@ public class ChatEvents implements Listener {
           eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
         }
       }
-      int xp = plugin.getUserManager().getUser(event.getPlayer()).getStat(StatsStorage.StatisticType.HIGHEST_SCORE);
-      FileConfiguration ranks = ConfigUtils.getConfig(plugin, "ranks");
+      User user = plugin.getUserManager().getUser(event.getPlayer());
+      int xp = user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE);
       String novobranec = ranks.getString("ranks.Новобранец.name").replace('&', '§');
       int xpNeededNovobranec = ranks.getInt("ranks.Новобранец.xp");
       if(xp >= xpNeededNovobranec) {

@@ -98,6 +98,7 @@ public class User {
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, getStat(stat) + i);
+
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
       MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));

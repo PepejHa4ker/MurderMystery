@@ -19,15 +19,12 @@
 package pl.plajer.murdermystery;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
 
-import pl.plajer.murdermystery.user.PlayerLevelManager;
 import pl.plajer.murdermystery.utils.Debugger;
 
 /**
