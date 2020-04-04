@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Maximka">
+    <CLASSES>
+      <root url="jar://C:/Maximka.jar!/" />
+      <root url="jar://C:/Libs/Plajer/commons-box-minecraft-1.1.1.jar!/" />
+      <root url="jar://C:/Libs/Plajer/commons-box-database-1.1.1.jar!/" />
+      <root url="jar://C:/Libs/Plajer/commons-box-classic-1.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

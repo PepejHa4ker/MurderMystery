@@ -1,0 +1,110 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+group 'pl.plajer.murdermystery'
+version 'gamma-edit'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    maven {
+        name = 'bungeecord-api'
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+    maven {
+        name = 'papermc'
+        url = 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
+        name = 'hd'
+        url = 'https://ci.filoghost.me/plugin/repository/everything/'
+    }
+    maven {
+        name = 'papi'
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+    maven {
+        name = 'mvdwapi'
+        url = 'http://repo.mvdw-software.be/content/groups/public/'
+    }
+    maven {
+        name = 'CodeMC'
+        url = 'https://repo.codemc.org/repository/maven-public/'
+    }
+    //
+    maven {
+        name = 'simonsators-repo'
+        url = 'http://simonsator.de/repo/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
+    compile "net.md-5:bungeecord-api:1.12-SNAPSHOT"
+    compile "com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT"
+    compile "org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT"
+    //
+    compile "net.milkbowl.vault:VaultAPI:1.7"
+    compile "com.zaxxer:HikariCP:3.4.2"
+    compile "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.3.2"
+    // papi
+    compileOnly "me.clip:placeholderapi:2.10.4"
+    // include fb-api and another parties
+    compile "be.maximvdw:MVdWPlaceholderAPI:1.0.2-SNAPSHOT"
+    compile "com.alessiodp.parties:parties-api:2.6.14"
+    // jetbrains
+    compile "org.jetbrains:annotations:16.0.2"
+    // simon
+    compile "de.simonsator:Spigot-Party-API-For-RedisBungee:1.0-SNAPSHOT"
+    compile "de.simonsator:Party-and-Friends-MySQL-Edition-Spigot-API:1.3.2"
+    //
+    compile "com.github.stefvanschie.inventoryframework:IF:0.5.19"
+    // local
+    compileOnly fileTree(dir: "C:\\Code\\Libs\\CorpseReborn.jar", include: "*.jar")
+    compileOnly fileTree(dir: "C:\\Code\\Libs\\Libs\\Maximka.jar", include: "*.jar")
+    compile fileTree(dir: "C:\\Code\\Libs\\Plajer", include: "*.jar")
+}
+
+
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+shadowJar {
+    dependencies {
+        include(dependency("com.alessiodp.parties:parties-api:2.6.14"))
+        //
+        include(dependency("redis.clients:jedis:2.9.0"))
+        //
+        include(dependency("de.simonsator:Party-and-Friends-MySQL-Edition-Spigot-API:1.3.2"))
+        include(dependency("de.simonsator:Spigot-Party-API-For-RedisBungee:1.0-SNAPSHOT"))
+        include(dependency("com.github.stefvanschie.inventoryframework:IF:0.5.19"))
+        //
+        include(dependency("be.maximvdw:MVdWPlaceholderAPI:1.0.2-SNAPSHOT"))
+        //
+        include(dependency("pl.plajer:commons-box-classic:1.1.1"))
+        include(dependency("pl.plajer:commons-box-minecraft:1.1.1"))
+        include(dependency("pl.plajer:commons-box-database:1.1.1"))
+        from "resources\\plugin.yml"
+    }
+}
