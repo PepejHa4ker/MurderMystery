@@ -29,11 +29,6 @@ public class LabeledCommandArgument extends CommandArgument {
 
   private LabelData labelData;
 
-  public LabeledCommandArgument(String argumentName, List<String> permissions, ExecutorType validExecutors, LabelData labelData) {
-    super(argumentName, permissions, validExecutors);
-    this.labelData = labelData;
-  }
-
   public LabeledCommandArgument(String argumentName, String permissions, ExecutorType validExecutors, LabelData labelData) {
     super(argumentName, permissions, validExecutors);
     this.labelData = labelData;

@@ -78,9 +78,17 @@ public class ArenaUtils {
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
     if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
-      msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints() * amount));
-      msg = StringUtils.replace(msg, "%action%", action.getAction());
-      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
+      int score = action.getPoints() * amount;
+      if(user.getPlayer().hasPermission("murder.grand")) {
+        float scoreGrand = score + (score * 0.75f);
+        msg = StringUtils.replace(msg, "%score%", String.valueOf(scoreGrand));
+        msg = StringUtils.replace(msg, "%action%", action.getAction());
+        user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, (int) (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + scoreGrand));
+      } else {
+        msg = StringUtils.replace(msg, "%score%", String.valueOf(score));
+        msg = StringUtils.replace(msg, "%action%", action.getAction());
+        user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + score);
+      }
       user.getPlayer().sendMessage(msg);
       return;
     }

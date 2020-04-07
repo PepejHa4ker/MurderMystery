@@ -17,6 +17,12 @@ commands:
     aliases: [mma, murderadmin]
 
 permissions:
+  murder.vip:
+    description: none
+  murder.grand:
+    description: none
+  murder.premium:
+    description: none
   murdermystery.admin.*:
     default: op
     children:

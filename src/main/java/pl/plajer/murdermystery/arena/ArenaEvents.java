@@ -18,16 +18,11 @@
 
 package pl.plajer.murdermystery.arena;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -58,9 +53,9 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,6 +66,8 @@ import java.util.List;
 public class ArenaEvents implements Listener {
 
   private Main plugin;
+  private List<Player> isLevelChanged = new ArrayList<>();
+
 
   public ArenaEvents(Main plugin) {
     this.plugin = plugin;
@@ -175,7 +172,9 @@ public class ArenaEvents implements Listener {
     user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
     e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
-
+    if(Role.isRole(Role.MURDERER, e.getPlayer())) {
+      return;
+    }
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
       ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
@@ -239,7 +238,6 @@ public class ArenaEvents implements Listener {
     user.addStat(StatsStorage.StatisticType.KILLS, 1);
     user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-
     Arena arena = ArenaRegistry.getArena(attacker);
     if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
       //if already true, no effect is done :)
@@ -400,11 +398,36 @@ public class ArenaEvents implements Listener {
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
     if (e.getWhoClicked() instanceof Player) {
-      if (ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
-        e.setResult(Event.Result.DENY);
+      Player player = (Player) e.getWhoClicked();
+      if (ArenaRegistry.getArena(player) != null) {
+        Arena arena = ArenaRegistry.getArena(player);
+        if (e.getClickedInventory() != null) {
+          ItemStack clickedItem = e.getCurrentItem();
+          if(e.getClickedInventory().getName().equalsIgnoreCase(ChatColor.DARK_AQUA + "Выберите ваш бонус")) {
+            Material clickedMaterial = clickedItem.getType();
+            User user = plugin.getUserManager().getUser(player);
+            if (clickedMaterial == Material.LEATHER_CHESTPLATE || clickedMaterial == Material.BOW || clickedMaterial == Material.IRON_SWORD) {
+              if(Utils.isNamed(clickedItem)) {
+                if (!isLevelChanged.contains(player)) {
+                  player.sendMessage("Удачно");
+                  isLevelChanged.add(player);
+                  switch (clickedMaterial) {
+                    case LEATHER_CHESTPLATE:
+
+
+                  }
+                } else {
+                  player.sendMessage("Уже выбрано");
+                }
+              }
+            }
+          }
+        }
+        e.setCancelled(true);
       }
     }
   }
+
 
   @EventHandler
   public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
@@ -447,5 +470,4 @@ public class ArenaEvents implements Listener {
       }
     }
   }
-
 }

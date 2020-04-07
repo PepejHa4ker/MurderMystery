@@ -53,6 +53,8 @@ public class SpecialItem {
     new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {
       ChatColor.GRAY + "Нажмите для телепортации в лобби"
     }, XMaterial.WHITE_BED.parseMaterial(), 8);
+    new SpecialItem("Menu").load(ChatColor.GREEN + "Меню игры", new String[] {
+            ChatColor.GRAY + "Меню игры"}, XMaterial.CHEST.parseMaterial(), 4);
   }
 
   public void load(String displayName, String[] lore, Material material, int slot) {

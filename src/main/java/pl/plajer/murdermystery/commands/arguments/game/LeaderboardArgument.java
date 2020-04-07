@@ -47,6 +47,7 @@ public class LeaderboardArgument {
 
   private ArgumentsRegistry registry;
 
+
   public LeaderboardArgument(ArgumentsRegistry registry) {
     this.registry = registry;
     List<String> stats = new ArrayList<>();
@@ -94,8 +95,6 @@ public class LeaderboardArgument {
       statistic = "Поражений";
     } else if(statistic.equalsIgnoreCase("wins")) {
       statistic = "Побед";
-    } else if (statistic.equalsIgnoreCase("level")) {
-      statistic = "Уровень";
     }
 
     for (int i = 0; i < 10; i++) {
@@ -104,7 +103,7 @@ public class LeaderboardArgument {
         sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
         stats.remove(current);
       } catch (IndexOutOfBoundsException ex) {
-        sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
+        sender.sendMessage(formatMessage(statistic, "Пусто", i + 1, 0));
       } catch (NullPointerException ex) {
         UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
         if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -119,7 +118,7 @@ public class LeaderboardArgument {
             //it has failed second time, cannot continue
           }
         }
-        sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, stats.get(current)));
+        sender.sendMessage(formatMessage(statistic, "Неизвестный игрок", i + 1, stats.get(current)));
       }
     }
   }

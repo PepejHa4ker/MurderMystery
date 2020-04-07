@@ -20,6 +20,7 @@ package pl.plajer.murdermystery.arena;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Level;
 
@@ -46,6 +47,7 @@ import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
+import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.party.GameParty;
@@ -95,6 +97,7 @@ public class ArenaManager {
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
       return;
     }
+
 
     //check if player is in party and send party members to the game
     if (plugin.getPartyHandler().isPlayerInParty(player)) {
@@ -178,8 +181,8 @@ public class ArenaManager {
       player.getInventory().clear();
 
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-      player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      player.getInventory().setItem(5, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
+      player.getInventory().setItem(8, Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getItemStack());
 
       for (PotionEffect potionEffect : player.getActivePotionEffects()) {
         player.removePotionEffect(potionEffect.getType());
@@ -219,6 +222,7 @@ public class ArenaManager {
     }
     if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      player.getInventory().setItem(SpecialItemManager.getSpecialItem("Menu").getSlot(), SpecialItemManager.getSpecialItem("Menu").getItemStack());
     }
     player.updateInventory();
     for (Player arenaPlayer : arena.getPlayers()) {
@@ -244,7 +248,11 @@ public class ArenaManager {
     Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
     if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
+//        if(player.hasPermission("murder.grand")) {
+//            user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
+//        }
       user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
+
     }
 
     //todo change later
