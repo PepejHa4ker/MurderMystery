@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+      <configuration>
+        <userChosenTypes>
+          <map>
+            <entry key="PAPER" value="false" />
+            <entry key="SPIGOT" value="false" />
+            <entry key="BUKKIT" value="true" />
+            <entry key="FORGE" value="false" />
+            <entry key="SPONGE" value="false" />
+            <entry key="WATERFALL" value="false" />
+            <entry key="BUNGEECORD" value="true" />
+            <entry key="LITELOADER" value="false" />
+            <entry key="MIXIN" value="false" />
+            <entry key="MCP" value="false" />
+          </map>
+        </userChosenTypes>
+        <autoDetectTypes>
+          <platformType>PAPER</platformType>
+          <platformType>BUNGEECORD</platformType>
+        </autoDetectTypes>
+      </configuration>
+    </facet>
+  </component>
+</module>

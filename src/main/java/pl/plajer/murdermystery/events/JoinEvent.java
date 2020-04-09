@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.events;
 
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.UpdateChecker;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
 
 /**
  * @author Plajer

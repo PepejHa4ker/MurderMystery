@@ -338,727 +338,721 @@ public class Arena extends BukkitRunnable {
                         detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
                                 ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
                         playersToSet.remove(detective);
-                        if(detective.hasPermission("murder.vip")) {
-                            if (potionChancheDetective == 1) detective.getInventory().addItem(potionSpeed);
-                            if (potionChancheDetective == 2) detective.getInventory().addItem(jumpSpeed);
-                            if (potionChancheDetective == 3) detective.getInventory().addItem(invisibleSpeed);
+                        if (ArenaEvents.potions.containsKey(detective)) {
+                            detective.getInventory().addItem(ArenaEvents.potions.get(detective));
                         }
                         ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
                         ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-
-
-                        }
-
-                        for (Player p : playersToSet) {
-                            p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
-                                    ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-                            if (p.hasPermission("murder.vip")) {
-                                if (potionChancheInnocent == 1) p.getInventory().addItem(potionSpeed);
-                                if (potionChancheInnocent == 2) p.getInventory().addItem(jumpSpeed);
-                                if (potionChancheInnocent == 3) p.getInventory().addItem(invisibleSpeed);
-                            }
-                            if (p.hasPermission("murder.grand")) {
-                                p.getInventory().addItem(new ItemStack(Material.GOLD_INGOT, 4));
-                                p.sendMessage(ChatColor.GREEN + "Вам было выдано дополнительное золото!");
-                            }
-                        }
-                        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                            gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
-                        }
                     }
-                    if (forceStart) {
-                        forceStart = false;
+
+
+                    for (Player p : playersToSet) {
+                        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+//                            if (p.hasPermission("murder.vip")) {
+                        if(ArenaEvents.potions.containsKey(p)) {
+                            p.getInventory().addItem(ArenaEvents.potions.get(p));
+
+                        }
+
                     }
-                    setTimer(getTimer() - 1);
-                    break;
-                    case IN_GAME:
-                        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-                            if (getMaximumPlayers() <= getPlayers().size()) {
-                                plugin.getServer().setWhitelist(true);
-                            } else {
-                                plugin.getServer().setWhitelist(false);
-                            }
-                        }
-                        if (getTimer() <= 0) {
-                            ArenaManager.stopGame(false, this);
-                        }
-                        if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
-                                && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
-                            for (Player p : getPlayers()) {
-                                p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                                        .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
-                                p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-                            }
-                            if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-                                for (Player p : allMurderer) {
-                                    User murderer = plugin.getUserManager().getUser(p);
-                                    if (murderer.isSpectator()) continue;
-                                    ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
-                                    if(p.hasPermission("murder.vip")) {
-                                        if (potionChancheMurderer == 1) p.getInventory().addItem(potionSpeed);
-                                        if (potionChancheMurderer == 2) p.getInventory().addItem(jumpSpeed);
-                                        if (potionChancheMurderer == 3) p.getInventory().addItem(invisibleSpeed);
-                                    }
-                                    p.getInventory().setHeldItemSlot(0);
-                                }
-                            }
-                        }
-
-                        //every 30 secs survive reward
-                        if (getTimer() % 30 == 0) {
-                            for (Player p : getPlayersLeft()) {
-                                if (Role.isRole(Role.INNOCENT, p)) {
-                                    ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
-                                }
-                            }
-                        }
-
-                        if (getTimer() == 30 || getTimer() == 60) {
-                            String title = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
-                            String subtitle = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
-                            for (Player p : getPlayers()) {
-                                p.sendTitle(title, subtitle, 5, 40, 5);
-                            }
-                        }
-
-                        if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
-                            ArenaUtils.updateInnocentLocator(this);
-                        }
-                        //no players - stop game
-                        if (getPlayersLeft().size() == 0) {
-                            ArenaManager.stopGame(false, this);
-                        } else
-                            //winner check
-                            if (getPlayersLeft().size() == aliveMurderer()) {
-                                for (Player p : getPlayers()) {
-                                    p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                                            ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
-                                    if (allMurderer.contains(p)) {
-                                        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
-                                    }
-                                }
-                                ArenaManager.stopGame(false, this);
-                            } else
-                                //murderer speed add
-                                if (getPlayersLeft().size() == aliveMurderer() + 1) {
-                                    for (Player p : allMurderer) {
-                                        if (isMurderAlive(p)) {
-                                            p.setWalkSpeed(0.2f);
-                                        }
-                                    }
-                                }
-
-                        //don't spawn it every time
-                        if (spawnGoldTimer == spawnGoldTime) {
-                            spawnSomeGold();
-                            spawnGoldTimer = 0;
-                        } else {
-                            spawnGoldTimer++;
-                        }
-                        setTimer(getTimer() - 1);
-                        break;
-                    case ENDING:
-                        scoreboardManager.stopAllScoreboards();
-                        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-                            plugin.getServer().setWhitelist(false);
-                        }
-                        if (getTimer() <= 0) {
-                            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                                gameBar.setTitle(ChatManager.colorMessage("Bossbar.Game-Ended"));
-                            }
-
-                            List<Player> playersToQuit = new ArrayList<>(getPlayers());
-                            for (Player player : playersToQuit) {
-                                plugin.getUserManager().getUser(player).removeScoreboard();
-                                player.setGameMode(GameMode.SURVIVAL);
-                                for (Player players : Bukkit.getOnlinePlayers()) {
-                                    player.showPlayer(players);
-                                    if (ArenaRegistry.getArena(players) == null) {
-                                        players.showPlayer(player);
-                                    }
-                                }
-                                for (PotionEffect effect : player.getActivePotionEffects()) {
-                                    player.removePotionEffect(effect.getType());
-                                }
-                                player.setWalkSpeed(0.2f);
-                                player.setFlying(false);
-                                player.setAllowFlight(false);
-                                player.getInventory().clear();
-
-                                player.getInventory().setArmorContents(null);
-                                doBarAction(BarAction.REMOVE, player);
-                                player.setFireTicks(0);
-                                player.setFoodLevel(20);
-                            }
-                            teleportAllToEndLocation();
-
-                            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-                                for (Player player : getPlayers()) {
-                                    InventorySerializer.loadInventory(plugin, player);
-                                }
-                            }
-
-                            ChatManager.broadcast(this, ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-
-                            for (User user : plugin.getUserManager().getUsers(this)) {
-                                user.setSpectator(false);
-
-                                for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
-                                    if (!statistic.isPersistent()) {
-                                        user.setStat(statistic, 0);
-                                    }
-                                }
-                            }
-                            plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
-                            players.clear();
-
-                            cleanUpArena();
-                            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-                                if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
-                                    plugin.getServer().shutdown();
-                                }
-                            }
-                            setArenaState(ArenaState.RESTARTING);
-                        }
-                        setTimer(getTimer() - 1);
-                        break;
-                    case RESTARTING:
-                        getPlayers().clear();
-                        setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-                        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-                            for (Player player : Bukkit.getOnlinePlayers()) {
-                                ArenaManager.joinAttempt(player, this);
-                            }
-                        }
-                        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                            gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
-                        }
-                        break;
-                    default:
-                        break; //o.o?
+                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
+                    }
                 }
-                Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms",
+                if (forceStart) {
+                    forceStart = false;
+                }
+                setTimer(getTimer() - 1);
+                break;
+            case IN_GAME:
+                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+                    if (getMaximumPlayers() <= getPlayers().size()) {
+                        plugin.getServer().setWhitelist(true);
+                    } else {
+                        plugin.getServer().setWhitelist(false);
+                    }
+                }
+                if (getTimer() <= 0) {
+                    ArenaManager.stopGame(false, this);
+                }
+                if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
+                        && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
+                    for (Player p : getPlayers()) {
+                        p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword").replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
+                        p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                    }
+                    if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
+                        for (Player p : allMurderer) {
+                            User murderer = plugin.getUserManager().getUser(p);
+                            if (murderer.isSpectator()) continue;
+                            ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+                            if (ArenaEvents.potions.containsKey(p)) {
+                                p.getInventory().addItem(ArenaEvents.potions.get(p));
+                            }
+                            p.getInventory().setHeldItemSlot(0);
+                        }
+                    }
+                }
 
-                        getId(), System.
+                //every 30 secs survive reward
+                if (getTimer() % 30 == 0) {
+                    for (Player p : getPlayersLeft()) {
+                        if (Role.isRole(Role.INNOCENT, p)) {
+                            ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
+                        }
+                    }
+                }
 
-                                currentTimeMillis() - start);
+                if (getTimer() == 30 || getTimer() == 60) {
+                    String title = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
+                    String subtitle = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
+                    for (Player p : getPlayers()) {
+                        p.sendTitle(title, subtitle, 5, 40, 5);
+                    }
+                }
+
+                if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
+                    ArenaUtils.updateInnocentLocator(this);
+                }
+                //no players - stop game
+                if (getPlayersLeft().size() == 0) {
+                    ArenaManager.stopGame(false, this);
+                } else
+                    //winner check
+                    if (getPlayersLeft().size() == aliveMurderer()) {
+                        for (Player p : getPlayers()) {
+                            p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                                    ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
+                            if (allMurderer.contains(p)) {
+                                p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                            }
+                        }
+                        ArenaManager.stopGame(false, this);
+                    } else
+                        //murderer speed add
+                        if (getPlayersLeft().size() == aliveMurderer() + 1) {
+                            for (Player p : allMurderer) {
+                                if (isMurderAlive(p)) {
+                                    p.setWalkSpeed(0.2f);
+                                }
+                            }
+                        }
+
+                //don't spawn it every time
+                if (spawnGoldTimer == spawnGoldTime) {
+                    spawnSomeGold();
+                    spawnGoldTimer = 0;
+                } else {
+                    spawnGoldTimer++;
+                }
+                setTimer(getTimer() - 1);
+                break;
+            case ENDING:
+                scoreboardManager.stopAllScoreboards();
+                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+                    plugin.getServer().setWhitelist(false);
+                }
+                if (getTimer() <= 0) {
+                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Game-Ended"));
+                    }
+
+                    List<Player> playersToQuit = new ArrayList<>(getPlayers());
+                    for (Player player : playersToQuit) {
+                        plugin.getUserManager().getUser(player).removeScoreboard();
+                        player.setGameMode(GameMode.SURVIVAL);
+                        for (Player players : Bukkit.getOnlinePlayers()) {
+                            player.showPlayer(players);
+                            if (ArenaRegistry.getArena(players) == null) {
+                                players.showPlayer(player);
+                            }
+                        }
+                        for (PotionEffect effect : player.getActivePotionEffects()) {
+                            player.removePotionEffect(effect.getType());
+                        }
+                        player.setWalkSpeed(0.2f);
+                        player.setFlying(false);
+                        player.setAllowFlight(false);
+                        player.getInventory().clear();
+
+                        player.getInventory().setArmorContents(null);
+                        doBarAction(BarAction.REMOVE, player);
+                        player.setFireTicks(0);
+                        player.setFoodLevel(20);
+                    }
+                    teleportAllToEndLocation();
+
+                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+                        for (Player player : getPlayers()) {
+                            InventorySerializer.loadInventory(plugin, player);
+                        }
+                    }
+
+                    ChatManager.broadcast(this, ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+
+                    for (User user : plugin.getUserManager().getUsers(this)) {
+                        user.setSpectator(false);
+
+                        for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
+                            if (!statistic.isPersistent()) {
+                                user.setStat(statistic, 0);
+                            } else {
+                                plugin.getUserManager().saveStatistic(user, statistic);
+                            }
+                        }
+                    }
+                    plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
+                    players.clear();
+
+                    cleanUpArena();
+                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+                        if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
+                            plugin.getServer().shutdown();
+                        }
+                    }
+                    setArenaState(ArenaState.RESTARTING);
+                }
+                setTimer(getTimer() - 1);
+                break;
+            case RESTARTING:
+                getPlayers().clear();
+                ArenaEvents events = new ArenaEvents(plugin);
+                events.potions.clear();
+                setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        ArenaManager.joinAttempt(player, this);
+                    }
+                }
+                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+                }
+                break;
+            default:
+                break; //o.o?
         }
+        Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms",
 
-        private String formatRoleChance (User user,int murdererPts, int detectivePts) throws NumberFormatException {
-            String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
-            message = StringUtils.replace(message, "%murderer_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
-            message = StringUtils.replace(message, "%detective_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
-            return message;
+                getId(), System.
+
+                        currentTimeMillis() - start);
+    }
+
+    private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
+        String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
+        message = StringUtils.replace(message, "%murderer_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
+        message = StringUtils.replace(message, "%detective_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
+        return message;
+    }
+
+    private void spawnSomeGold() {
+        //do not exceed amount of gold per spawn
+        if (goldSpawned.size() >= goldSpawnPoints.size()) {
+            return;
         }
+        Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
+        Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
+        goldSpawned.add(item);
+    }
 
-        private void spawnSomeGold () {
-            //do not exceed amount of gold per spawn
-            if (goldSpawned.size() >= goldSpawnPoints.size()) {
-                return;
-            }
-            Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
-            Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
-            goldSpawned.add(item);
+    public void setMurderers(int murderers) {
+        this.murderers = murderers;
+    }
+
+    public void setSpawnGoldTime(int spawnGoldTime) {
+        this.spawnGoldTime = spawnGoldTime;
+    }
+
+    public void setHideChances(boolean hideChances) {
+        this.hideChances = hideChances;
+    }
+
+    public boolean isDetectiveDead() {
+        return detectiveDead;
+    }
+
+    public void setDetectiveDead(boolean detectiveDead) {
+        this.detectiveDead = detectiveDead;
+    }
+
+    public void setDetectives(int detectives) {
+        this.detectives = detectives;
+    }
+
+    public boolean isMurdererLocatorReceived() {
+        return murdererLocatorReceived;
+    }
+
+    public void setMurdererLocatorReceived(boolean murdererLocatorReceived) {
+        this.murdererLocatorReceived = murdererLocatorReceived;
+    }
+
+    public void setForceStart(boolean forceStart) {
+        this.forceStart = forceStart;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
+    public List<Item> getGoldSpawned() {
+        return goldSpawned;
+    }
+
+    public List<Location> getGoldSpawnPoints() {
+        return goldSpawnPoints;
+    }
+
+    public void setGoldSpawnPoints(List<Location> goldSpawnPoints) {
+        this.goldSpawnPoints = goldSpawnPoints;
+    }
+
+    /**
+     * Get arena identifier used to get arenas by string.
+     *
+     * @return arena name
+     * @see ArenaRegistry#getArena(String)
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Get minimum players needed.
+     *
+     * @return minimum players needed to start arena
+     */
+    public int getMinimumPlayers() {
+        return getOption(ArenaOption.MINIMUM_PLAYERS);
+    }
+
+    /**
+     * Set minimum players needed.
+     *
+     * @param minimumPlayers players needed to start arena
+     */
+    public void setMinimumPlayers(int minimumPlayers) {
+        if (minimumPlayers < 2) {
+            Debugger.debug(Level.WARNING, "Беда с башкой? Больше {0} ставь, мало ёпта", minimumPlayers);
+            setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
+            return;
         }
+        setOptionValue(ArenaOption.MINIMUM_PLAYERS, minimumPlayers);
+    }
 
-        public void setMurderers ( int murderers){
-            this.murderers = murderers;
+    /**
+     * Get arena map name.
+     *
+     * @return arena map name, it's not arena id
+     * @see #getId()
+     */
+    public String getMapName() {
+        return mapName;
+    }
+
+    /**
+     * Set arena map name.
+     *
+     * @param mapname new map name, it's not arena id
+     */
+    public void setMapName(String mapname) {
+        this.mapName = mapname;
+    }
+
+    /**
+     * Get timer of arena.
+     *
+     * @return timer of lobby time / time to next wave
+     */
+    public int getTimer() {
+        return getOption(ArenaOption.TIMER);
+    }
+
+    /**
+     * Modify game timer.
+     *
+     * @param timer timer of lobby / time to next wave
+     */
+    public void setTimer(int timer) {
+        setOptionValue(ArenaOption.TIMER, timer);
+    }
+
+    /**
+     * Return maximum players arena can handle.
+     *
+     * @return maximum players arena can handle
+     */
+    public int getMaximumPlayers() {
+        return getOption(ArenaOption.MAXIMUM_PLAYERS);
+    }
+
+    /**
+     * Set maximum players arena can handle.
+     *
+     * @param maximumPlayers how many players arena can handle
+     */
+    public void setMaximumPlayers(int maximumPlayers) {
+        setOptionValue(ArenaOption.MAXIMUM_PLAYERS, maximumPlayers);
+    }
+
+    /**
+     * Return game state of arena.
+     *
+     * @return game state of arena
+     * @see ArenaState
+     */
+    public ArenaState getArenaState() {
+        return arenaState;
+    }
+
+    /**
+     * Set game state of arena.
+     *
+     * @param arenaState new game state of arena
+     * @see ArenaState
+     */
+    public void setArenaState(ArenaState arenaState) {
+        this.arenaState = arenaState;
+        MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
+        Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
+    }
+
+    /**
+     * Get all players in arena.
+     *
+     * @return set of players in arena
+     */
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
+    public void teleportToLobby(Player player) {
+        player.setFoodLevel(20);
+        player.setFlying(false);
+        player.setAllowFlight(false);
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
         }
-
-        public void setSpawnGoldTime ( int spawnGoldTime){
-            this.spawnGoldTime = spawnGoldTime;
+        player.setWalkSpeed(0.2f);
+        Location location = getLobbyLocation();
+        if (location == null) {
+            System.out.print("LobbyLocation isn't intialized for arena " + getId());
         }
+        player.teleport(location);
+    }
 
-        public void setHideChances ( boolean hideChances){
-            this.hideChances = hideChances;
+    /**
+     * Executes boss bar action for arena
+     *
+     * @param action add or remove a player from boss bar
+     * @param p      player
+     */
+    public void doBarAction(BarAction action, Player p) {
+        if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+            return;
         }
-
-        public boolean isDetectiveDead () {
-            return detectiveDead;
+        switch (action) {
+            case ADD:
+                gameBar.addPlayer(p);
+                break;
+            case REMOVE:
+                gameBar.removePlayer(p);
+                break;
+            default:
+                break;
         }
+    }
 
-        public void setDetectiveDead ( boolean detectiveDead){
-            this.detectiveDead = detectiveDead;
-        }
+    /**
+     * Get lobby location of arena.
+     *
+     * @return lobby location of arena
+     */
+    public Location getLobbyLocation() {
+        return gameLocations.get(GameLocation.LOBBY);
+    }
 
-        public void setDetectives ( int detectives){
-            this.detectives = detectives;
-        }
+    /**
+     * Set lobby location of arena.
+     *
+     * @param loc new lobby location of arena
+     */
+    public void setLobbyLocation(Location loc) {
+        gameLocations.put(GameLocation.LOBBY, loc);
+    }
 
-        public boolean isMurdererLocatorReceived () {
-            return murdererLocatorReceived;
-        }
+    public void teleportToStartLocation(Player player) {
+        player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
+    }
 
-        public void setMurdererLocatorReceived ( boolean murdererLocatorReceived){
-            this.murdererLocatorReceived = murdererLocatorReceived;
-        }
-
-        public void setForceStart ( boolean forceStart){
-            this.forceStart = forceStart;
-        }
-
-        public ScoreboardManager getScoreboardManager () {
-            return scoreboardManager;
-        }
-
-        public List<Item> getGoldSpawned () {
-            return goldSpawned;
-        }
-
-        public List<Location> getGoldSpawnPoints () {
-            return goldSpawnPoints;
-        }
-
-        public void setGoldSpawnPoints (List < Location > goldSpawnPoints) {
-            this.goldSpawnPoints = goldSpawnPoints;
-        }
-
-        /**
-         * Get arena identifier used to get arenas by string.
-         *
-         * @return arena name
-         * @see ArenaRegistry#getArena(String)
-         */
-        public String getId () {
-            return id;
-        }
-
-        /**
-         * Get minimum players needed.
-         *
-         * @return minimum players needed to start arena
-         */
-        public int getMinimumPlayers () {
-            return getOption(ArenaOption.MINIMUM_PLAYERS);
-        }
-
-        /**
-         * Set minimum players needed.
-         *
-         * @param minimumPlayers players needed to start arena
-         */
-        public void setMinimumPlayers ( int minimumPlayers){
-            if (minimumPlayers < 2) {
-                Debugger.debug(Level.WARNING, "Minimum players amount for arena cannot be less than 2! Got {0}", minimumPlayers);
-                setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
-                return;
-            }
-            setOptionValue(ArenaOption.MINIMUM_PLAYERS, minimumPlayers);
-        }
-
-        /**
-         * Get arena map name.
-         *
-         * @return arena map name, it's not arena id
-         * @see #getId()
-         */
-        public String getMapName () {
-            return mapName;
-        }
-
-        /**
-         * Set arena map name.
-         *
-         * @param mapname new map name, it's not arena id
-         */
-        public void setMapName (String mapname){
-            this.mapName = mapname;
-        }
-
-        /**
-         * Get timer of arena.
-         *
-         * @return timer of lobby time / time to next wave
-         */
-        public int getTimer () {
-            return getOption(ArenaOption.TIMER);
-        }
-
-        /**
-         * Modify game timer.
-         *
-         * @param timer timer of lobby / time to next wave
-         */
-        public void setTimer ( int timer){
-            setOptionValue(ArenaOption.TIMER, timer);
-        }
-
-        /**
-         * Return maximum players arena can handle.
-         *
-         * @return maximum players arena can handle
-         */
-        public int getMaximumPlayers () {
-            return getOption(ArenaOption.MAXIMUM_PLAYERS);
-        }
-
-        /**
-         * Set maximum players arena can handle.
-         *
-         * @param maximumPlayers how many players arena can handle
-         */
-        public void setMaximumPlayers ( int maximumPlayers){
-            setOptionValue(ArenaOption.MAXIMUM_PLAYERS, maximumPlayers);
-        }
-
-        /**
-         * Return game state of arena.
-         *
-         * @return game state of arena
-         * @see ArenaState
-         */
-        public ArenaState getArenaState () {
-            return arenaState;
-        }
-
-        /**
-         * Set game state of arena.
-         *
-         * @param arenaState new game state of arena
-         * @see ArenaState
-         */
-        public void setArenaState (ArenaState arenaState){
-            this.arenaState = arenaState;
-            MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
-            Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
-        }
-
-        /**
-         * Get all players in arena.
-         *
-         * @return set of players in arena
-         */
-        public Set<Player> getPlayers () {
-            return players;
-        }
-
-        public void teleportToLobby (Player player){
-            player.setFoodLevel(20);
-            player.setFlying(false);
-            player.setAllowFlight(false);
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                player.removePotionEffect(effect.getType());
-            }
-            player.setWalkSpeed(0.2f);
-            Location location = getLobbyLocation();
-            if (location == null) {
-                System.out.print("LobbyLocation isn't intialized for arena " + getId());
-            }
-            player.teleport(location);
-        }
-
-        /**
-         * Executes boss bar action for arena
-         *
-         * @param action add or remove a player from boss bar
-         * @param p      player
-         */
-        public void doBarAction (BarAction action, Player p){
-            if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                return;
-            }
-            switch (action) {
-                case ADD:
-                    gameBar.addPlayer(p);
-                    break;
-                case REMOVE:
-                    gameBar.removePlayer(p);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /**
-         * Get lobby location of arena.
-         *
-         * @return lobby location of arena
-         */
-        public Location getLobbyLocation () {
-            return gameLocations.get(GameLocation.LOBBY);
-        }
-
-        /**
-         * Set lobby location of arena.
-         *
-         * @param loc new lobby location of arena
-         */
-        public void setLobbyLocation (Location loc){
-            gameLocations.put(GameLocation.LOBBY, loc);
-        }
-
-        public void teleportToStartLocation (Player player){
+    private void teleportAllToStartLocation() {
+        for (Player player : getPlayers()) {
             player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
         }
+    }
 
-        private void teleportAllToStartLocation () {
+    public void teleportAllToEndLocation() {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+                && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
             for (Player player : getPlayers()) {
-                player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
-            }
-        }
-
-        public void teleportAllToEndLocation () {
-            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-                    && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
-                for (Player player : getPlayers()) {
-                    plugin.getBungeeManager().connectToHub(player);
-                }
-                return;
-            }
-            Location location = getEndLocation();
-
-            if (location == null) {
-                location = getLobbyLocation();
-                System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
-            }
-            for (Player player : getPlayers()) {
-                player.teleport(location);
-            }
-        }
-
-        public void teleportToEndLocation (Player player){
-            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-                    && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
                 plugin.getBungeeManager().connectToHub(player);
-                return;
             }
-            Location location = getEndLocation();
-            if (location == null) {
-                location = getLobbyLocation();
-                System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
-            }
+            return;
+        }
+        Location location = getEndLocation();
 
+        if (location == null) {
+            location = getLobbyLocation();
+            System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
+        }
+        for (Player player : getPlayers()) {
             player.teleport(location);
         }
-
-        public List<Location> getPlayerSpawnPoints () {
-            return playerSpawnPoints;
-        }
-
-        public void setPlayerSpawnPoints (List < Location > playerSpawnPoints) {
-            this.playerSpawnPoints = playerSpawnPoints;
-        }
-
-        /**
-         * Get end location of arena.
-         *
-         * @return end location of arena
-         */
-        public Location getEndLocation () {
-            return gameLocations.get(GameLocation.END);
-        }
-
-        /**
-         * Set end location of arena.
-         *
-         * @param endLoc new end location of arena
-         */
-        public void setEndLocation (Location endLoc){
-            gameLocations.put(GameLocation.END, endLoc);
-        }
-
-        public void loadSpecialBlock (SpecialBlock block){
-            specialBlocks.add(block);
-            Hologram holo;
-            switch (block.getSpecialBlockType()) {
-                case MYSTERY_CAULDRON:
-                    holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
-                    holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
-                    break;
-                case PRAISE_DEVELOPER:
-                    holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
-                    for (String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
-                        holo.appendTextLine(str);
-                    }
-                    break;
-                case HORSE_PURCHASE:
-                case RAPID_TELEPORTATION:
-                    //not yet implemented
-                default:
-                    break;
-            }
-        }
-
-        public List<SpecialBlock> getSpecialBlocks () {
-            return specialBlocks;
-        }
-
-        public void start () {
-            Debugger.debug(Level.INFO, "[{0}] Game instance started", getId());
-            this.runTaskTimer(plugin, 20L, 20L);
-            this.setArenaState(ArenaState.RESTARTING);
-        }
-
-        void addPlayer (Player player){
-            players.add(player);
-        }
-
-        void removePlayer (Player player){
-            if (player == null) {
-                return;
-            }
-            players.remove(player);
-        }
-
-        public List<Player> getPlayersLeft () {
-            List<Player> players = new ArrayList<>();
-            for (User user : plugin.getUserManager().getUsers(this)) {
-                if (!user.isSpectator()) {
-                    players.add(user.getPlayer());
-                }
-            }
-            return players;
-        }
-
-        void showPlayers () {
-            for (Player player : getPlayers()) {
-                for (Player p : getPlayers()) {
-                    player.showPlayer(p);
-                    p.showPlayer(player);
-                }
-            }
-        }
-
-        public void cleanUpArena () {
-            if (bowHologram != null && !bowHologram.isDeleted()) {
-                bowHologram.delete();
-            }
-            murdererLocatorReceived = false;
-            bowHologram = null;
-            gameCharacters.clear();
-            allMurderer.clear();
-            allDetectives.clear();
-            setDetectiveDead(false);
-            clearCorpses();
-            clearGold();
-        }
-
-        public void clearGold () {
-            for (Item item : goldSpawned) {
-                if (item != null) {
-                    item.remove();
-                }
-            }
-            goldSpawned.clear();
-        }
-
-        public void clearCorpses () {
-            if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-                return;
-            }
-            for (Corpse corpse : corpses) {
-                if (!corpse.getHologram().isDeleted()) {
-                    corpse.getHologram().delete();
-                }
-                if (corpse.getCorpseData() != null) {
-                    corpse.getCorpseData().destroyCorpseFromEveryone();
-                    CorpseAPI.removeCorpse(corpse.getCorpseData());
-                }
-            }
-            corpses.clear();
-        }
-
-        public boolean isCharacterSet (CharacterType type){
-            return gameCharacters.get(type) != null;
-        }
-
-        public void setCharacter (CharacterType type, Player player){
-            gameCharacters.put(type, player);
-        }
-
-        public Player getCharacter (CharacterType type){
-            return gameCharacters.get(type);
-        }
-
-        public void addToDetectiveList (Player player){
-            allDetectives.add(player);
-        }
-
-        public boolean lastAliveDetective () {
-            return aliveDetective() <= 1;
-        }
-
-        public int aliveDetective () {
-            int alive = 0;
-            for (Player p : getPlayersLeft()) {
-                if (Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
-                    alive++;
-                }
-            }
-            return alive;
-        }
-
-        public boolean isDetectiveAlive (Player player){
-            for (Player p : getPlayersLeft()) {
-                if (p == player && allDetectives.contains(p)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public List<Player> getDetectiveList () {
-            return allDetectives;
-        }
-
-        public void addToMurdererList (Player player){
-            allMurderer.add(player);
-        }
-
-        public void removeFromMurdererList (Player player){
-            allMurderer.remove(player);
-        }
-
-
-        public boolean lastAliveMurderer () {
-            return aliveMurderer() == 1;
-        }
-
-        public int aliveMurderer () {
-            int alive = 0;
-            for (Player p : getPlayersLeft()) {
-                if (allMurderer.contains(p) && isMurderAlive(p)) {
-                    alive++;
-                }
-            }
-            return alive;
-        }
-
-        public boolean isMurderAlive (Player player){
-            for (Player p : getPlayersLeft()) {
-                if (p == player && allMurderer.contains(p)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public List<Player> getMurdererList () {
-            return allMurderer;
-        }
-
-        public int getOption (ArenaOption option){
-            return arenaOptions.get(option);
-        }
-
-        public void setOptionValue (ArenaOption option,int value){
-            arenaOptions.put(option, value);
-        }
-
-        public void addOptionValue (ArenaOption option,int value){
-            arenaOptions.put(option, arenaOptions.get(option) + value);
-        }
-
-        public enum BarAction {
-            ADD, REMOVE
-        }
-
-        public enum GameLocation {
-            LOBBY, END
-        }
-
-        public enum CharacterType {
-            MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
-        }
-
     }
+
+    public void teleportToEndLocation(Player player) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+                && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
+            plugin.getBungeeManager().connectToHub(player);
+            return;
+        }
+        Location location = getEndLocation();
+        if (location == null) {
+            location = getLobbyLocation();
+            System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
+        }
+
+        player.teleport(location);
+    }
+
+    public List<Location> getPlayerSpawnPoints() {
+        return playerSpawnPoints;
+    }
+
+    public void setPlayerSpawnPoints(List<Location> playerSpawnPoints) {
+        this.playerSpawnPoints = playerSpawnPoints;
+    }
+
+    /**
+     * Get end location of arena.
+     *
+     * @return end location of arena
+     */
+    public Location getEndLocation() {
+        return gameLocations.get(GameLocation.END);
+    }
+
+    /**
+     * Set end location of arena.
+     *
+     * @param endLoc new end location of arena
+     */
+    public void setEndLocation(Location endLoc) {
+        gameLocations.put(GameLocation.END, endLoc);
+    }
+
+    public void loadSpecialBlock(SpecialBlock block) {
+        specialBlocks.add(block);
+        Hologram holo;
+        switch (block.getSpecialBlockType()) {
+            case MYSTERY_CAULDRON:
+                holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
+                holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+                break;
+            case PRAISE_DEVELOPER:
+                holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
+                for (String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
+                    holo.appendTextLine(str);
+                }
+                break;
+            case HORSE_PURCHASE:
+            case RAPID_TELEPORTATION:
+                //not yet implemented
+            default:
+                break;
+        }
+    }
+
+    public List<SpecialBlock> getSpecialBlocks() {
+        return specialBlocks;
+    }
+
+    public void start() {
+        Debugger.debug(Level.INFO, "[{0}] Game instance started", getId());
+        this.runTaskTimer(plugin, 20L, 20L);
+        this.setArenaState(ArenaState.RESTARTING);
+    }
+
+    void addPlayer(Player player) {
+        players.add(player);
+    }
+
+    void removePlayer(Player player) {
+        if (player == null) {
+            return;
+        }
+        players.remove(player);
+    }
+
+    public List<Player> getPlayersLeft() {
+        List<Player> players = new ArrayList<>();
+        for (User user : plugin.getUserManager().getUsers(this)) {
+            if (!user.isSpectator()) {
+                players.add(user.getPlayer());
+            }
+        }
+        return players;
+    }
+
+    void showPlayers() {
+        for (Player player : getPlayers()) {
+            for (Player p : getPlayers()) {
+                player.showPlayer(p);
+                p.showPlayer(player);
+            }
+        }
+    }
+
+    public void cleanUpArena() {
+        if (bowHologram != null && !bowHologram.isDeleted()) {
+            bowHologram.delete();
+        }
+        murdererLocatorReceived = false;
+        bowHologram = null;
+        gameCharacters.clear();
+        allMurderer.clear();
+        allDetectives.clear();
+        setDetectiveDead(false);
+        clearCorpses();
+        clearGold();
+    }
+
+    public void clearGold() {
+        for (Item item : goldSpawned) {
+            if (item != null) {
+                item.remove();
+            }
+        }
+        goldSpawned.clear();
+    }
+
+    public void clearCorpses() {
+        if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+            return;
+        }
+        for (Corpse corpse : corpses) {
+            if (!corpse.getHologram().isDeleted()) {
+                corpse.getHologram().delete();
+            }
+            if (corpse.getCorpseData() != null) {
+                corpse.getCorpseData().destroyCorpseFromEveryone();
+                CorpseAPI.removeCorpse(corpse.getCorpseData());
+            }
+        }
+        corpses.clear();
+    }
+
+    public boolean isCharacterSet(CharacterType type) {
+        return gameCharacters.get(type) != null;
+    }
+
+    public void setCharacter(CharacterType type, Player player) {
+        gameCharacters.put(type, player);
+    }
+
+    public Player getCharacter(CharacterType type) {
+        return gameCharacters.get(type);
+    }
+
+    public void addToDetectiveList(Player player) {
+        allDetectives.add(player);
+    }
+
+    public boolean lastAliveDetective() {
+        return aliveDetective() <= 1;
+    }
+
+    public int aliveDetective() {
+        int alive = 0;
+        for (Player p : getPlayersLeft()) {
+            if (Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
+                alive++;
+            }
+        }
+        return alive;
+    }
+
+    public boolean isDetectiveAlive(Player player) {
+        for (Player p : getPlayersLeft()) {
+            if (p == player && allDetectives.contains(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Player> getDetectiveList() {
+        return allDetectives;
+    }
+
+    public void addToMurdererList(Player player) {
+        allMurderer.add(player);
+    }
+
+    public void removeFromMurdererList(Player player) {
+        allMurderer.remove(player);
+    }
+
+
+    public boolean lastAliveMurderer() {
+        return aliveMurderer() == 1;
+    }
+
+    public int aliveMurderer() {
+        int alive = 0;
+        for (Player p : getPlayersLeft()) {
+            if (allMurderer.contains(p) && isMurderAlive(p)) {
+                alive++;
+            }
+        }
+        return alive;
+    }
+
+    public boolean isMurderAlive(Player player) {
+        for (Player p : getPlayersLeft()) {
+            if (p == player && allMurderer.contains(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Player> getMurdererList() {
+        return allMurderer;
+    }
+
+    public int getOption(ArenaOption option) {
+        return arenaOptions.get(option);
+    }
+
+    public void setOptionValue(ArenaOption option, int value) {
+        arenaOptions.put(option, value);
+    }
+
+    public void addOptionValue(ArenaOption option, int value) {
+        arenaOptions.put(option, arenaOptions.get(option) + value);
+    }
+
+    public enum BarAction {
+        ADD, REMOVE
+    }
+
+    public enum GameLocation {
+        LOBBY, END
+    }
+
+    public enum CharacterType {
+        MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+    }
+
+}

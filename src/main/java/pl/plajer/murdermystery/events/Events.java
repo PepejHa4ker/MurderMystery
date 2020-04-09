@@ -47,6 +47,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -64,6 +67,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Plajer
@@ -253,46 +257,6 @@ public class Events implements Listener {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
     }
-    if(SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Menu")) {
-      event.setCancelled(true);
-      gameInv = Bukkit.createInventory(null, 27, ChatColor.DARK_AQUA + "Выберите ваш бонус");
-      ItemStack innocent = new ItemStack(Material.LEATHER_CHESTPLATE);
-      ItemStack detective = new ItemStack(Material.BOW);
-      ItemStack murderer = new ItemStack(Material.IRON_SWORD);
-      ItemMeta innocentMeta = innocent.getItemMeta();
-      ItemMeta detectiveMeta = detective.getItemMeta();
-      ItemMeta murdererMeta = murderer.getItemMeta();
-      innocentMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 10, true);
-      detectiveMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 10, true);
-      murdererMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 10, true);
-//      String message = event.getPlayer().hasPermission("murdermystery.premium") ? ChatColor.DARK_AQUA + "Увеличить шанс на 7%" :
-      //
-      List<String> innocentLore = new ArrayList<>();
-      innocentMeta.setDisplayName(ChatColor.YELLOW + "Гражданский");
-      innocentLore.add(ChatColor.DARK_AQUA + "Увеличить шанс на 7%");
-      innocentMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-      innocentMeta.setLore(innocentLore);
-      innocent.setItemMeta(innocentMeta);
-      //
-      List<String> detectiveLore = new ArrayList<>();
-      detectiveMeta.setDisplayName(ChatColor.AQUA + "Детектив");
-      detectiveLore.add(ChatColor.DARK_AQUA + "Увеличить шанс на 7%");
-
-      detectiveMeta.setLore(detectiveLore);
-      detectiveMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-      detective.setItemMeta(detectiveMeta);
-      //
-      List<String> murdererLore = new ArrayList<>();
-      murdererMeta.setDisplayName(ChatColor.RED + "Маньяк");
-      murdererLore.add(ChatColor.DARK_AQUA + "Увеличить шанс на 7%");
-      murdererMeta.setLore(murdererLore);
-      murdererMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-      murderer.setItemMeta(murdererMeta);
-      gameInv.setItem(11, innocent);
-      gameInv.setItem(13, detective);
-      gameInv.setItem(15, murderer);
-    }
-    event.getPlayer().openInventory(gameInv);
   }
 
   @EventHandler(priority = EventPriority.HIGH)

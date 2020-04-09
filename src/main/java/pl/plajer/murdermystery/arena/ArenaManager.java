@@ -243,6 +243,8 @@ public class ArenaManager {
   public static void leaveAttempt(Player player, Arena arena) {
     Debugger.debug(Level.INFO, "[{0}] Initial leave attempt for {1}", arena.getId(), player.getName());
     long start = System.currentTimeMillis();
+    ArenaEvents.potions.remove(player);
+
 
     MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(event);
