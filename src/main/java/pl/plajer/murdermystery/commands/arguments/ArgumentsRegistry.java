@@ -43,14 +43,10 @@ import pl.plajer.murdermystery.commands.arguments.admin.arena.*;
 import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import pl.plajer.murdermystery.commands.arguments.game.CreateArgument;
-import pl.plajer.murdermystery.commands.arguments.game.JoinArguments;
-import pl.plajer.murdermystery.commands.arguments.game.LeaderboardArgument;
-import pl.plajer.murdermystery.commands.arguments.game.LeaveArgument;
-import pl.plajer.murdermystery.commands.arguments.game.StatsArgument;
+import pl.plajer.murdermystery.commands.arguments.game.*;
 import pl.plajer.murdermystery.commands.completion.TabCompletion;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.string.StringMatcher;
 
@@ -79,10 +75,11 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LeaveArgument(this);
     new StatsArgument(this);
     new LeaderboardArgument(this);
-
+    new RankArgument(this);
     //register admin related arguments
     new ListArenasArgument(this);
     new DeleteArgument(this);
+    new RemoveGoldArgument(this);
     new ForceStartArgument(this);
     new StopArgument(this);
     new ReloadArgument(this);

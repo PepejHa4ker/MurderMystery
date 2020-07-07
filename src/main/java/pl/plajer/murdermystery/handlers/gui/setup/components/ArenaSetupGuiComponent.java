@@ -16,21 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.handlers.setup.components;
+package pl.plajer.murdermystery.handlers.gui.setup.components;
 
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.gui.GuiComponent;
+import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 
 /**
  * @author Plajer
  * <p>
  * Created at 25.05.2019
  */
-public interface SetupComponent {
+public interface ArenaSetupGuiComponent extends GuiComponent {
 
   void prepare(SetupInventory setupInventory);
-
-  void injectComponents(StaticPane pane);
 
 }

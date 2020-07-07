@@ -166,6 +166,11 @@ public class ArenaRegistry {
           specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         }
       }
+      if (config.isSet(s + ".magicanvils")) {
+        for (String loc : config.getStringList(s + ".magicanvils")) {
+          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MAGIC_ANVIL));
+        }
+      }
       for (SpecialBlock block : specialBlocks) {
         arena.loadSpecialBlock(block);
       }

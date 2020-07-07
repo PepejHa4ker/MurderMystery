@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,25 +29,22 @@ import java.util.logging.Logger;
  * <p>
  * Created at 06.04.2019
  */
+@UtilityClass
 public class Debugger {
 
   private static HashSet<String> listenedPerformance = new HashSet<>();
-  private static boolean enabled = false;
+  private static boolean enabled = true;
   private static boolean deep = false;
-  private static Logger logger = Logger.getLogger("Murder Mystery");
-
-  private Debugger() {
-  }
-
+  private static Logger logger = Logger.getLogger("Minecraft");
   public static void setEnabled(boolean enabled) {
     Debugger.enabled = enabled;
   }
 
-  public static void deepDebug(boolean deep) {
+  public void deepDebug(boolean deep) {
     Debugger.deep = deep;
   }
 
-  public static void monitorPerformance(String task) {
+  public void monitorPerformance(String task) {
     listenedPerformance.add(task);
   }
 
@@ -57,7 +56,7 @@ public class Debugger {
    * @param level level of debugged message
    * @param msg   debugged message
    */
-  public static void debug(Level level, String msg) {
+  public void debug(Level level, String msg) {
     if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
@@ -72,7 +71,7 @@ public class Debugger {
    * @param level level of debugged message
    * @param msg   debugged message
    */
-  public static void debug(Level level, String msg, Object... params) {
+  public void debug(Level level, String msg, Object... params) {
     if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
       return;
     }
@@ -84,7 +83,7 @@ public class Debugger {
    *
    * @param msg debugged message
    */
-  public static void performance(String monitorName, String msg, Object... params) {
+  public void performance(String monitorName, String msg, Object... params) {
     if (!deep) {
       return;
     }

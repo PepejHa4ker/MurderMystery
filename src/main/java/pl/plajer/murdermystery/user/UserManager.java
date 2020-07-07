@@ -41,74 +41,74 @@ import pl.plajer.murdermystery.utils.Debugger;
  */
 public class UserManager {
 
-  private UserDatabase database;
-  private List<User> users = new ArrayList<>();
+    private UserDatabase database;
+    private List<User> users = new ArrayList<>();
 
-  public UserManager(Main plugin) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      database = new MysqlManager(plugin);
-    } else {
-      database = new FileStats(plugin);
+    public UserManager(Main plugin) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+            database = new MysqlManager(plugin);
+        } else
+            database = new FileStats(plugin);
+
+        loadStatsForPlayersOnline();
     }
-    loadStatsForPlayersOnline();
-  }
 
-  private void loadStatsForPlayersOnline() {
-    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-      User user = getUser(player);
-      loadStatistics(user);
+    private void loadStatsForPlayersOnline() {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            User user = getUser(player);
+            loadStatistics(user);
+        }
     }
-  }
 
-  public User getUser(Player player) {
-    for (User user : users) {
-      if (user.getPlayer().equals(player)) {
+    public User getUser(Player player) {
+        for (User user : users) {
+            if (user.getPlayer().equals(player)) {
+                return user;
+            }
+        }
+        Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
+        User user = new User(player);
+        users.add(user);
         return user;
-      }
     }
-    Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
-    User user = new User(player);
-    users.add(user);
-    return user;
-  }
 
-  public List<User> getUsers(Arena arena) {
-    List<User> users = new ArrayList<>();
-    for (Player player : arena.getPlayers()) {
-      users.add(getUser(player));
+    public List<User> getUsers(Arena arena) {
+        List<User> users = new ArrayList<>();
+        for (Player player : arena.getPlayers()) {
+            users.add(getUser(player));
+        }
+        return users;
     }
-    return users;
-  }
 
-  public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
+    public void saveStatistic(User user, StatsStorage.StatisticType stat) {
+        if (!stat.isPersistent()) {
+            return;
+        }
+        //apply before save
+        fixContirbutionStatistics(user);
+        database.saveStatistic(user, stat);
     }
-    //apply before save
-    fixContirbutionStatistics(user);
-    database.saveStatistic(user, stat);
-  }
 
-  public void loadStatistics(User user) {
-    database.loadStatistics(user);
-    //apply after load to override
-    fixContirbutionStatistics(user);
-  }
-
-  private void fixContirbutionStatistics(User user) {
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
-      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+    public void loadStatistics(User user) {
+        database.loadStatistics(user);
+        //apply after load to override
+        fixContirbutionStatistics(user);
     }
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
-      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+
+    private void fixContirbutionStatistics(User user) {
+        if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+        }
+        if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+        }
     }
-  }
 
-  public void removeUser(User user) {
-    users.remove(user);
-  }
+    public void removeUser(User user) {
+        users.remove(user);
+    }
 
-  public UserDatabase getDatabase() {
-    return database;
-  }
+    public UserDatabase getDatabase() {
+        return database;
+    }
 }

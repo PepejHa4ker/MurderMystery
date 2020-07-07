@@ -16,13 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.handlers.setup;
+package pl.plajer.murdermystery.handlers.gui.setup;
 
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import java.util.Random;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import lombok.val;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,11 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.setup.components.ArenaRegisterComponent;
-import pl.plajer.murdermystery.handlers.setup.components.MiscComponents;
-import pl.plajer.murdermystery.handlers.setup.components.PlayerAmountComponents;
-import pl.plajer.murdermystery.handlers.setup.components.SpawnComponents;
-import pl.plajer.murdermystery.handlers.setup.components.SpecialBlocksComponents;
+import pl.plajer.murdermystery.handlers.gui.setup.components.*;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
@@ -42,16 +43,24 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  * <p>
  * Created at 25.05.2019
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class SetupInventory {
 
   public static final String VIDEO_LINK = "https://tutorial.plajer.xyz";
-  private static Random random = new Random();
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-  private Arena arena;
-  private Player player;
-  private Gui gui;
-  private SetupUtilities setupUtilities;
+  static Random random = new Random();
+  @Getter
+  static Main plugin = JavaPlugin.getPlugin(Main.class);
+  @Getter
+  FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+  @Getter
+  Arena arena;
+  @Getter
+  Player player;
+  @Getter
+  @NonFinal
+  Gui gui;
+  @Getter
+  SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
     this.arena = arena;
@@ -61,38 +70,37 @@ public class SetupInventory {
   }
 
   private void prepareGui() {
-    this.gui = new Gui(plugin, 4, "Murder Mystery Arena Setup");
+    this.gui = new Gui(plugin, 4, "MurderMystery настройка арены");
     this.gui.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane pane = new StaticPane(9, 4);
     this.gui.addPane(pane);
-
     prepareComponents(pane);
   }
 
   private void prepareComponents(StaticPane pane) {
-    SpawnComponents spawnComponents = new SpawnComponents();
+    val spawnComponents = new SpawnComponents();
     spawnComponents.prepare(this);
     spawnComponents.injectComponents(pane);
 
-    PlayerAmountComponents playerAmountComponents = new PlayerAmountComponents();
+    val playerAmountComponents = new PlayerAmountComponents();
     playerAmountComponents.prepare(this);
     playerAmountComponents.injectComponents(pane);
 
-    MiscComponents miscComponents = new MiscComponents();
+    val miscComponents = new MiscComponents();
     miscComponents.prepare(this);
     miscComponents.injectComponents(pane);
 
-    ArenaRegisterComponent arenaRegisterComponent = new ArenaRegisterComponent();
+    val arenaRegisterComponent = new ArenaRegisterComponent();
     arenaRegisterComponent.prepare(this);
     arenaRegisterComponent.injectComponents(pane);
 
-    SpecialBlocksComponents specialBlocksComponents = new SpecialBlocksComponents();
+    val specialBlocksComponents = new SpecialBlocksComponents();
     specialBlocksComponents.prepare(this);
     specialBlocksComponents.injectComponents(pane);
   }
 
   private void sendProTip(Player p) {
-    int rand = random.nextInt(16 + 1);
+    val rand = random.nextInt(16 + 1);
     switch (rand) {
       case 0:
         p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
@@ -118,29 +126,4 @@ public class SetupInventory {
     sendProTip(player);
     gui.show(player);
   }
-
-  public Main getPlugin() {
-    return plugin;
-  }
-
-  public FileConfiguration getConfig() {
-    return config;
-  }
-
-  public Arena getArena() {
-    return arena;
-  }
-
-  public Player getPlayer() {
-    return player;
-  }
-
-  public Gui getGui() {
-    return gui;
-  }
-
-  public SetupUtilities getSetupUtilities() {
-    return setupUtilities;
-  }
-
 }

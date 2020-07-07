@@ -56,6 +56,7 @@ public class StatsArgument {
         sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses", player) + user.getStat(StatsStorage.StatisticType.LOSES));
         sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played", player) + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
         sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score", player) + user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Karma", player) + user.getStat(StatsStorage.StatisticType.KARMA));
         sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer", player));
       }
     });

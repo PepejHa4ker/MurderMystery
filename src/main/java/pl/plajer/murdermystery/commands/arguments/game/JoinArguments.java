@@ -18,19 +18,16 @@
 
 package pl.plajer.murdermystery.commands.arguments.game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import pl.plajer.murdermystery.ConfigPreferences;
+
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
 import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -41,8 +38,6 @@ import pl.plajer.murdermystery.handlers.ChatManager;
  * Created at 18.05.2019
  */
 public class JoinArguments {
-
-  private Random random = new Random();
 
   public JoinArguments(ArgumentsRegistry registry) {
     //join argument
@@ -62,39 +57,5 @@ public class JoinArguments {
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       }
     });
-
-    //random join argument, register only for multi arena
-    if (!registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      registry.mapArgument("murdermystery", new CommandArgument("randomjoin", "", CommandArgument.ExecutorType.PLAYER) {
-        @Override
-        public void execute(CommandSender sender, String[] args) {
-          //first random get method
-          Map<Arena, Integer> arenas = new HashMap<>();
-          for (Arena arena : ArenaRegistry.getArenas()) {
-            if (arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()) {
-              arenas.put(arena, arena.getPlayers().size());
-            }
-          }
-          if (arenas.size() > 0) {
-            Stream<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
-            Arena arena = sorted.findFirst().get().getKey();
-            if (arena != null) {
-              ArenaManager.joinAttempt((Player) sender, arena);
-              return;
-            }
-          }
-
-          //fallback safe method
-          for (Arena arena : ArenaRegistry.getArenas()) {
-            if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-              && arena.getPlayers().size() < arena.getMaximumPlayers()) {
-              ArenaManager.joinAttempt((Player) sender, arena);
-              return;
-            }
-          }
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
-        }
-      });
-    }
   }
 }

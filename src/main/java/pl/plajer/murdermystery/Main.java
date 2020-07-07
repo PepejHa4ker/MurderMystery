@@ -28,7 +28,7 @@ import java.util.logging.Level;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
-
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -65,6 +65,7 @@ import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
+import pl.plajer.murdermystery.user.RankManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
@@ -85,273 +86,289 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  */
 public class Main extends JavaPlugin {
 
-  private ExceptionLogHandler exceptionLogHandler;
-  private String version;
-  private boolean forceDisable = false;
-  private BungeeManager bungeeManager;
-  private RewardsFactory rewardsHandler;
-  private MysqlDatabase database;
-  private SignManager signManager;
-  private CorpseHandler corpseHandler;
-  private PartyHandler partyHandler;
-  private ConfigPreferences configPreferences;
-  private HookManager hookManager;
-  private UserManager userManager;
+    private ExceptionLogHandler exceptionLogHandler;
+    private String version;
+    private boolean forceDisable = false;
+    private BungeeManager bungeeManager;
+    private RewardsFactory rewardsHandler;
+    private MysqlDatabase database;
+    private SignManager signManager;
+    private CorpseHandler corpseHandler;
+    private PartyHandler partyHandler;
+    private ConfigPreferences configPreferences;
+    private HookManager hookManager;
+    private UserManager userManager;
+    private Economy econ;
 
 
-  @Override
-  public void onEnable() {
-    if (!validateIfPluginShouldStart()) {
-      return;
-    }
-    ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler(this);
-    LanguageManager.init(this);
-    saveDefaultConfig();
-    if (getDescription().getVersion().contains("b")) {
-      Debugger.setEnabled(true);
-    } else {
-      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-    }
-    Debugger.debug(Level.INFO, "[System] Initialization start");
-    if (getConfig().getBoolean("Developer-Mode", false)) {
-      Debugger.deepDebug(true);
-      Debugger.debug(Level.FINE, "Deep debug enabled");
-      for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
-        Debugger.monitorPerformance(listenable);
-      }
-    }
-    long start = System.currentTimeMillis();
-
-    configPreferences = new ConfigPreferences(this);
-    setupFiles();
-    initializeClasses();
-    checkUpdate();
-    Debugger.debug(Level.INFO, "[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
-
-    Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
-    //start hook manager later in order to allow soft-dependencies to fully load
-    Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
-    if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
-      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-          ArenaUtils.updateNameTagsVisibility(player);
+    @Override
+    public void onEnable() {
+        if (!validateIfPluginShouldStart()) {
+            return;
         }
-      }, 60, 140);
-    }
-  }
-
-  private boolean validateIfPluginShouldStart() {
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return false;
-    }
-    try {
-      Class.forName("org.spigotmc.SpigotConfig");
-    } catch (Exception e) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Murder Mystery!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return false;
-    }
-    return true;
-  }
-
-  @Override
-  public void onDisable() {
-    if (forceDisable) {
-      return;
-    }
-
-    Debugger.debug(Level.INFO, "System disable initialized");
-    long start = System.currentTimeMillis();
-
-    Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    saveAllUserStatistics();
-    if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      for (Hologram hologram : HologramsAPI.getHolograms(this)) {
-        hologram.delete();
-      }
-    }
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMysqlDatabase().shutdownConnPool();
-    }
-
-    for (Arena arena : ArenaRegistry.getArenas()) {
-      arena.getScoreboardManager().stopAllScoreboards();
-      for (Player player : arena.getPlayers()) {
-        arena.doBarAction(Arena.BarAction.REMOVE, player);
-        arena.teleportToEndLocation(player);
-        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-          InventorySerializer.loadInventory(this, player);
+        setupEconomy();
+        RankManager.setupRanks();
+        ServiceRegistry.registerService(this);
+        exceptionLogHandler = new ExceptionLogHandler(this);
+        LanguageManager.init(this);
+        saveDefaultConfig();
+        if (getDescription().getVersion().contains("b")) {
+            Debugger.setEnabled(true);
         } else {
-          player.getInventory().clear();
-          player.getInventory().setArmorContents(null);
-          for (PotionEffect pe : player.getActivePotionEffects()) {
-            player.removePotionEffect(pe.getType());
-          }
-          player.setWalkSpeed(0.2f);
+            Debugger.setEnabled(getConfig().getBoolean("Debug", false));
         }
-      }
-      arena.teleportAllToEndLocation();
-      arena.cleanUpArena();
-    }
-    Debugger.debug(Level.INFO, "System disable finished took {0}ms", System.currentTimeMillis() - start);
-  }
-
-  private void initializeClasses() {
-    ScoreboardLib.setPluginInstance(this);
-    if (getConfig().getBoolean("BungeeActivated", false)) {
-      bungeeManager = new BungeeManager(this);
-    }
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
-    }
-    new ArgumentsRegistry(this);
-    userManager = new UserManager(this);
-    Utils.init(this);
-    ArenaSign.init(this);
-    SpecialItem.loadAll();
-    PermissionsManager.init();
-    new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"), this);
-    new ArenaEvents(this);
-    new SpectatorEvents(this);
-    new QuitEvent(this);
-    new JoinEvent(this);
-    new ChatEvents(this);
-    registerSoftDependenciesAndServices();
-    User.cooldownHandlerTask();
-    ArenaRegistry.registerArenas();
-    new Events(this);
-    new LobbyEvent(this);
-    new SpectatorItemEvents(this);
-    rewardsHandler = new RewardsFactory(this);
-    signManager = new SignManager(this);
-    corpseHandler = new CorpseHandler(this);
-    partyHandler = new PartySupportInitializer().initialize();
-    new BowTrailsHandler(this);
-    MysteryPotionRegistry.init(this);
-    PrayerRegistry.init(this);
-    new SpecialBlockEvents(this);
-  }
-
-  private void registerSoftDependenciesAndServices() {
-    Debugger.debug(Level.INFO, "Hooking into soft dependencies");
-    long start = System.currentTimeMillis();
-
-    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
-      new PlaceholderManager().register();
-    }
-    Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
-  }
-
-
-  private void checkUpdate() {
-    if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-      return;
-    }
-    UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
-      if (!result.requiresUpdate()) {
-        return;
-      }
-      if (result.getNewestVersion().contains("b")) {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-            result.getNewestVersion()));
+        Debugger.debug(Level.INFO, "[System] Initialization start");
+        if (getConfig().getBoolean("Developer-Mode", false)) {
+            Debugger.deepDebug(true);
+            Debugger.debug(Level.FINE, "Deep debug enabled");
+            for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
+                Debugger.monitorPerformance(listenable);
+            }
         }
-        return;
-      }
-      MessageUtils.updateIsHere();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your MurderMystery plugin is outdated! Download it to keep with latest changes and fixes.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-    });
-  }
+        long start = System.currentTimeMillis();
 
-  private void setupFiles() {
-    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks", "filter", "ranks")) {
-      File file = new File(getDataFolder() + File.separator + fileName + ".yml");
-      if (!file.exists()) {
-        saveResource(fileName + ".yml", false);
-      }
-    }
-  }
+        configPreferences = new ConfigPreferences(this);
+        setupFiles();
+        initializeClasses();
+        checkUpdate();
+        Debugger.debug(Level.INFO, "[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
 
-  public boolean is1_12_R1() {
-    return version.equalsIgnoreCase("v1_12_R1");
-  }
-
-  public boolean is1_14_R1() {
-    return version.equalsIgnoreCase("v1_14_R1");
-  }
-  public boolean is1_15_R1() {
-    return version.equalsIgnoreCase("v1_15_R1");
-  }
-
-  public RewardsFactory getRewardsHandler() {
-    return rewardsHandler;
-  }
-
-  public BungeeManager getBungeeManager() {
-    return bungeeManager;
-  }
-
-  public PartyHandler getPartyHandler() {
-    return partyHandler;
-  }
-
-  public ConfigPreferences getConfigPreferences() {
-    return configPreferences;
-  }
-
-  public MysqlDatabase getMysqlDatabase() {
-    return database;
-  }
-
-  public SignManager getSignManager() {
-    return signManager;
-  }
-
-  public CorpseHandler getCorpseHandler() {
-    return corpseHandler;
-  }
-
-  public HookManager getHookManager() {
-    return hookManager;
-  }
-
-  public UserManager getUserManager() {
-    return userManager;
-  }
-
-  private void saveAllUserStatistics() {
-    for (Player player : getServer().getOnlinePlayers()) {
-      User user = userManager.getUser(player);
-
-      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if (!stat.isPersistent()) {
-          continue;
+        Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
+        //start hook manager later in order to allow soft-dependencies to fully load
+        Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
+        if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    ArenaUtils.updateNameTagsVisibility(player);
+                }
+            }, 60, 140);
         }
-        if (userManager.getDatabase() instanceof MysqlManager) {
-          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-          continue;
-        }
-        userManager.getDatabase().saveStatistic(user, stat);
-      }
     }
-  }
+
+    private boolean validateIfPluginShouldStart() {
+        version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
+                || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
+            MessageUtils.thisVersionIsNotSupported();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
+            forceDisable = true;
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        }
+        try {
+            Class.forName("org.spigotmc.SpigotConfig");
+        } catch (Exception e) {
+            MessageUtils.thisVersionIsNotSupported();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Murder Mystery!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+            forceDisable = true;
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onDisable() {
+        if (forceDisable) {
+            return;
+        }
+
+        Debugger.debug(Level.INFO, "System disable initialized");
+        long start = System.currentTimeMillis();
+
+        Bukkit.getLogger().removeHandler(exceptionLogHandler);
+        saveAllUserStatistics();
+        if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+            for (Hologram hologram : HologramsAPI.getHolograms(this)) {
+                hologram.delete();
+            }
+        }
+        if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+            getMysqlDatabase().shutdownConnPool();
+        }
+
+        for (Arena arena : ArenaRegistry.getArenas()) {
+            arena.getScoreboardManager().stopAllScoreboards();
+            for (Player player : arena.getPlayers()) {
+                arena.doBarAction(Arena.BarAction.REMOVE, player);
+                arena.teleportToEndLocation(player);
+                if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+                    InventorySerializer.loadInventory(this, player);
+                } else {
+                    player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
+                    for (PotionEffect pe : player.getActivePotionEffects()) {
+                        player.removePotionEffect(pe.getType());
+                    }
+                    player.setWalkSpeed(0.2f);
+                }
+            }
+            arena.teleportAllToEndLocation();
+            arena.cleanUpArena();
+        }
+        Debugger.debug(Level.INFO, "System disable finished took {0}ms", System.currentTimeMillis() - start);
+    }
+
+    private void initializeClasses() {
+        ScoreboardLib.setPluginInstance(this);
+        if (getConfig().getBoolean("BungeeActivated", false)) {
+            bungeeManager = new BungeeManager(this);
+        }
+        if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+            FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
+            database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
+        }
+        new ArgumentsRegistry(this);
+        userManager = new UserManager(this);
+        Utils.init(this);
+        ArenaSign.init(this);
+        SpecialItem.loadAll();
+        PermissionsManager.init();
+        new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"), this);
+        new ArenaEvents(this);
+        new SpectatorEvents(this);
+        new QuitEvent(this);
+        new JoinEvent(this);
+        new ChatEvents(this);
+        registerSoftDependenciesAndServices();
+        User.cooldownHandlerTask();
+        ArenaRegistry.registerArenas();
+        new Events(this);
+        new LobbyEvent(this);
+        new SpectatorItemEvents(this);
+        rewardsHandler = new RewardsFactory(this);
+        signManager = new SignManager(this);
+        corpseHandler = new CorpseHandler(this);
+        partyHandler = new PartySupportInitializer().initialize();
+        new BowTrailsHandler(this);
+        MysteryPotionRegistry.init(this);
+        PrayerRegistry.init(this);
+        new SpecialBlockEvents(this);
+    }
+
+    private void registerSoftDependenciesAndServices() {
+        Debugger.debug(Level.INFO, "Hooking into soft dependencies");
+        long start = System.currentTimeMillis();
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
+            new PlaceholderManager().register();
+        }
+        Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
+    }
+
+
+    private void checkUpdate() {
+        if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+            return;
+        }
+        UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
+            if (!result.requiresUpdate()) {
+                return;
+            }
+            if (result.getNewestVersion().contains("b")) {
+                if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+                            result.getNewestVersion()));
+                }
+                return;
+            }
+            MessageUtils.updateIsHere();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your MurderMystery plugin is outdated! Download it to keep with latest changes and fixes.");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+        });
+    }
+
+    private void setupFiles() {
+        for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks", "filter", "ranks", "donaters")) {
+            File file = new File(getDataFolder() + File.separator + fileName + ".yml");
+            if (!file.exists()) {
+                saveResource(fileName + ".yml", false);
+            }
+        }
+    }
+
+    public boolean is1_12_R1() {
+        return version.equalsIgnoreCase("v1_12_R1");
+    }
+
+    public boolean is1_14_R1() {
+        return version.equalsIgnoreCase("v1_14_R1");
+    }
+
+    public boolean is1_15_R1() {
+        return version.equalsIgnoreCase("v1_15_R1");
+    }
+
+    public RewardsFactory getRewardsHandler() {
+        return rewardsHandler;
+    }
+
+    public BungeeManager getBungeeManager() {
+        return bungeeManager;
+    }
+
+    public PartyHandler getPartyHandler() {
+        return partyHandler;
+    }
+
+    public ConfigPreferences getConfigPreferences() {
+        return configPreferences;
+    }
+
+    public MysqlDatabase getMysqlDatabase() {
+        return database;
+    }
+
+    public SignManager getSignManager() {
+        return signManager;
+    }
+
+    public CorpseHandler getCorpseHandler() {
+        return corpseHandler;
+    }
+
+    public HookManager getHookManager() {
+        return hookManager;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    private void saveAllUserStatistics() {
+        for (Player player : getServer().getOnlinePlayers()) {
+            User user = userManager.getUser(player);
+
+            //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+            for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+                if (!stat.isPersistent()) {
+                    continue;
+                }
+                if (userManager.getDatabase() instanceof MysqlManager) {
+                    ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+                    continue;
+                }
+                userManager.getDatabase().saveStatistic(user, stat);
+            }
+        }
+    }
+
+    private void setupEconomy() {
+        if(getServer().getPluginManager().getPlugin("Vault") == null) {
+            return;
+        }
+        econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+    }
+
+
+    public Economy getEconomy() {
+        return econ;
+    }
 
 
 }

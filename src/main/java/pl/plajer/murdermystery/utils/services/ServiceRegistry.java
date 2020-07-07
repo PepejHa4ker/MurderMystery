@@ -24,6 +24,7 @@ import java.util.logging.Level;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.utils.services.locale.LocaleService;
@@ -32,6 +33,7 @@ import pl.plajer.murdermystery.utils.services.metrics.MetricsService;
 /**
  * Class for registering new services
  */
+@UtilityClass
 public class ServiceRegistry {
 
   private static JavaPlugin registeredService;
@@ -39,10 +41,7 @@ public class ServiceRegistry {
   private static long serviceCooldown = 0;
   private static LocaleService localeService;
 
-  private ServiceRegistry() {
-  }
-
-  public static boolean registerService(JavaPlugin plugin) {
+  public boolean registerService(JavaPlugin plugin) {
     if (registeredService != null && registeredService.equals(plugin)) {
       return false;
     }
@@ -72,26 +71,26 @@ public class ServiceRegistry {
     return true;
   }
 
-  public static JavaPlugin getRegisteredService() {
+  public JavaPlugin getRegisteredService() {
     return registeredService;
   }
 
-  public static long getServiceCooldown() {
+  public long getServiceCooldown() {
     return serviceCooldown;
   }
 
-  public static void setServiceCooldown(long serviceCooldown) {
+  public void setServiceCooldown(long serviceCooldown) {
     ServiceRegistry.serviceCooldown = serviceCooldown;
   }
 
-  public static LocaleService getLocaleService(JavaPlugin plugin) {
+  public LocaleService getLocaleService(JavaPlugin plugin) {
     if (!serviceEnabled || registeredService == null || !registeredService.equals(plugin)) {
       return null;
     }
     return localeService;
   }
 
-  public static boolean isServiceEnabled() {
+  public boolean isServiceEnabled() {
     return serviceEnabled;
   }
 }

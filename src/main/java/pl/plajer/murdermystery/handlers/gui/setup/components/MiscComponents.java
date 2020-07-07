@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.handlers.setup.components;
+package pl.plajer.murdermystery.handlers.gui.setup.components;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -41,7 +40,7 @@ import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.utils.conversation.SimpleConversationBuilder;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
@@ -53,8 +52,9 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  * @author Plajer
  * <p>
  * Created at 25.05.2019
+ *
  */
-public class MiscComponents implements SetupComponent {
+public class MiscComponents implements ArenaSetupGuiComponent {
 
   private SetupInventory setupInventory;
 
@@ -68,7 +68,7 @@ public class MiscComponents implements SetupComponent {
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
-    Main plugin = setupInventory.getPlugin();
+    Main plugin = SetupInventory.getPlugin();
     ItemStack bungeeItem;
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       bungeeItem = new ItemBuilder(Material.SIGN)

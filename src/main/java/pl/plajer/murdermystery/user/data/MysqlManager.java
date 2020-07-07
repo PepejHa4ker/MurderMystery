@@ -29,7 +29,6 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 
 /**
@@ -54,15 +53,15 @@ public class MysqlManager implements UserDatabase {
           + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
           + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
           + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `karma` int(11) NOT NULL DEFAULT '0',\n"
           + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
           + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
           + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
           + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
           + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
-          + ");");
+          + "  `joinedtimes` int(11) NOT NULL DEFAULT '1'\n"
+          + ") ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='\\r\\n';");
       } catch (SQLException e) {
-        e.printStackTrace();
-        MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }
@@ -85,7 +84,7 @@ public class MysqlManager implements UserDatabase {
         if (rs.next()) {
           //player already exists - get the stats
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;;
+            if (!stat.isPersistent()) continue;
             int val = rs.getInt(stat.getName());
             user.setStat(stat, val);
           }
@@ -93,7 +92,7 @@ public class MysqlManager implements UserDatabase {
           //player doesn't exist - make a new record
           statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;;
+            if (!stat.isPersistent()) continue;
             user.setStat(stat, 0);
           }
         }

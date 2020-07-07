@@ -146,7 +146,6 @@ public class SpectatorItemEvents implements Listener {
         p.closeInventory();
         return;
       }
-      p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found", player));
     }
   }
 

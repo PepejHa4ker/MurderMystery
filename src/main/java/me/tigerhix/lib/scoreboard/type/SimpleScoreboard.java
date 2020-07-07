@@ -159,7 +159,6 @@ public class SimpleScoreboard implements Scoreboard {
             }
         }
     }
-
     @SuppressWarnings("deprecation")
     private FakePlayer getFakePlayer(String text, int offset) {
         Team team = null;

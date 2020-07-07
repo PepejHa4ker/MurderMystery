@@ -22,6 +22,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 
+import lombok.val;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -42,6 +43,9 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
 
+import java.util.Random;
+import java.util.Scanner;
+
 /**
  * @author Plajer
  * <p>
@@ -50,7 +54,6 @@ import pl.plajer.murdermystery.utils.ItemPosition;
 public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
-
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
       player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),

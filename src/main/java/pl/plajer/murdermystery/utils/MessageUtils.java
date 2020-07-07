@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.utils;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -26,12 +27,10 @@ import org.bukkit.ChatColor;
  * <p>
  * Created at 03.08.2018
  */
+@UtilityClass
 public class MessageUtils {
 
-  private MessageUtils() {
-  }
-
-  public static void thisVersionIsNotSupported() {
+  public void thisVersionIsNotSupported() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | \\ | |   ___   | |_     ___   _   _   _ __    _ __     ___    _ __  | |_    ___    __| |");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |  \\| |  / _ \\  | __|   / __| | | | | | '_ \\  | '_ \\   / _ \\  | '__| | __|  / _ \\  / _` |");
@@ -40,7 +39,7 @@ public class MessageUtils {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                       |_|     |_|                                        ");
   }
 
-  public static void errorOccurred() {
+  public void errorOccurred() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _____                                                                                  _   _ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | ____|  _ __   _ __    ___    _ __      ___     ___    ___   _   _   _ __    ___    __| | | |");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |  _|   | '__| | '__|  / _ \\  | '__|    / _ \\   / __|  / __| | | | | | '__|  / _ \\  / _` | | |");
@@ -49,7 +48,7 @@ public class MessageUtils {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                                                                               ");
   }
 
-  public static void updateIsHere() {
+  public void updateIsHere() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  _   _               _           _          ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | | | |  _ __     __| |   __ _  | |_    ___ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | | | | | '_ \\   / _` |  / _` | | __|  / _ \\");
@@ -58,7 +57,7 @@ public class MessageUtils {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "         |_|                                 ");
   }
 
-  public static void info() {
+  public void info() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "  _____        __        _ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " |_   _|      / _|      | |");
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "   | |  _ __ | |_ ___   | |");

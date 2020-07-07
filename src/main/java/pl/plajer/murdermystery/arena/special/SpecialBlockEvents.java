@@ -21,6 +21,7 @@ package pl.plajer.murdermystery.arena.special;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,6 +43,9 @@ import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -83,6 +87,9 @@ public class SpecialBlockEvents implements Listener {
           case PRAISE_DEVELOPER:
             onPrayerClick(e);
             return;
+          case MAGIC_ANVIL:
+            onMagicAnvilClick(e);
+            return;
           case HORSE_PURCHASE:
           case RAPID_TELEPORTATION:
             //not yet implemented
@@ -113,6 +120,24 @@ public class SpecialBlockEvents implements Listener {
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
     ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
+  }
+
+  private void onMagicAnvilClick(PlayerInteractEvent e) {
+    if (e.getClickedBlock().getType() != XMaterial.ANVIL.parseMaterial()) {
+      return;
+    }
+    e.setCancelled(true);
+    User user = plugin.getUserManager().getUser(e.getPlayer());
+    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 8) {
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(8)));
+      return;
+    }
+    e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5);
+    List<String> lore = new ArrayList<>();
+    lore.add("§eЭтой тростью когда-то владел админ..");
+    e.getPlayer().getInventory().addItem(new ItemBuilder(Material.BLAZE_ROD).name("§cТаинственная трость мудреца").lore(lore).enchantment(Enchantment.KNOCKBACK, 3).build());
+    user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 8);
+    ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, - 8));
   }
 
   private void onPrayerClick(PlayerInteractEvent e) {

@@ -18,12 +18,16 @@
 
 package pl.plajer.murdermystery.user;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.val;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -32,20 +36,47 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.utils.DonatType;
 
 /**
  * @author Plajer
  * <p>
  * Created at 03.08.2018
  */
-public class User {
 
+public class User {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static long cooldownCounter = 0;
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+  @Getter
   private Player player;
+
+  @Getter
+  @Setter
+  private boolean pickedPotion;
+
+  @Getter
+  @Setter
+  private ItemStack potion;
+
+  @Getter
+  private List<Rank> ranks = new ArrayList<>();
+
+  @Getter
+  private Rank rank;
+
+  @Getter
+  private HashMap<String, Integer> shots = new HashMap<>();
+
+  @Getter
+  @Setter
   private boolean spectator = false;
   private Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
+
+  @Getter
+  @Setter
+  private DonatType type;
+
   private Map<String, Double> cooldowns = new HashMap<>();
 
   public User(Player player) {
@@ -60,17 +91,6 @@ public class User {
     return ArenaRegistry.getArena(player);
   }
 
-  public Player getPlayer() {
-    return player;
-  }
-
-  public boolean isSpectator() {
-    return spectator;
-  }
-
-  public void setSpectator(boolean b) {
-    spectator = b;
-  }
 
   public int getStat(StatsStorage.StatisticType stat) {
     if (!stats.containsKey(stat)) {
@@ -117,4 +137,13 @@ public class User {
     return cooldowns.get(s) - cooldownCounter;
   }
 
+  public void sendMessage(String message) {
+    message = ChatColor.translateAlternateColorCodes('&', message);
+    player.sendMessage(message);
+  }
+
+  public void loadRank() {
+    ranks = Rank.getRanks().stream().filter(r -> this.getStat(StatsStorage.StatisticType.HIGHEST_SCORE) >= r.getXp()).collect(Collectors.toList());
+    rank = ranks.get(ranks.size() - 1);
+  }
 }

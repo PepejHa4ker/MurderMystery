@@ -59,14 +59,12 @@ public class PrayerRegistry {
     PrayerRegistry.plugin = plugin;
     //good prayers
     prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));
-    prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Gold-Rush")));
     prayers.add(new Prayer(Prayer.PrayerType.SINGLE_COMPENSATION, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Single-Compensation")));
     prayers.add(new Prayer(Prayer.PrayerType.BOW_TIME, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Bow-Time")));
 
     //bad prayers
     prayers.add(new Prayer(Prayer.PrayerType.SLOWNESS_CURSE, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Slowness-Curse")));
     prayers.add(new Prayer(Prayer.PrayerType.BLINDNESS_CURSE, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Blindness-Curse")));
-    prayers.add(new Prayer(Prayer.PrayerType.GOLD_BAN, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Gold-Ban")));
     prayers.add(new Prayer(Prayer.PrayerType.INCOMING_DEATH, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Incoming-Death")));
     rand = new Random();
   }
@@ -100,15 +98,9 @@ public class PrayerRegistry {
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
         break;
       case DETECTIVE_REVELATION:
-        String detectiveName;
-        if (arena.isCharacterSet(Arena.CharacterType.DETECTIVE)) {
-          detectiveName = arena.getCharacter(Arena.CharacterType.DETECTIVE).getName();
-        } else if (arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
-          detectiveName = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).getName();
-        } else {
-          detectiveName = "????";
-        }
-        prayMessage = prayMessage.stream().map(msg -> msg.replace("%detective%", detectiveName)).collect(Collectors.toList());
+        String murderer;
+        murderer = arena.getCharacter(Arena.CharacterType.MURDERER).getName();
+        prayMessage = prayMessage.stream().map(msg -> msg.replace("%detective%", murderer)).collect(Collectors.toList());
         break;
       case INCOMING_DEATH:
         new BukkitRunnable() {
@@ -130,14 +122,11 @@ public class PrayerRegistry {
         break;
       case SINGLE_COMPENSATION:
         ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
-        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) + 5);
+        user.addStat(StatsStorage.StatisticType.LOCAL_GOLD,  5);
         break;
       case SLOWNESS_CURSE:
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 100,  false, false));
         break;
-      case GOLD_BAN:
-      case GOLD_RUSH:
-        //unused
       default:
         break;
     }
@@ -145,5 +134,4 @@ public class PrayerRegistry {
       MiscUtils.sendCenteredMessage(player, msg);
     }
   }
-
 }

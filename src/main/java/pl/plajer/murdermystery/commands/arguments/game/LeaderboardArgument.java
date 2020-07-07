@@ -82,21 +82,7 @@ public class LeaderboardArgument {
   private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
     LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
     sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Header"));
-    String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
-    if(statistic.equalsIgnoreCase("kills")) {
-      statistic = "Убийства";
-    } else if(statistic.equalsIgnoreCase("deaths")) {
-      statistic = "Смертей";
-    } else if(statistic.equalsIgnoreCase("highest score")) {
-      statistic = "Очков";
-    } else if(statistic.equalsIgnoreCase("games played")) {
-      statistic = "Игр сыграно";
-    } else if(statistic.equalsIgnoreCase("loses")) {
-      statistic = "Поражений";
-    } else if(statistic.equalsIgnoreCase("wins")) {
-      statistic = "Побед";
-    }
-
+    String statistic = statisticType.getFormattedName();
     for (int i = 0; i < 10; i++) {
       try {
         UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];

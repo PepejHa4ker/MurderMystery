@@ -21,8 +21,10 @@ package pl.plajer.murdermystery.events;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
+import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,10 +40,12 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.user.Rank;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
@@ -51,130 +55,94 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class ChatEvents implements Listener {
 
-  private Main plugin;
-  private String[] regexChars = new String[] {"$", "\\"};
-  private String rank;
+    private Main plugin;
+    private String[] regexChars = new String[]{"$", "\\"};
 
-  public ChatEvents(Main plugin) {
-    this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
-  }
 
-  @EventHandler
-  public void onChatIngame(AsyncPlayerChatEvent event) {
-    FileConfiguration ranks = ConfigUtils.getConfig(plugin, "ranks");
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    FileConfiguration filter = ConfigUtils.getConfig(plugin, "filter");
-    if (arena == null) {
-      return;
+
+    @Getter
+    private static List<UUID> sayed = new ArrayList<>();
+
+    public ChatEvents(Main plugin) {
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
-      event.setCancelled(true);
-      Iterator<Player> iterator = event.getRecipients().iterator();
-      List<Player> remove = new ArrayList<>();
-      while (iterator.hasNext()) {
-        Player player = iterator.next();
-        remove.add(player);
-      }
-      for (Player player : remove) {
-        event.getRecipients().remove(player);
-      }
-      remove.clear();
-      String message;
-      String eventMessage = event.getMessage();
-      boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
-      for (String regexChar : regexChars) {
-        if (eventMessage.contains(regexChar)) {
-          eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
+
+    @EventHandler
+    public void onChatIngame(AsyncPlayerChatEvent event) {
+
+        FileConfiguration ranks = ConfigUtils.getConfig(plugin, "ranks");
+        Arena arena = ArenaRegistry.getArena(event.getPlayer());
+        FileConfiguration filter = ConfigUtils.getConfig(plugin, "filter");
+        if (arena == null) {
+            return;
         }
-      }
-      User user = plugin.getUserManager().getUser(event.getPlayer());
-      int xp = user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE);
-      String novobranec = ranks.getString("ranks.Новобранец.name").replace('&', '§');
-      int xpNeededNovobranec = ranks.getInt("ranks.Новобранец.xp");
-      if(xp >= xpNeededNovobranec) {
-        rank = novobranec;
-      }
-      String meet = ranks.getString("ranks.Мясо.name").replace('&', '§');
-      int xpNeededMeet = ranks.getInt("ranks.Мясо.xp");
-      if(xp >= xpNeededMeet) {
-        rank = meet;
-      }
-      String harmless = ranks.getString("ranks.Безобидный.name").replace('&', '§');
-      int xpNeededHarmless = ranks.getInt("ranks.Безобидный.xp");
-      if(xp >= xpNeededHarmless) {
-          rank = harmless;
-      }
-      String expert = ranks.getString("ranks.Знаток.name").replace('&', '§');
-      int xpNeededExpert = ranks.getInt("ranks.Знаток.xp");
-      if(xp >= xpNeededExpert) {
-        rank = expert;
-      }
-      String progressor = ranks.getString("ranks.Прогрессор.name").replace('&', '§');
-      int xpNeededProgressor = ranks.getInt("ranks.Безобидный.xp");
-      if(xp >= xpNeededProgressor) {
-        rank = progressor;
-      }
-      String scarecrow = ranks.getString("ranks.Знаток.name").replace('&', '§');
-      int xpNeededScarecrow = ranks.getInt("ranks.Знаток.xp");
-      if(xp >= xpNeededScarecrow) {
-        rank = scarecrow;
-      }
-      String knight = ranks.getString("ranks.Воин.name").replace('&', '§');
-      int xpNeededKnight = ranks.getInt("ranks.Воин.xp");
-      if(xp >= xpNeededKnight) {
-        rank = knight;
-      }
-      String sinner = ranks.getString("ranks.Грешник.name").replace('&', '§');
-      int xpNeededSinner = ranks.getInt("ranks.Грешник.xp");
-      if(xp >= xpNeededSinner) {
-        rank = sinner;
-      }
-      String shadow = ranks.getString("ranks.Тень.name").replace('&', '§');
-      int xpNeededShadow = ranks.getInt("ranks.Тень.xp");
-      if(xp >= xpNeededShadow) {
-        rank = shadow;
-      }
-      String killer = ranks.getString("ranks.Убийца.name").replace('&', '§');
-      int xpNeededKiller = ranks.getInt("ranks.Убийца.xp");
-      if(xp >= xpNeededKiller) {
-        rank = killer;
-      }
-      message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
-      for (Player player : arena.getPlayers()) {
-        if (dead && arena.getPlayersLeft().contains(player)) {
-          continue;
-        }
-        String _message = event.getMessage();
-        String[] words = _message.split(" ");
-        List<String> wordList = filter.getStringList("words");
-        if (!player.getWorld().getName().equalsIgnoreCase("murder")) {
-          for (String word : words) {
-            if (wordList.contains(word)) {
-              player.sendMessage("§cЭто слово нельзя использовать сейчас.");;
-              return;
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
+            event.setCancelled(true);
+            Iterator<Player> iterator = event.getRecipients().iterator();
+            List<Player> remove = new ArrayList<>();
+            while (iterator.hasNext()) {
+                Player player = iterator.next();
+                remove.add(player);
             }
-          }
-        }
-        player.sendMessage(message);
-      }
-      Bukkit.getConsoleSender().sendMessage(message);
-    } else {
-      event.getRecipients().clear();
-      event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
-    }
-  }
+            for (Player player : remove) {
+                event.getRecipients().remove(player);
+            }
+            remove.clear();
+            String message;
+            String eventMessage = event.getMessage();
+            boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
+            for (String regexChar : regexChars) {
+                if (eventMessage.contains(regexChar)) {
+                    eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
+                }
+            }
+            User user = plugin.getUserManager().getUser(event.getPlayer());
+            user.loadRank();
 
-  private String formatChatPlaceholders(String message, User user, String saidMessage) {
-    String formatted = message;
-    formatted = ChatManager.colorRawMessage(formatted);
-    formatted = StringUtils.replace(formatted, "%rank%", rank);
-    formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
-    formatted = StringUtils.replace(formatted, "%message%", saidMessage);
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
+            message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
+            if((eventMessage.equalsIgnoreCase("gg") || eventMessage.equalsIgnoreCase("goodgame")) && arena.getArenaState() == ArenaState.ENDING) {
+                if(!sayed.contains(event.getPlayer().getUniqueId())) {
+                    int karma = Utils.getRandomNumber(10, 30);
+                    user.addStat(StatsStorage.StatisticType.KARMA, karma);
+                    event.getPlayer().sendMessage("§d+ " + karma + " к карме");
+                }
+                sayed.add(event.getPlayer().getUniqueId());
+            }
+            List<String> wordList = filter.getStringList("words");
+            if (!event.getPlayer().getWorld().getName().equalsIgnoreCase("murder")) {
+                for (String _word : wordList) {
+                    if (event.getMessage().replaceAll("[^A-Za-zА-Яа-я]", "").contains(_word)) {
+                        event.getPlayer().sendMessage("§cЭто слово нельзя использовать сейчас.");
+                        event.setCancelled(true);
+                        return;
+
+                    }
+                }
+                for (Player player : arena.getPlayers()) {
+                    if (dead && arena.getPlayersLeft().contains(player)) {
+                        continue;
+                    }
+                    player.sendMessage(message);
+                }
+            }
+            Bukkit.getConsoleSender().sendMessage(message);
+        } else {
+            event.getRecipients().clear();
+            event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
+        }
     }
-    return formatted;
-  }
+
+    private String formatChatPlaceholders(String message, User user, String saidMessage) {
+        String formatted = message;
+        formatted = ChatManager.colorRawMessage(formatted);
+        formatted = StringUtils.replace(formatted, "%rank%", user.getRank().getName());
+        formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
+        formatted = StringUtils.replace(formatted, "%message%", saidMessage);
+        if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
+        }
+        return formatted;
+    }
 
 }

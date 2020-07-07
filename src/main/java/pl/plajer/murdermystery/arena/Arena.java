@@ -21,20 +21,14 @@ package pl.plajer.murdermystery.arena;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.apache.commons.lang.StringUtils;
@@ -42,16 +36,13 @@ import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
+
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 
@@ -66,6 +57,7 @@ import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
 import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
+import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
@@ -95,7 +87,6 @@ public class Arena extends BukkitRunnable {
     private int spawnGoldTimer = 0;
     private int spawnGoldTime = 0;
 
-
     //contains murderer, detective, fake detective and hero
     private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
     //all arena values that are integers, contains constant and floating values
@@ -114,6 +105,7 @@ public class Arena extends BukkitRunnable {
     private String mapName = "";
     private boolean ready = true;
     private boolean forceStart = false;
+    private boolean canForceStart = true;
 
     public Arena(String id) {
         this.id = id;
@@ -150,47 +142,11 @@ public class Arena extends BukkitRunnable {
 
     @Override
     public void run() {
-        //idle task
         if (getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
             return;
         }
         Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
         long start = System.currentTimeMillis();
-        int potionChancheDetective = new Random().nextInt(3);
-        int potionChancheMurderer = new Random().nextInt(3);
-        int potionChancheInnocent = new Random().nextInt(3);
-        ItemStack potionSpeed = new ItemStack(Material.POTION, 1);
-        ItemStack jumpSpeed = new ItemStack(Material.POTION, 1);
-        ItemStack invisibleSpeed = new ItemStack(Material.POTION, 1);
-
-        PotionMeta speedMeta = (PotionMeta) potionSpeed.getItemMeta();
-        PotionMeta jumpMeta = (PotionMeta) jumpSpeed.getItemMeta();
-        PotionMeta invisMeta = (PotionMeta) invisibleSpeed.getItemMeta();
-
-        PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 300, 0);
-        PotionEffect jump = new PotionEffect(PotionEffectType.JUMP, 300, 1);
-        PotionEffect invis = new PotionEffect(PotionEffectType.INVISIBILITY, 300, 0);
-
-        speedMeta.addCustomEffect(speed, false);
-        speedMeta.setColor(Color.fromRGB(159, 166, 186));
-        speedMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-
-        jumpMeta.addCustomEffect(jump, false);
-        jumpMeta.setColor(Color.fromRGB(159, 166, 186));
-        jumpMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-
-        invisMeta.addCustomEffect(invis, false);
-        invisMeta.setColor(Color.fromRGB(159, 166, 186));
-        invisMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-
-        speedMeta.setDisplayName("§cВыпей чаю");
-        jumpMeta.setDisplayName("§cВыпей чаю");
-        invisMeta.setDisplayName("§cВыпей чаю");
-
-        potionSpeed.setItemMeta(speedMeta);
-        jumpSpeed.setItemMeta(jumpMeta);
-        invisibleSpeed.setItemMeta(invisMeta);
-
         switch (getArenaState()) {
             case WAITING_FOR_PLAYERS:
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -198,13 +154,21 @@ public class Arena extends BukkitRunnable {
                 }
                 if (getPlayers().size() < getMinimumPlayers()) {
                     if (getTimer() <= 0) {
-                        setTimer(15);
+                        setTimer(60);
                         ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
                         break;
                     }
                 } else {
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+                    }
+                    for(Player player
+                            : Bukkit.getOnlinePlayers()
+                            .stream()
+                            .filter(p -> !getPlayers()
+                                    .contains(p))
+                            .collect(Collectors.toSet())) {
+                        player.sendMessage("§6Арена " + getMapName()  + " §6скоро начнётся!");
                     }
                     ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
                     setArenaState(ArenaState.STARTING);
@@ -233,6 +197,7 @@ public class Arena extends BukkitRunnable {
                     }
                     ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
                     setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+                    canForceStart = true;
                     Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
                     setTimer(15);
                     for (Player player : getPlayers()) {
@@ -317,7 +282,7 @@ public class Arena extends BukkitRunnable {
 
                     Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
                             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-                    for (int i = 0; i < (maxmurderer); i++) {
+                    for (int i = 0; i < maxmurderer; i++) {
                         Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
                         setCharacter(CharacterType.MURDERER, murderer);
                         allMurderer.add(murderer);
@@ -328,8 +293,7 @@ public class Arena extends BukkitRunnable {
                         detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
                     }
 
-                    Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-                            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                    Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
                     for (int i = 0; i < (maxdetectives); i++) {
                         Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
                         setCharacter(CharacterType.DETECTIVE, detective);
@@ -338,22 +302,20 @@ public class Arena extends BukkitRunnable {
                         detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
                                 ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
                         playersToSet.remove(detective);
-                        if (ArenaEvents.potions.containsKey(detective)) {
-                            detective.getInventory().addItem(ArenaEvents.potions.get(detective));
-                        }
                         ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
                         ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+                        if(plugin.getUserManager().getUser(detective).getPotion() != null) {
+                            detective.getInventory().addItem(plugin.getUserManager().getUser(detective).getPotion());
+                        }
                     }
 
 
                     for (Player p : playersToSet) {
                         p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-//                            if (p.hasPermission("murder.vip")) {
-                        if(ArenaEvents.potions.containsKey(p)) {
-                            p.getInventory().addItem(ArenaEvents.potions.get(p));
-
+                        User u = plugin.getUserManager().getUser(p);
+                        if (u.getPotion() != null) {
+                            p.getInventory().addItem(u.getPotion());
                         }
-
                     }
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
@@ -375,19 +337,25 @@ public class Arena extends BukkitRunnable {
                 if (getTimer() <= 0) {
                     ArenaManager.stopGame(false, this);
                 }
-                if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
-                        && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
+                if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10) && getTimer() >= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
                     for (Player p : getPlayers()) {
                         p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword").replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
-                        p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                        p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                     }
                     if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
+                        for(Player p : getPlayers()) {
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_AMBIENT, 0.5f, 1f);
+                            p.sendMessage("§cМаньяк получил меч! Бегите, глупцы!");
+                            if(allMurderer.contains(p)) continue;
+                            p.sendTitle("§cМаньяк получил меч!", "", 10, 30, 5);
+                        }
                         for (Player p : allMurderer) {
                             User murderer = plugin.getUserManager().getUser(p);
                             if (murderer.isSpectator()) continue;
                             ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
-                            if (ArenaEvents.potions.containsKey(p)) {
-                                p.getInventory().addItem(ArenaEvents.potions.get(p));
+                            User u = plugin.getUserManager().getUser(p);
+                            if (u.getPotion() != null) {
+                                p.getInventory().addItem(u.getPotion());
                             }
                             p.getInventory().setHeldItemSlot(0);
                         }
@@ -397,7 +365,7 @@ public class Arena extends BukkitRunnable {
                 //every 30 secs survive reward
                 if (getTimer() % 30 == 0) {
                     for (Player p : getPlayersLeft()) {
-                        if (Role.isRole(Role.INNOCENT, p)) {
+                        if (Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p) && !plugin.getUserManager().getUser(p).isSpectator()) {
                             ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
                         }
                     }
@@ -407,7 +375,7 @@ public class Arena extends BukkitRunnable {
                     String title = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
                     String subtitle = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
                     for (Player p : getPlayers()) {
-                        p.sendTitle(title, subtitle, 5, 40, 5);
+                        p.sendTitle(title, subtitle, 5, 60, 5);
                     }
                 }
 
@@ -492,13 +460,13 @@ public class Arena extends BukkitRunnable {
 
                     for (User user : plugin.getUserManager().getUsers(this)) {
                         user.setSpectator(false);
-
+                        user.getPlayer().setCollidable(true);
+                        user.getShots().put("blaze_rod", 0);
                         for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
                             if (!statistic.isPersistent()) {
                                 user.setStat(statistic, 0);
-                            } else {
-                                plugin.getUserManager().saveStatistic(user, statistic);
                             }
+                                plugin.getUserManager().saveStatistic(user, statistic);
                         }
                     }
                     plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
@@ -515,9 +483,9 @@ public class Arena extends BukkitRunnable {
                 setTimer(getTimer() - 1);
                 break;
             case RESTARTING:
+                ChatEvents.getSayed().removeIf(id -> ChatEvents.getSayed().contains(id));
+                canForceStart = true;
                 getPlayers().clear();
-                ArenaEvents events = new ArenaEvents(plugin);
-                events.potions.clear();
                 setArenaState(ArenaState.WAITING_FOR_PLAYERS);
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
@@ -736,7 +704,7 @@ public class Arena extends BukkitRunnable {
         player.setWalkSpeed(0.2f);
         Location location = getLobbyLocation();
         if (location == null) {
-            System.out.print("LobbyLocation isn't intialized for arena " + getId());
+            System.out.print("Lobby Location isn't intialized for arena " + getId());
         }
         player.teleport(location);
     }
@@ -865,6 +833,9 @@ public class Arena extends BukkitRunnable {
                     holo.appendTextLine(str);
                 }
                 break;
+            case MAGIC_ANVIL:
+                holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 1.5, 0)));
+                holo.appendTextLine("§eМистическая кузня");
             case HORSE_PURCHASE:
             case RAPID_TELEPORTATION:
                 //not yet implemented
@@ -1003,7 +974,6 @@ public class Arena extends BukkitRunnable {
         allMurderer.remove(player);
     }
 
-
     public boolean lastAliveMurderer() {
         return aliveMurderer() == 1;
     }
@@ -1042,6 +1012,15 @@ public class Arena extends BukkitRunnable {
     public void addOptionValue(ArenaOption option, int value) {
         arenaOptions.put(option, arenaOptions.get(option) + value);
     }
+
+    public boolean isCanForceStart() {
+        return canForceStart;
+    }
+
+    public void setCanForceStart(boolean canForceStart) {
+        this.canForceStart = canForceStart;
+    }
+
 
     public enum BarAction {
         ADD, REMOVE

@@ -9,6 +9,7 @@ import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,16 +25,19 @@ public class AddBlackListWordsArgument {
             @Override
             public void execute(CommandSender sender, String[] args) {
                 List<String> wordsList = config.getStringList("words");
-                if(args.length < 2) {
+                if (args.length < 2) {
                     sender.sendMessage("§cНедостаточно аргументов. Укажите слова");
                     return;
                 }
-                wordsList.addAll(Arrays.asList(args));
+                List<String> toAdd =  Arrays.asList(args);
+                toAdd.remove(0);
+                wordsList.addAll(toAdd);
                 config.set("words", wordsList);
                 sender.sendMessage("§cУспешно");
                 ConfigUtils.saveConfig(registry.getPlugin(), config, "filter");
             }
         });
+
     }
 }
 

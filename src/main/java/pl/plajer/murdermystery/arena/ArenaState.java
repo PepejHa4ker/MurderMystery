@@ -24,9 +24,7 @@ package pl.plajer.murdermystery.arena;
  * Contains all GameStates.
  */
 public enum ArenaState {
-  WAITING_FOR_PLAYERS("§6§lОжидание"), STARTING("§2§lНачало"), IN_GAME("§4§lИдёт-игра"), ENDING("§c§lЗавершение"), RESTARTING("§a§lПерезаапуск");
-//  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Finishing"), RESTARTING("Restarting"); olв
-
+  WAITING_FOR_PLAYERS("Ожидание"), STARTING("Начало"), IN_GAME("Идёт-игра"), ENDING("Завершение"), RESTARTING("Перезапуск");
   String formattedName;
 
   ArenaState(String formattedName) {

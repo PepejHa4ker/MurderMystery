@@ -50,11 +50,9 @@ public class SpecialItem {
   }
 
   public static void loadAll() {
-    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {
-      ChatColor.GRAY + "Нажмите для телепортации в лобби"
-    }, XMaterial.WHITE_BED.parseMaterial(), 8);
-    new SpecialItem("Menu").load(ChatColor.GREEN + "Меню игры", new String[] {
-            ChatColor.GRAY + "Меню игры"}, XMaterial.CHEST.parseMaterial(), 4);
+    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {ChatColor.GRAY + "Нажмите для телепортации в лобби"}, XMaterial.WHITE_BED.parseMaterial(), 8);
+    new SpecialItem("Start").load(ChatColor.GREEN + "Начать игру", new String[] {ChatColor.GRAY + "Нажмите для начала игры\n(требуется {player} для начала игры)"}, XMaterial.DIAMOND.parseMaterial(), 4);
+    new SpecialItem("Menu").load(ChatColor.GOLD + "Меню", new String[]{ChatColor.GRAY + "Нажмите для открытия!"}, XMaterial.CHEST.parseMaterial(), 0);
   }
 
   public void load(String displayName, String[] lore, Material material, int slot) {

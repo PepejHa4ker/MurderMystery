@@ -20,7 +20,9 @@ package pl.plajer.murdermystery.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -32,25 +34,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import org.bukkit.util.Vector;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 /**
  * @author Plajer
  * <p>
  * Created at 06.10.2018
  */
+@UtilityClass
 public class Utils {
 
   private static Main plugin;
 
-  private Utils() {
-  }
-
-  public static void init(Main plugin) {
+  public void init(Main plugin) {
     Utils.plugin = plugin;
   }
 
@@ -63,7 +67,7 @@ public class Utils {
    * @param i integer to serialize
    * @return serialized number
    */
-  public static int serializeInt(Integer i) {
+  public int serializeInt(Integer i) {
     if ((i % 9) == 0) {
       return i;
     } else {
@@ -77,14 +81,14 @@ public class Utils {
    * @param stack item stack to check
    * @return true if named, false otherwise
    */
-  public static boolean isNamed(ItemStack stack) {
+  public boolean isNamed(ItemStack stack) {
     if (stack == null) {
       return false;
     }
     return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
   }
 
-  public static void applyActionBarCooldown(Player p, int seconds) {
+  public void applyActionBarCooldown(Player p, int seconds) {
     new BukkitRunnable() {
       int ticks = 0;
 
@@ -104,7 +108,7 @@ public class Utils {
     }.runTaskTimer(plugin, 0, 10);
   }
 
-  public static List<Block> getNearbyBlocks(Location location, int radius) {
+  public List<Block> getNearbyBlocks(Location location, int radius) {
     List<Block> blocks = new ArrayList<>();
     for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
       for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
@@ -116,11 +120,11 @@ public class Utils {
     return blocks;
   }
 
-  public static Location getBlockCenter(Location location) {
+  public Location getBlockCenter(Location location) {
     return location.add(0.5, 0, 0.5);
   }
 
-  public static boolean checkIsInGameInstance(Player player) {
+  public boolean checkIsInGameInstance(Player player) {
     if (ArenaRegistry.getArena(player) == null) {
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Not-Playing", player));
       return false;
@@ -128,12 +132,36 @@ public class Utils {
     return true;
   }
 
-  public static boolean hasPermission(CommandSender sender, String perm) {
+  public boolean hasPermission(CommandSender sender, String perm) {
     if (sender.hasPermission(perm)) {
       return true;
     }
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Permission"));
     return false;
   }
+
+  public int getRandomNumber(int lowerBound, int upperBound) {
+    return new Random().nextInt(upperBound - lowerBound) + lowerBound;
+  }
+
+  public Vector rotateAroundAxisX(Vector v, double angle) {
+    angle = Math.toRadians(angle);
+    double cos = cos(angle);
+    double sin = sin(angle);
+    double y = v.getY() * cos - v.getZ() * sin;
+    double z = v.getY() * sin + v.getZ() * cos;
+    return v.setY(y).setZ(z);
+  }
+
+  public Vector rotateAroundAxisY(Vector v, double angle) {
+    angle = -angle;
+    angle = Math.toRadians(angle);
+    double cos = cos(angle);
+    double sin = sin(angle);
+    double x = v.getX() * cos + v.getZ() * sin;
+    double z = v.getX() * -sin + v.getZ() * cos;
+    return v.setX(x).setZ(z);
+  }
+
 
 }

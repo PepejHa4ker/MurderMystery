@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.handlers.setup.components;
+package pl.plajer.murdermystery.handlers.gui.setup.components;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
@@ -34,7 +34,7 @@ import org.bukkit.event.inventory.ClickType;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
@@ -44,7 +44,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  * <p>
  * Created at 25.05.2019
  */
-public class SpawnComponents implements SetupComponent {
+public class SpawnComponents implements ArenaSetupGuiComponent {
 
   private SetupInventory setupInventory;
 

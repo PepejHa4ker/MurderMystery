@@ -18,7 +18,7 @@
 
 package pl.plajer.murdermystery.events;
 
-import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,11 +27,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.DonatType;
 import pl.plajer.murdermystery.utils.UpdateChecker;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
@@ -43,67 +45,74 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  */
 public class JoinEvent implements Listener {
 
-  private Main plugin;
+    private Main plugin;
 
-  public JoinEvent(Main plugin) {
-    this.plugin = plugin;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
-  }
+    public JoinEvent(Main plugin) {
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 
-  @EventHandler
-  public void onLogin(PlayerLoginEvent e) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
-      || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
-      return;
-    }
-    if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
-      e.setResult(PlayerLoginEvent.Result.ALLOWED);
-    }
-  }
+    @EventHandler
+    public void onSneak(PlayerToggleSneakEvent e) {
 
-  @EventHandler
-  public void onJoin(PlayerJoinEvent event) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
-      return;
     }
-    for (Player player : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(player) == null) {
-        continue;
-      }
-      player.hidePlayer(event.getPlayer());
-      event.getPlayer().hidePlayer(player);
-    }
-    User user = plugin.getUserManager().getUser(event.getPlayer());
-    plugin.getUserManager().loadStatistics(user);
-    //load player inventory in case of server crash, file is deleted once loaded so if file was already
-    //deleted player won't receive his backup, in case of crash he will get it back
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      InventorySerializer.loadInventory(plugin, event.getPlayer());
-    }
-  }
 
-  @EventHandler
-  public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("murdermystery.updatenotify")) {
-      return;
+    @EventHandler
+    public void onLogin(PlayerLoginEvent e) {
+        if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
+                || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
+            return;
+        }
+        if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
+            e.setResult(PlayerLoginEvent.Result.ALLOWED);
+        }
     }
-    //we want to be the first :)
-    Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
-      if (!result.requiresUpdate()) {
-        return;
-      }
-      if (result.getNewestVersion().contains("b")) {
-        event.getPlayer().sendMessage("");
-        event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
-        event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
-        event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-      } else {
-        event.getPlayer().sendMessage("");
-        event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
-        event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
-        event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-      }
-    }), 25);
-  }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        User user = plugin.getUserManager().getUser(event.getPlayer());
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+            ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
+            return;
+        }
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            if (ArenaRegistry.getArena(player) == null) {
+                continue;
+            }
+            player.hidePlayer(event.getPlayer());
+            event.getPlayer().hidePlayer(player);
+        }
+
+        plugin.getUserManager().loadStatistics(user);
+        //load player inventory in case of server crash, file is deleted once loaded so if file was already
+        //deleted player won't receive his backup, in case of crash he will get it back
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+            InventorySerializer.loadInventory(plugin, event.getPlayer());
+        }
+    }
+
+
+    @EventHandler
+    public void onJoinCheckVersion(final PlayerJoinEvent event) {
+        if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("murdermystery.updatenotify")) {
+            return;
+        }
+        //we want to be the first :)
+        Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
+            if (!result.requiresUpdate()) {
+                return;
+            }
+            if (result.getNewestVersion().contains("b")) {
+                event.getPlayer().sendMessage("");
+                event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
+                event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+            } else {
+                event.getPlayer().sendMessage("");
+                event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
+                event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+            }
+        }), 25);
+    }
 }

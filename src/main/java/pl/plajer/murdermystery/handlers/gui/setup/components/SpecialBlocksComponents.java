@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.handlers.setup.components;
+package pl.plajer.murdermystery.handlers.gui.setup.components;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
@@ -33,7 +33,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -45,7 +45,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  * <p>
  * Created at 25.05.2019
  */
-public class SpecialBlocksComponents implements SetupComponent {
+public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
 
   private SetupInventory setupInventory;
 
@@ -117,6 +117,26 @@ public class SpecialBlocksComponents implements SetupComponent {
       player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aНе забудьте поместить любой рычаг в радиусе 3 рядом с чародейным столом!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 3);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ANVIL.parseItem())
+            .name(ChatManager.colorRawMessage("&e&lДобавить волшебную кузницу"))
+            .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
+      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.ANVIL.parseMaterial()) {
+        e.getWhoClicked().sendMessage(ChatColor.RED + "Пожалуйста нацельтесь на наковальню для продолжения!");
+        return;
+      }
+
+
+      arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
+              SpecialBlock.SpecialBlockType.MAGIC_ANVIL));
+      List<String> anvils = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".magicanvils"));
+      anvils.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
+      config.set("instances." + arena.getId() + ".magicanvils", anvils);
+      player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен специальный блок кузницы!"));
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+    }), 3, 3);
   }
 
 }

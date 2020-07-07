@@ -36,7 +36,7 @@ import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 

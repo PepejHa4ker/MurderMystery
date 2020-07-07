@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.utils.services.locale;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +28,10 @@ import java.util.List;
  *
  * @since 1.2.0
  */
+@UtilityClass
 public class LocaleRegistry {
 
-  private static List<Locale> registeredLocales = new ArrayList<>();
+  private List<Locale> registeredLocales = new ArrayList<>();
 
   /**
    * Register new locale into registry
@@ -36,7 +39,7 @@ public class LocaleRegistry {
    * @param locale locale to register
    * @throws IllegalArgumentException if same locale is registered twice
    */
-  public static void registerLocale(Locale locale) {
+  public void registerLocale(Locale locale) {
     if (registeredLocales.contains(locale)) {
       throw new IllegalArgumentException("Cannot register same locale twice!");
     }
@@ -48,7 +51,7 @@ public class LocaleRegistry {
    *
    * @return all registered locales
    */
-  public static List<Locale> getRegisteredLocales() {
+  public List<Locale> getRegisteredLocales() {
     return registeredLocales;
   }
 
@@ -59,7 +62,7 @@ public class LocaleRegistry {
    * @return locale by name or locale "Undefined" when not found (null is not returned)
    * @since 1.2.2
    */
-  public static Locale getByName(String name) {
+  public Locale getByName(String name) {
     for (Locale locale : registeredLocales) {
       if (locale.getName().equals(name)) {
         return locale;
