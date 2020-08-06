@@ -18,15 +18,9 @@
 
 package pl.plajer.murdermystery.events;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
+import io.netty.util.internal.ConcurrentSet;
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,7 +28,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -43,25 +36,27 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.user.Rank;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author Plajer
  * <p>
  * Created at 03.08.2018
  */
+@SuppressWarnings("ALL")
 public class ChatEvents implements Listener {
 
     private Main plugin;
     private String[] regexChars = new String[]{"$", "\\"};
 
 
-
     @Getter
-    private static List<UUID> sayed = new ArrayList<>();
+    private static Set<UUID> said = new ConcurrentSet<>();
 
     public ChatEvents(Main plugin) {
         this.plugin = plugin;
@@ -69,13 +64,20 @@ public class ChatEvents implements Listener {
     }
 
     @EventHandler
-    public void onChatIngame(AsyncPlayerChatEvent event) {
-
-        FileConfiguration ranks = ConfigUtils.getConfig(plugin, "ranks");
+    public synchronized void onChatIngame(AsyncPlayerChatEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         FileConfiguration filter = ConfigUtils.getConfig(plugin, "filter");
         if (arena == null) {
             return;
+        }
+        User user = plugin.getUserManager().getUser(event.getPlayer());
+        if (event.getMessage().equalsIgnoreCase("gg") && arena.getArenaState() == ArenaState.ENDING) {
+            if (!said.contains(event.getPlayer().getUniqueId())) {
+                int karma = Utils.getRandomNumber(10, 30);
+                getSaid().add(event.getPlayer().getUniqueId());
+                user.addStat(StatsStorage.StatisticType.KARMA, karma);
+                event.getPlayer().sendMessage("§d+ " + karma + " к карме");
+            }
         }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
             event.setCancelled(true);
@@ -97,19 +99,11 @@ public class ChatEvents implements Listener {
                     eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
                 }
             }
-            User user = plugin.getUserManager().getUser(event.getPlayer());
             user.loadRank();
 
             message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
-            if((eventMessage.equalsIgnoreCase("gg") || eventMessage.equalsIgnoreCase("goodgame")) && arena.getArenaState() == ArenaState.ENDING) {
-                if(!sayed.contains(event.getPlayer().getUniqueId())) {
-                    int karma = Utils.getRandomNumber(10, 30);
-                    user.addStat(StatsStorage.StatisticType.KARMA, karma);
-                    event.getPlayer().sendMessage("§d+ " + karma + " к карме");
-                }
-                sayed.add(event.getPlayer().getUniqueId());
-            }
             List<String> wordList = filter.getStringList("words");
+
             if (!event.getPlayer().getWorld().getName().equalsIgnoreCase("murder")) {
                 for (String _word : wordList) {
                     if (event.getMessage().replaceAll("[^A-Za-zА-Яа-я]", "").contains(_word)) {

@@ -18,16 +18,9 @@
 
 package pl.plajer.murdermystery.events;
 
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,8 +32,6 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -51,14 +42,14 @@ import pl.plajer.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import pl.plajer.murdermystery.arena.*;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.gui.PerkGui;
 import pl.plajer.murdermystery.handlers.gui.PotionGui;
 import pl.plajer.murdermystery.handlers.gui.StartGui;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajer.murdermystery.utils.message.type.TitleMessage;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.dimensional.Cuboid;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 
 
 /**
@@ -154,7 +145,7 @@ public class Events implements Listener {
                 .add(standStart)
                 .add(Utils.rotateAroundAxisY(
                         Utils.rotateAroundAxisX(
-                                new Vector(0.0D,
+                            new Vector(0.0D,
                                         0.0D,
                                         1.0D),
                                 loc.getPitch()),
@@ -186,6 +177,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        new TitleMessage("§cДобро пожаловать!", 10, 40, 10).send(e.getPlayer());
         plugin.getUserManager().getUser(e.getPlayer()).loadRank();
     }
 
@@ -200,6 +192,7 @@ public class Events implements Listener {
         player.teleport(arena.getPlayerSpawnPoints().get(0));
         for(Player p : arena.getPlayers()) {
             p.playSound(p.getLocation(), Sound.ENTITY_WITCH_HURT, 1f, 1f);
+            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_DEATH, 1f, 1f);
         }
     }
 
@@ -324,12 +317,36 @@ public class Events implements Listener {
         if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Start")) {
             e.setCancelled(true);
             if (arena.getArenaState() == ArenaState.STARTING) {
-                new StartGui(e.getPlayer()).openInventory();
+                new StartGui(e.getPlayer()).show(e.getPlayer());
             } else e.getPlayer().sendMessage("§6Арена должна начаться, чтобы её ускорить");
 
         }
     }
 
+    @EventHandler
+    public void onPerk(PlayerInteractEvent e) {
+        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+            return;
+        }
+        Arena arena = ArenaRegistry.getArena(e.getPlayer());
+        ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
+        if (arena == null || !Utils.isNamed(itemStack)) {
+            return;
+        }
+        String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
+        if (key == null) {
+            return;
+        }
+        if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Perks")) {
+            e.setCancelled(true);
+            Player p = e.getPlayer();
+            if (arena.getArenaState() != ArenaState.STARTING && arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+                p.sendMessage("§6Опоздал :(");
+                return;
+            }
+            new PerkGui().show(p);
+        }
+    }
 
     @EventHandler
     public void onMenu(PlayerInteractEvent e) {
@@ -352,7 +369,7 @@ public class Events implements Listener {
                 p.sendMessage("§6Опоздал :(");
                 return;
             }
-            new PotionGui(p).openInventory();
+            new PotionGui(p).show(p);
         }
     }
 

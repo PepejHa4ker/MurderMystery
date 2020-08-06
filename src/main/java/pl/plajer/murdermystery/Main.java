@@ -20,14 +20,8 @@ package pl.plajer.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-
+import lombok.Getter;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
-
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +29,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
@@ -45,19 +38,10 @@ import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
-import pl.plajer.murdermystery.events.ChatEvents;
-import pl.plajer.murdermystery.events.Events;
-import pl.plajer.murdermystery.events.JoinEvent;
-import pl.plajer.murdermystery.events.LobbyEvent;
-import pl.plajer.murdermystery.events.QuitEvent;
+import pl.plajer.murdermystery.events.*;
 import pl.plajer.murdermystery.events.spectator.SpectatorEvents;
 import pl.plajer.murdermystery.events.spectator.SpectatorItemEvents;
-import pl.plajer.murdermystery.handlers.BowTrailsHandler;
-import pl.plajer.murdermystery.handlers.BungeeManager;
-import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.CorpseHandler;
-import pl.plajer.murdermystery.handlers.PermissionsManager;
-import pl.plajer.murdermystery.handlers.PlaceholderManager;
+import pl.plajer.murdermystery.handlers.*;
 import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.party.PartyHandler;
@@ -65,19 +49,21 @@ import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
+import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.user.RankManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
-import pl.plajer.murdermystery.utils.Debugger;
-import pl.plajer.murdermystery.utils.ExceptionLogHandler;
-import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajer.murdermystery.utils.UpdateChecker;
-import pl.plajer.murdermystery.utils.Utils;
+import pl.plajer.murdermystery.utils.*;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -85,27 +71,29 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  * Created at 03.08.2018
  */
 public class Main extends JavaPlugin {
-
+    @Getter private static Main instance;
     private ExceptionLogHandler exceptionLogHandler;
     private String version;
     private boolean forceDisable = false;
-    private BungeeManager bungeeManager;
-    private RewardsFactory rewardsHandler;
-    private MysqlDatabase database;
-    private SignManager signManager;
-    private CorpseHandler corpseHandler;
-    private PartyHandler partyHandler;
-    private ConfigPreferences configPreferences;
-    private HookManager hookManager;
-    private UserManager userManager;
-    private Economy econ;
+    @Getter private BungeeManager bungeeManager;
+    @Getter private RewardsFactory rewardsHandler;
+    @Getter private MysqlDatabase database;
+    @Getter private SignManager signManager;
+    @Getter private CorpseHandler corpseHandler;
+    @Getter private PartyHandler partyHandler;
+    @Getter private ConfigPreferences configPreferences;
+    @Getter private HookManager hookManager;
+    @Getter private UserManager userManager;
+    @Getter private Economy economy;
 
 
     @Override
     public void onEnable() {
+        instance = this;
         if (!validateIfPluginShouldStart()) {
             return;
         }
+        Perk.init();
         setupEconomy();
         RankManager.setupRanks();
         ServiceRegistry.registerService(this);
@@ -169,6 +157,8 @@ public class Main extends JavaPlugin {
         return true;
     }
 
+
+
     @Override
     public void onDisable() {
         if (forceDisable) {
@@ -186,7 +176,7 @@ public class Main extends JavaPlugin {
             }
         }
         if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-            getMysqlDatabase().shutdownConnPool();
+            this.getDatabase().shutdownConnPool();
         }
 
         for (Arena arena : ArenaRegistry.getArenas()) {
@@ -304,42 +294,6 @@ public class Main extends JavaPlugin {
         return version.equalsIgnoreCase("v1_15_R1");
     }
 
-    public RewardsFactory getRewardsHandler() {
-        return rewardsHandler;
-    }
-
-    public BungeeManager getBungeeManager() {
-        return bungeeManager;
-    }
-
-    public PartyHandler getPartyHandler() {
-        return partyHandler;
-    }
-
-    public ConfigPreferences getConfigPreferences() {
-        return configPreferences;
-    }
-
-    public MysqlDatabase getMysqlDatabase() {
-        return database;
-    }
-
-    public SignManager getSignManager() {
-        return signManager;
-    }
-
-    public CorpseHandler getCorpseHandler() {
-        return corpseHandler;
-    }
-
-    public HookManager getHookManager() {
-        return hookManager;
-    }
-
-    public UserManager getUserManager() {
-        return userManager;
-    }
-
     private void saveAllUserStatistics() {
         for (Player player : getServer().getOnlinePlayers()) {
             User user = userManager.getUser(player);
@@ -362,13 +316,6 @@ public class Main extends JavaPlugin {
         if(getServer().getPluginManager().getPlugin("Vault") == null) {
             return;
         }
-        econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+        economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
     }
-
-
-    public Economy getEconomy() {
-        return econ;
-    }
-
-
 }

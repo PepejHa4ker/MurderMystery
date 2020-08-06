@@ -18,25 +18,24 @@
 
 package pl.plajer.murdermystery.user;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import lombok.Getter;
 import lombok.Setter;
-import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.utils.DonatType;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -50,6 +49,9 @@ public class User {
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   @Getter
   private Player player;
+
+  @Getter
+  private List<Perk> perks = new ArrayList<>();
 
   @Getter
   @Setter
@@ -66,7 +68,8 @@ public class User {
   private Rank rank;
 
   @Getter
-  private HashMap<String, Integer> shots = new HashMap<>();
+  @Setter
+  private Integer shots = 0;
 
   @Getter
   @Setter

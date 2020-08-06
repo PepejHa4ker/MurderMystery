@@ -93,7 +93,7 @@ public class LeaderboardArgument {
       } catch (NullPointerException ex) {
         UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
         if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-          try (Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
+          try (Connection connection = registry.getPlugin().getDatabase().getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
             if (set.next()) {

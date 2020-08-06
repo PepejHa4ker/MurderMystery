@@ -122,4 +122,9 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
     }), 2, 0);
   }
 
+  @Override
+  public void show(Player player) {
+
+  }
+
 }

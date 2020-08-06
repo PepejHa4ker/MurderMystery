@@ -20,15 +20,9 @@ package pl.plajer.murdermystery.handlers.gui.setup.components;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
@@ -39,6 +33,10 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -137,6 +135,11 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен специальный блок кузницы!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 3, 3);
+  }
+
+  @Override
+  public void show(Player player) {
+
   }
 
 }

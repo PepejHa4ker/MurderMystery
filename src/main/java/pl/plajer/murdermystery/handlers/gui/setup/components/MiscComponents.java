@@ -205,4 +205,9 @@ public class MiscComponents implements ArenaSetupGuiComponent {
     }), 8, 1);
   }
 
+  @Override
+  public void show(Player player) {
+
+  }
+
 }

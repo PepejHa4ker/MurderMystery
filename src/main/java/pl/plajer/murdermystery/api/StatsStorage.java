@@ -74,7 +74,7 @@ public class StatsStorage {
     @Contract("null -> fail")
     public static Map getStats(StatisticType stat) {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-            try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
+            try (Connection connection = plugin.getDatabase().getConnection()) {
                 Statement statement = connection.createStatement();
                 ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName());
                 Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();

@@ -30,6 +30,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.murdermystery.Main;
@@ -156,6 +157,11 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       }
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 8, 0);
+  }
+
+  @Override
+  public void show(Player player) {
+
   }
 
 }

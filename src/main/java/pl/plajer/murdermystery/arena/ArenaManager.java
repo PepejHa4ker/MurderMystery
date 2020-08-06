@@ -18,58 +18,55 @@
 
   package pl.plajer.murdermystery.arena;
 
-  import java.util.ArrayList;
-  import java.util.List;
-  import java.util.Objects;
-  import java.util.Random;
-  import java.util.logging.Level;
-
   import me.clip.placeholderapi.PlaceholderAPI;
-  import net.md_5.bungee.api.chat.ClickEvent;
-  import net.md_5.bungee.api.chat.ComponentBuilder;
-  import net.md_5.bungee.api.chat.HoverEvent;
-  import net.md_5.bungee.api.chat.TextComponent;
-  import org.apache.commons.lang.StringUtils;
-  import org.bukkit.Bukkit;
-  import org.bukkit.ChatColor;
-  import org.bukkit.GameMode;
-  import org.bukkit.Material;
-  import org.bukkit.attribute.Attribute;
-  import org.bukkit.configuration.file.FileConfiguration;
-  import org.bukkit.entity.Player;
-  import org.bukkit.inventory.ItemStack;
-  import org.bukkit.inventory.meta.ItemMeta;
-  import org.bukkit.plugin.java.JavaPlugin;
-  import org.bukkit.potion.PotionEffect;
-  import org.bukkit.potion.PotionEffectType;
-  import org.bukkit.scheduler.BukkitRunnable;
-
-  import pl.plajer.murdermystery.ConfigPreferences;
-  import pl.plajer.murdermystery.Main;
-  import pl.plajer.murdermystery.api.StatsStorage;
-  import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
-  import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
-  import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
-  import pl.plajer.murdermystery.arena.role.Role;
-  import pl.plajer.murdermystery.events.ChatEvents;
-  import pl.plajer.murdermystery.events.Events;
-  import pl.plajer.murdermystery.handlers.ChatManager;
-  import pl.plajer.murdermystery.handlers.PermissionsManager;
-  import pl.plajer.murdermystery.handlers.items.SpecialItem;
-  import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-  import pl.plajer.murdermystery.handlers.language.LanguageManager;
-  import pl.plajer.murdermystery.handlers.party.GameParty;
-  import pl.plajer.murdermystery.handlers.rewards.Reward;
-  import pl.plajer.murdermystery.user.User;
-  import pl.plajer.murdermystery.utils.Debugger;
-  import pl.plajer.murdermystery.utils.DonatType;
-  import pl.plajer.murdermystery.utils.DonaterUtils;
-  import pl.plajer.murdermystery.utils.ItemPosition;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajer.murdermystery.ConfigPreferences;
+import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
+import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
+import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
+import pl.plajer.murdermystery.arena.role.Role;
+import pl.plajer.murdermystery.events.ChatEvents;
+import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.PermissionsManager;
+import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.party.GameParty;
+import pl.plajer.murdermystery.handlers.rewards.Reward;
+import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Debugger;
+import pl.plajer.murdermystery.utils.DonatType;
+import pl.plajer.murdermystery.utils.DonaterUtils;
+import pl.plajer.murdermystery.utils.ItemPosition;
+  import pl.plajer.murdermystery.utils.message.type.TitleMessage;
   import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-  import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-  import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-  import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-  import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.logging.Level;
 
   /**
    * @author Plajer
@@ -191,6 +188,7 @@
           } else {
               user.setType(DonatType.DEF);
           }
+          new TitleMessage("§cДобро пожаловать на §6" + arena.getMapName(), 10, 30, 10).send(player);
 
 
           arena.addPlayer(player);
@@ -245,6 +243,7 @@
           }
           if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
               player.getInventory().setItem(Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getSlot(), Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getItemStack());
+              player.getInventory().setItem(Objects.requireNonNull(SpecialItemManager.getSpecialItem("Perks")).getSlot(), Objects.requireNonNull(SpecialItemManager.getSpecialItem("Perks")).getItemStack());
               FileConfiguration donat = ConfigUtils.getConfig(plugin, "donaters");
               if (player.hasPermission(donat.getString("Can-Forcestart-Game-Permission"))) {
                   ItemStack toAdd = SpecialItemManager.getSpecialItem("Start").getItemStack();
@@ -283,8 +282,8 @@
           MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
           Bukkit.getPluginManager().callEvent(event);
           User user = plugin.getUserManager().getUser(player);
-          user.getShots().put("blaze_row", 0);
-          ChatEvents.getSayed().removeIf(id -> ChatEvents.getSayed().contains(id));
+          user.setShots(0);
+          ChatEvents.getSaid().removeIf(id -> ChatEvents.getSaid().contains(id));
           //todo change later
           int murderDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
                   .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
@@ -299,6 +298,7 @@
               user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
           }
 
+          user.getPerks().clear();
           arena.getScoreboardManager().removeScoreboard(user);
           //-1 cause we didn't remove player yet
           if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {

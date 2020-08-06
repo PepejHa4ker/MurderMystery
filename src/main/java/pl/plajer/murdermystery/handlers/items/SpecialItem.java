@@ -18,21 +18,20 @@
 
 package pl.plajer.murdermystery.handlers.items;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -53,6 +52,7 @@ public class SpecialItem {
     new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {ChatColor.GRAY + "Нажмите для телепортации в лобби"}, XMaterial.WHITE_BED.parseMaterial(), 8);
     new SpecialItem("Start").load(ChatColor.GREEN + "Начать игру", new String[] {ChatColor.GRAY + "Нажмите для начала игры\n(требуется {player} для начала игры)"}, XMaterial.DIAMOND.parseMaterial(), 4);
     new SpecialItem("Menu").load(ChatColor.GOLD + "Меню", new String[]{ChatColor.GRAY + "Нажмите для открытия!"}, XMaterial.CHEST.parseMaterial(), 0);
+    new SpecialItem("Perks").load(ChatColor.DARK_PURPLE + "Способности", new String[]{ChatColor.GRAY + "Нажмите для открытия!"}, XMaterial.ENDER_EYE.parseMaterial(), 1);
   }
 
   public void load(String displayName, String[] lore, Material material, int slot) {

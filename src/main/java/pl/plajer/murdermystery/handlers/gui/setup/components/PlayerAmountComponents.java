@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -159,6 +160,11 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 4, 1);
+  }
+
+  @Override
+  public void show(Player player) {
+
   }
 
 }
