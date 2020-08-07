@@ -23,7 +23,7 @@ public class UdavkaNahuyPerk extends Perk {
     protected UdavkaNahuyPerk() {
         super(
                 2,
-                "Заключённый",
+                "§8Заключённый",
                 600.0,
                 item,
                 null,
@@ -34,7 +34,7 @@ public class UdavkaNahuyPerk extends Perk {
     }
 
     @Override
-    public void get(Player player, Player target, Arena arena) {
+    public void handle(Player player, Player target, Arena arena) {
         this.getEffects().forEach(target::addPotionEffect);
         ItemPosition.setItem(player, ItemPosition.UDAVKA, null);
 

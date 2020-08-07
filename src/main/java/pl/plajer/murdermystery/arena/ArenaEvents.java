@@ -55,6 +55,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.Confirmation;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
+import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
@@ -271,7 +272,7 @@ public class ArenaEvents implements Listener {
         user.getPerks()
                 .stream()
                 .filter(perk -> perk.getId() == 1)
-                .forEach(perk -> perk.get(user.getPlayer(), null, arena));
+                .forEach(perk -> perk.handle(user.getPlayer(), null, arena));
         ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
         user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
         ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
@@ -315,12 +316,10 @@ public class ArenaEvents implements Listener {
             u.setShots(u.getShots() + 1);
         }
         if (attacker.getInventory().getItemInMainHand().isSimilar(UdavkaNahuyPerk.item)) {
-            User u = plugin.getUserManager().getUser(attacker);
-            u.getPerks()
-                    .stream()
-                    .filter(perk -> perk.getId() == 2)
-                    .findFirst()
-                    .ifPresent(perk -> perk.get(attacker, victim, ArenaRegistry.getArena(attacker)));
+            if(Perk.has(attacker, UdavkaNahuyPerk.class)) {
+                Perk.getPerkByClass(UdavkaNahuyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
+            }
+
         }
 
 
@@ -482,6 +481,7 @@ public class ArenaEvents implements Listener {
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             e.getEntity().spigot().respawn();
+            player.teleport(arena.getPlayerSpawnPoints().get(0));
             player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
             player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
             player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
@@ -504,9 +504,11 @@ public class ArenaEvents implements Listener {
         }
         if (arena.getPlayers().contains(player)) {
             User user = plugin.getUserManager().getUser(player);
-
-            e.setRespawnLocation(player.getLocation());
-
+            if (player.getLocation().getWorld() == arena.getPlayerSpawnPoints().get(0).getWorld()) {
+                e.setRespawnLocation(player.getLocation());
+            } else {
+                e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
+            }
             user.setSpectator(true);
             ArenaUtils.hidePlayer(player, arena);
             player.setCollidable(false);

@@ -49,6 +49,8 @@ import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
+import pl.plajer.murdermystery.perks.Perk;
+import pl.plajer.murdermystery.perks.SpeedPerk;
 import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
@@ -147,24 +149,24 @@ public class Arena extends BukkitRunnable {
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
                     plugin.getServer().setWhitelist(false);
                 }
+
+
                 if (getPlayers().size() < getMinimumPlayers()) {
                     if (getTimer() <= 0) {
                         setTimer(60);
                         ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
                         break;
                     }
+
                 } else {
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
                     }
-                    for (Player player
-                            : Bukkit.getOnlinePlayers()
+                    Bukkit.getOnlinePlayers()
                             .stream()
-                            .filter(p -> !getPlayers()
-                                    .contains(p))
-                            .collect(Collectors.toSet())) {
-                        player.sendMessage("§6Арена §a" + getMapName() + " §6скоро начнётся!");
-                    }
+                            .filter(p -> !getPlayers().contains(p))
+                            .forEach(player -> player.sendMessage("§6Арена §a" + getMapName() + " §6скоро начнётся!"));
+
                     ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
                     setArenaState(ArenaState.STARTING);
                     setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
@@ -224,117 +226,109 @@ public class Arena extends BukkitRunnable {
                 if (getTimer() == 0 || forceStart) {
                     MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
                     Bukkit.getPluginManager().callEvent(gameStartEvent);
-                    for (Player player
-                            : Bukkit.getOnlinePlayers()
+                    Bukkit.getOnlinePlayers()
                             .stream()
-                            .filter(p -> !getPlayers()
-                                    .contains(p))
-                            .collect(Collectors
-                                    .toSet())) {
-                        player.sendMessage("§6Арена §a" + getMapName() + " §6была только что запущена!");
-                    }
-                    setArenaState(ArenaState.IN_GAME);
-                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                        gameBar.setProgress(1.0);
-                    }
-                    setTimer(5);
-                    if (players.isEmpty()) {
-                        break;
-                    }
-                    teleportAllToStartLocation();
+                            .filter(p -> !getPlayers().contains(p))
+                            .forEach(p -> p.sendMessage("§6Арена §a" + getMapName() + " §6была только что запущена!"));
 
-                    for (Player player : getPlayers()) {
-                        ArenaUtils.updateNameTagsVisibility(player);
-                        player.getInventory().clear();
-                        player.setGameMode(GameMode.ADVENTURE);
-                        ArenaUtils.hidePlayersOutsideTheGame(player, this);
-                        player.updateInventory();
-                        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-                        setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
-                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
-                        val user = plugin.getUserManager().getUser(player);
-                        if (user.getPotion() != null) {
-                            player.getInventory().addItem(user.getPotion());
-                        }
-                    }
-                    for (val user : plugin.getUserManager().getUsers(this)) {
-                        user.getPerks()
-                                .stream()
-                                .filter(perk -> perk.getId() == 2)
-                                .findFirst()
-                                .ifPresent(perk -> {
-                                    ItemPosition.setItem(user.getPlayer(), ItemPosition.UDAVKA, UdavkaNahuyPerk.item);
-                                });
+                }
+                setArenaState(ArenaState.IN_GAME);
+                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                    gameBar.setProgress(1.0);
+                }
+                setTimer(5);
+                if (players.isEmpty()) {
+                    break;
+                }
+                teleportAllToStartLocation();
 
-
-                    }
-
-                    Map<User, Double> murdererChances = new HashMap<>();
-                    Map<User, Double> detectiveChances = new HashMap<>();
-                    for (Player p : getPlayers()) {
-                        User user = plugin.getUserManager().getUser(p);
-                        murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
-                        detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
-                    }
-                    Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-                            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-                    Set<Player> playersToSet = new HashSet<>(getPlayers());
-                    int maxmurderer = 1;
-                    int maxdetectives = 1;
-                    Debugger.debug(Level.INFO, "Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
-                            getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-                    if (murderers > 1 && getPlayers().size() > murderers) {
-                        maxmurderer = (getPlayers().size() / murderers);
-                    }
-                    if (detectives > 1 && getPlayers().size() > detectives) {
-                        maxdetectives = (getPlayers().size() / detectives);
-                    }
-                    if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-                        ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
-                        //Make sure to have one innocent!
-                        if (maxdetectives > 1) {
-                            maxdetectives--;
-                        } else if (maxmurderer > 1) {
-                            maxmurderer--;
-                        }
-                    }
-
-                    Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
-                            getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-                    for (int i = 0; i < maxmurderer; i++) {
-                        Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
-                        setCharacter(CharacterType.MURDERER, murderer);
-                        allMurderer.add(murderer);
-                        plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-                        playersToSet.remove(murderer);
-                        murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-                                ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-                        detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
-                    }
-
-                    Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-                    for (int i = 0; i < (maxdetectives); i++) {
-                        Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
-                        setCharacter(CharacterType.DETECTIVE, detective);
-                        allDetectives.add(detective);
-                        plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-                        detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
-                                ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
-                        playersToSet.remove(detective);
-                        ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-                        ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-
-                    }
-
-
-                    for (Player p : playersToSet) {
-                        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-                    }
-                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
+                for (Player player : getPlayers()) {
+                    ArenaUtils.updateNameTagsVisibility(player);
+                    player.getInventory().clear();
+                    player.setGameMode(GameMode.ADVENTURE);
+                    ArenaUtils.hidePlayersOutsideTheGame(player, this);
+                    player.updateInventory();
+                    plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+                    setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
+                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+                    val user = plugin.getUserManager().getUser(player);
+                    if (user.getPotion() != null) {
+                        player.getInventory().addItem(user.getPotion());
                     }
                 }
+                for (val user : plugin.getUserManager().getUsers(this)) {
+                    if (Perk.has(user.getPlayer(), UdavkaNahuyPerk.class)) {
+                        ItemPosition.setItem(user.getPlayer(), ItemPosition.UDAVKA, UdavkaNahuyPerk.item);
+                    }
+                }
+
+
+                Map<User, Double> murdererChances = new HashMap<>();
+                Map<User, Double> detectiveChances = new HashMap<>();
+                for (Player p : getPlayers()) {
+                    User user = plugin.getUserManager().getUser(p);
+                    murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
+                    detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
+                }
+                Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+                Set<Player> playersToSet = new HashSet<>(getPlayers());
+                int maxmurderer = 1;
+                int maxdetectives = 1;
+                Debugger.debug(Level.INFO, "Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+                        getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
+                if (murderers > 1 && getPlayers().size() > murderers) {
+                    maxmurderer = (getPlayers().size() / murderers);
+                }
+                if (detectives > 1 && getPlayers().size() > detectives) {
+                    maxdetectives = (getPlayers().size() / detectives);
+                }
+                if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
+                    ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
+                    //Make sure to have one innocent!
+                    if (maxdetectives > 1) {
+                        maxdetectives--;
+                    } else if (maxmurderer > 1) {
+                        maxmurderer--;
+                    }
+                }
+
+                Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+                        getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
+                for (int i = 0; i < maxmurderer; i++) {
+                    Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
+                    setCharacter(CharacterType.MURDERER, murderer);
+                    allMurderer.add(murderer);
+                    plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+                    playersToSet.remove(murderer);
+                    murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+                            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+                    detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
+                }
+
+                Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                for (int i = 0; i < (maxdetectives); i++) {
+                    Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
+                    setCharacter(CharacterType.DETECTIVE, detective);
+                    allDetectives.add(detective);
+                    plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+                    detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
+                            ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+                    playersToSet.remove(detective);
+                    ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+                    ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+
+                }
+
+
+                for (Player p : playersToSet) {
+                    p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+                }
+                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
+                }
+
                 if (forceStart) {
                     forceStart = false;
                 }
@@ -372,14 +366,10 @@ public class Arena extends BukkitRunnable {
                     }
                 }
 
-                for (val user : plugin.getUserManager().getUsers(this)) {
-                    if (!user.isSpectator()) {
-                        user.getPerks()
-                                .stream()
-                                .filter(perk -> perk.getId() == 0)
-                                .forEach(perk -> perk.get(user.getPlayer(), null, this));
-                    }
-                }
+                getPlayersLeft()
+                        .stream()
+                        .filter(p -> Perk.has(p, SpeedPerk.class))
+                        .forEach(player -> Perk.getPerkByClass(SpeedPerk.class).handle(player, null, this));
 
 
                 //every 30 secs survive reward
@@ -506,14 +496,6 @@ public class Arena extends BukkitRunnable {
                 break;
             case RESTARTING:
                 canForceStart = true;
-                ChatEvents.getSaid()
-                        .stream()
-                        .filter(uuid -> this.getPlayers()
-                                .stream()
-                                .map(Player::getUniqueId)
-                                .collect(Collectors.toSet())
-                                .contains(uuid))
-                        .forEach(uuid -> ChatEvents.getSaid().remove(uuid));
                 ChatEvents.getSaid()
                         .stream()
                         .filter(uuid -> this.getPlayers()

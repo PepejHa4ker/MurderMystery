@@ -83,11 +83,37 @@ public class PrayerRegistry {
     Arena arena = ArenaRegistry.getArena(user.getPlayer());
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
     if (prayer.isGoodPray()) {
-      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player))).collect(Collectors.toList());
+      prayMessage = prayMessage
+              .stream()
+              .map(msg -> msg
+                      .replace(
+                              "%feeling%",
+                              ChatManager.colorMessage(
+                                      "In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player)
+                      )
+              )
+              .collect(Collectors.toList());
     } else {
-      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player))).collect(Collectors.toList());
+      prayMessage = prayMessage
+              .stream()
+              .map(msg -> msg
+                      .replace(
+                              "%feeling%",
+                              ChatManager.colorMessage(
+                                      "In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player)
+                      )
+              )
+              .collect(Collectors.toList());
     }
-    prayMessage = prayMessage.stream().map(msg -> msg.replace("%praise%", prayer.getPrayerDescription())).collect(Collectors.toList());
+    prayMessage = prayMessage
+            .stream()
+            .map(msg -> msg
+                    .replace(
+                            "%praise%",
+                            prayer.getPrayerDescription()
+                    )
+            )
+            .collect(Collectors.toList());
     switch (prayer.getPrayerType()) {
       case BLINDNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
@@ -98,7 +124,7 @@ public class PrayerRegistry {
         break;
       case DETECTIVE_REVELATION:
         String murderer;
-        murderer = arena.getCharacter(Arena.CharacterType.MURDERER).getName();
+        murderer = arena.getCharacter(Arena.CharacterType.MURDERER) != null ? arena.getCharacter(Arena.CharacterType.MURDERER).getName() : "" ;
         prayMessage = prayMessage.stream().map(msg -> msg.replace("%detective%", murderer)).collect(Collectors.toList());
         break;
       case INCOMING_DEATH:

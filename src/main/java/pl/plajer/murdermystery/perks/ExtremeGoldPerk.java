@@ -34,7 +34,7 @@ public class ExtremeGoldPerk extends Perk {
     }
 
     @Override
-    public void get(Player player, Player target, Arena arena) {
+    public void handle(Player player, Player target, Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 30) {
             ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, this.getItems().get(0));

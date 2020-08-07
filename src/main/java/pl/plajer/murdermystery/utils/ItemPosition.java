@@ -33,7 +33,7 @@ public enum ItemPosition {
 
   ARROWS(2, 2), BOW(0, 1), BOW_LOCATOR(-1, 4), MURDERER_SWORD(1, -1), INNOCENTS_LOCATOR(4, -1), INFINITE_ARROWS(9, 9), GOLD_INGOTS(8, 8),
   BLAZE_ROD(7, 7),
-  UDAVKA(3,3 ),
+  UDAVKA(4, -1),
   POTION(3, 3);
 
   private int murdererItemPosition;

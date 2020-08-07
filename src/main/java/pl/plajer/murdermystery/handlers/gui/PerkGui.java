@@ -3,7 +3,6 @@ package pl.plajer.murdermystery.handlers.gui;
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import lombok.val;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,24 +34,7 @@ public class PerkGui implements GuiComponent {
         AtomicInteger index = new AtomicInteger(3);
         Perk.getAllPerks().forEach(perk -> {
             pane.addItem(new GuiItem(perk.getDisplayItem(), event -> {
-                val user = plugin.getUserManager().getUser((Player) event.getWhoClicked());
-                if (user.getPerks().contains(perk)) {
-                    user.getPlayer().sendMessage("§cПерк уже выбран");
-                    return;
-                }
-                if (plugin.getEconomy().getBalance(user.getPlayer()) < perk.getPrice()) {
-                    user.getPlayer().sendMessage("§cНедостаточно средств.");
-                    return;
-                }
-
-                if (user.getPerks().size() == 1) {
-                    user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру.");
-                    return;
-                }
-
-                plugin.getEconomy().withdrawPlayer(user.getPlayer(), perk.getPrice());
-                user.getPerks().add(perk);
-                event.getWhoClicked().sendMessage("§6Перк " + perk.getName() + " §6успешно выбран.");
+                perk.buy((Player) event.getWhoClicked());
                 event.getWhoClicked().closeInventory();
             }), index.get(), 1);
             index.incrementAndGet();

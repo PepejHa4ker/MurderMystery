@@ -30,7 +30,7 @@ public class SpeedPerk extends Perk {
     }
 
     @Override
-    public void get(Player player, Player target, Arena arena) {
+    public void handle(Player player, Player target, Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 5) {
             this.getEffects().forEach(player::addPotionEffect);
