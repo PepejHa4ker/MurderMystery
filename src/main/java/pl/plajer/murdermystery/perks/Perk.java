@@ -47,6 +47,8 @@ public abstract class Perk {
         new SpeedPerk();
         new ExtremeGoldPerk();
         new UdavkaNahuyPerk();
+        new InvisibleHeadPerk();
+        new SecondChancePerk();
     }
 
 

@@ -344,7 +344,7 @@ public class Events implements Listener {
                 p.sendMessage("§6Опоздал :(");
                 return;
             }
-            new PerkGui().show(p);
+            new PerkGui(p).show(p);
         }
     }
 

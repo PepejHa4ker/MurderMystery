@@ -16,8 +16,10 @@ public class PerkGui implements GuiComponent {
 
     private static Main plugin = JavaPlugin.getPlugin(Main.class);
     private Gui gui;
+    private Player player;
 
-    public PerkGui() {
+    public PerkGui(Player player) {
+        this.player = player;
         this.gui = new Gui(plugin, 3, "Выберите способность");
         StaticPane pane = new StaticPane(9, 3);
         this.gui.addPane(pane);
@@ -31,7 +33,7 @@ public class PerkGui implements GuiComponent {
                 .name("§c")
                 .data((byte) 14)
                 .build());
-        AtomicInteger index = new AtomicInteger(3);
+        AtomicInteger index = new AtomicInteger(1);
         Perk.getAllPerks().forEach(perk -> {
             pane.addItem(new GuiItem(perk.getDisplayItem(), event -> {
                 perk.buy((Player) event.getWhoClicked());
@@ -39,6 +41,9 @@ public class PerkGui implements GuiComponent {
             }), index.get(), 1);
             index.incrementAndGet();
         });
+        pane.addItem(new GuiItem(new ItemBuilder(Material.EMPTY_MAP)
+                .name("§cБаланс: §a" + plugin.getEconomy().getBalance(player))
+                .build()), 4, 0);
     }
 
     @Override

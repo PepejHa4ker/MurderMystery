@@ -64,7 +64,7 @@ public class ChatEvents implements Listener {
     }
 
     @EventHandler
-    public synchronized void onChatIngame(AsyncPlayerChatEvent event) {
+    public void onChatIngame(AsyncPlayerChatEvent event) {
         Arena arena = ArenaRegistry.getArena(event.getPlayer());
         FileConfiguration filter = ConfigUtils.getConfig(plugin, "filter");
         if (arena == null) {

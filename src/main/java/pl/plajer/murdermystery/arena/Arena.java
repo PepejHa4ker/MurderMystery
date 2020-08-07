@@ -49,6 +49,7 @@ import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
+import pl.plajer.murdermystery.perks.InvisibleHeadPerk;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SpeedPerk;
 import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
@@ -256,12 +257,6 @@ public class Arena extends BukkitRunnable {
                         player.getInventory().addItem(user.getPotion());
                     }
                 }
-                for (val user : plugin.getUserManager().getUsers(this)) {
-                    if (Perk.has(user.getPlayer(), UdavkaNahuyPerk.class)) {
-                        ItemPosition.setItem(user.getPlayer(), ItemPosition.UDAVKA, UdavkaNahuyPerk.item);
-                    }
-                }
-
 
                 Map<User, Double> murdererChances = new HashMap<>();
                 Map<User, Double> detectiveChances = new HashMap<>();
@@ -321,6 +316,12 @@ public class Arena extends BukkitRunnable {
 
                 }
 
+                for (val user : plugin.getUserManager().getUsers(this)) {
+                    if (Perk.has(user.getPlayer(), UdavkaNahuyPerk.class)) {
+                        ItemPosition.setItem(user.getPlayer(), ItemPosition.UDAVKA, UdavkaNahuyPerk.item);
+                    }
+                }
+
 
                 for (Player p : playersToSet) {
                     p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
@@ -371,6 +372,7 @@ public class Arena extends BukkitRunnable {
                         .filter(p -> Perk.has(p, SpeedPerk.class))
                         .forEach(player -> Perk.getPerkByClass(SpeedPerk.class).handle(player, null, this));
 
+                this.handlePerk();
 
                 //every 30 secs survive reward
                 if (getTimer() % 30 == 0) {
@@ -541,6 +543,16 @@ public class Arena extends BukkitRunnable {
         Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
         goldSpawned.add(item);
     }
+
+
+    private void handlePerk() {
+        for (val player : getPlayersLeft()) {
+            if (Perk.has(player, InvisibleHeadPerk.class)) {
+                Perk.getPerkByClass(InvisibleHeadPerk.class).handle(player, null, this);
+            }
+        }
+    }
+
 
     public void setMurderers(int murderers) {
         this.murderers = murderers;
@@ -1041,16 +1053,16 @@ public class Arena extends BukkitRunnable {
     }
 
 
-    public enum BarAction {
-        ADD, REMOVE
-    }
+public enum BarAction {
+    ADD, REMOVE
+}
 
-    public enum GameLocation {
-        LOBBY, END
-    }
+public enum GameLocation {
+    LOBBY, END
+}
 
-    public enum CharacterType {
-        MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
-    }
+public enum CharacterType {
+    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+}
 
 }
