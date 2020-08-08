@@ -18,18 +18,16 @@
 
 package pl.plajer.murdermystery.user.data;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * @author Plajer
@@ -60,7 +58,7 @@ public class MysqlManager implements UserDatabase {
           + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
           + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
           + "  `joinedtimes` int(11) NOT NULL DEFAULT '1'\n"
-          + ") ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='\\r\\n';");
+            + ") ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='\\r\\n';");
       } catch (SQLException e) {
         Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");

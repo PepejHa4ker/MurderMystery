@@ -38,7 +38,7 @@ public class SecondChancePerk extends Perk {
     }
 
     @Override
-    public void handle(Player player, Player target, Arena arena) {
+    public synchronized void handle(Player player, Player target, Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 50) {
             val effect = new SpiralEffect(Main.getInstance().getScheduledExecutorService(),
