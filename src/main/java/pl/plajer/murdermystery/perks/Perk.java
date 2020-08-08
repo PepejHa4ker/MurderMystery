@@ -66,9 +66,16 @@ public abstract class Perk {
             return false;
         }
 
-        if (user.getPerks().size() == 1) {
-            user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру.");
-            return false;
+        if (!player.hasPermission("murder.grand")) {
+            if (user.getPerks().size() == 2) {
+                user.getPlayer().sendMessage("§cВы можете взять только 2 способности на игру.");
+                return false;
+            }
+        } else {
+            if (user.getPerks().size() == 1) {
+                user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру.");
+                return false;
+            }
         }
 
         Main.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getPrice());
@@ -78,8 +85,8 @@ public abstract class Perk {
     }
 
     public static Perk getPerkByName(String perkName) {
-        for(Perk perk : getAllPerks()) {
-            if(perk.getName().equalsIgnoreCase(perkName)) {
+        for (Perk perk : getAllPerks()) {
+            if (perk.getName().equalsIgnoreCase(perkName)) {
                 return perk;
             }
         }
@@ -88,8 +95,8 @@ public abstract class Perk {
 
 
     public static Perk getPerkByClass(Class<? extends Perk> clazz) {
-        for(Perk perk : getAllPerks()) {
-            if(perk.getClass() == clazz) {
+        for (Perk perk : getAllPerks()) {
+            if (perk.getClass() == clazz) {
                 return perk;
             }
         }
@@ -97,16 +104,13 @@ public abstract class Perk {
     }
 
     public static boolean has(Player player, Class<? extends Perk> clazz) {
-        for(Perk perk : Main.getInstance().getUserManager().getUser(player).getPerks()) {
-            if(perk.getClass() == clazz) {
+        for (Perk perk : Main.getInstance().getUserManager().getUser(player).getPerks()) {
+            if (perk.getClass() == clazz) {
                 return true;
             }
         }
         return false;
     }
-
-
-
 
 
     public abstract void handle(Player player, Player target, Arena arena);

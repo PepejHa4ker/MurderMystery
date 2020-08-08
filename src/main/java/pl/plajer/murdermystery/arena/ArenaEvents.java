@@ -50,6 +50,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.Confirmation;
@@ -191,6 +192,16 @@ public class ArenaEvents implements Listener {
         if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
             victim.damage(1000);
             victim.teleport(arena.getPlayerSpawnPoints().get(0));
+        }
+    }
+
+    @EventHandler
+    public void onLeave(MMGameLeaveAttemptEvent event) {
+        if(event.getArena().getArenaState() == ArenaState.IN_GAME || event.getArena().getArenaState() == ArenaState.ENDING) {
+            for(final User user : plugin.getUserManager().getUsers(event.getArena())) {
+                Bukkit.broadcastMessage("АЧИЩИНА");
+                user.getPerks().clear();
+            }
         }
     }
 

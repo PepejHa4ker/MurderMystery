@@ -73,7 +73,7 @@ import java.util.logging.Level;
    * <p>
    * Created at 13.05.2018
    */
-  public class ArenaManager {
+  public final class ArenaManager {
 
       private static Main plugin = JavaPlugin.getPlugin(Main.class);
 

@@ -186,7 +186,6 @@ public class Events implements Listener {
         if (e.getStatisticType() != StatsStorage.StatisticType.HIGHEST_SCORE) return;
         plugin.getUserManager().getUser(e.getPlayer()).loadRank();
     }
-
     private void killPlayer(Player player, Arena arena) {
         player.damage(1000);
         player.teleport(arena.getPlayerSpawnPoints().get(0));
