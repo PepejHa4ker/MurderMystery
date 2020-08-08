@@ -10,6 +10,7 @@ import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class UdavkaNahuyPerk extends Perk {
 
@@ -20,22 +21,23 @@ public class UdavkaNahuyPerk extends Perk {
             .lore("§eЦена: §c600.0§e монет")
             .build();
 
+    private List<PotionEffect> effects =  Arrays.asList(
+            new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0),
+            new PotionEffect(PotionEffectType.SLOW, 10*20, 0)
+    );
+
+
     protected UdavkaNahuyPerk() {
         super(
-                2,
                 "§8Заключённый",
                 600.0,
                 item,
-                null,
-                Arrays.asList(
-                        new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0),
-                        new PotionEffect(PotionEffectType.SLOW, 10*20, 0)
-                ));
+                null);
     }
 
     @Override
     public void handle(Player player, Player target, Arena arena) {
-        this.getEffects().forEach(target::addPotionEffect);
+        this.effects.forEach(target::addPotionEffect);
         ItemPosition.setItem(player, ItemPosition.UDAVKA, null);
 
     }

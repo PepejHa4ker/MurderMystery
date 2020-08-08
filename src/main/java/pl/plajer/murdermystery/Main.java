@@ -47,6 +47,7 @@ import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.party.PartyHandler;
 import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
+import pl.plajer.murdermystery.handlers.scheduler.Scheduler;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
 import pl.plajer.murdermystery.perks.Perk;
@@ -63,6 +64,8 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 
 /**
@@ -75,6 +78,9 @@ public class Main extends JavaPlugin {
     private ExceptionLogHandler exceptionLogHandler;
     private String version;
     private boolean forceDisable = false;
+    @Getter private ExecutorService executorService;
+    @Getter private ScheduledExecutorService scheduledExecutorService;
+
     @Getter private BungeeManager bungeeManager;
     @Getter private RewardsFactory rewardsHandler;
     @Getter private MysqlDatabase database;
@@ -93,6 +99,8 @@ public class Main extends JavaPlugin {
         if (!validateIfPluginShouldStart()) {
             return;
         }
+        executorService = Scheduler.createExecutorService();
+        scheduledExecutorService = Scheduler.createScheduledExecutorService();
         Perk.init();
         setupEconomy();
         RankManager.setupRanks();

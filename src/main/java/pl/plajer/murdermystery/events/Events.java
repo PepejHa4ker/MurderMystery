@@ -145,7 +145,7 @@ public class Events implements Listener {
                 .add(standStart)
                 .add(Utils.rotateAroundAxisY(
                         Utils.rotateAroundAxisX(
-                            new Vector(0.0D,
+                                new Vector(0.0D,
                                         0.0D,
                                         1.0D),
                                 loc.getPitch()),
@@ -190,7 +190,7 @@ public class Events implements Listener {
     private void killPlayer(Player player, Arena arena) {
         player.damage(1000);
         player.teleport(arena.getPlayerSpawnPoints().get(0));
-        for(Player p : arena.getPlayers()) {
+        for (Player p : arena.getPlayers()) {
             p.playSound(p.getLocation(), Sound.ENTITY_WITCH_HURT, 1f, 1f);
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_DEATH, 1f, 1f);
         }
@@ -202,10 +202,11 @@ public class Events implements Listener {
             return;
         }
         victim.playSound(victim.getLocation(), Sound.ENTITY_ENDERDRAGON_SHOOT, 1f, 1f);
-        attackerUser.getPlayer().playSound(attackerUser.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 1f,1f);
+        attackerUser.getPlayer().playSound(attackerUser.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
         killPlayer(victim, arena);
         new BukkitRunnable() {
             int timer = 0;
+
             @Override
             public void run() {
                 timer++;
@@ -347,6 +348,7 @@ public class Events implements Listener {
             new PerkGui(p).show(p);
         }
     }
+
 
     @EventHandler
     public void onMenu(PlayerInteractEvent e) {

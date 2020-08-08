@@ -33,7 +33,7 @@ public class PerkGui implements GuiComponent {
                 .name("§c")
                 .data((byte) 14)
                 .build());
-        AtomicInteger index = new AtomicInteger(1);
+        AtomicInteger index = new AtomicInteger(2);
         Perk.getAllPerks().forEach(perk -> {
             pane.addItem(new GuiItem(perk.getDisplayItem(), event -> {
                 perk.buy((Player) event.getWhoClicked());

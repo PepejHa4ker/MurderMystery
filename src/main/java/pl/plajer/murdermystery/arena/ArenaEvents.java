@@ -55,7 +55,9 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.Confirmation;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
+import pl.plajer.murdermystery.perks.ExtremeGoldPerk;
 import pl.plajer.murdermystery.perks.Perk;
+import pl.plajer.murdermystery.perks.SecondChancePerk;
 import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
@@ -187,11 +189,22 @@ public class ArenaEvents implements Listener {
         }
         //kill the player and move to the spawn point
         if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-            killPlayer(victim, arena);
+            victim.damage(1000);
+            victim.teleport(arena.getPlayerSpawnPoints().get(0));
         }
     }
 
     private void killPlayer(Player player, Arena arena) {
+        if (Perk.has(player, SecondChancePerk.class)) {
+            val perk = Perk.getPerkByClass(SecondChancePerk.class);
+            perk.handle(player, null, arena);
+            if (perk.success()) {
+                for (Player p : arena.getPlayers()) {
+                    p.sendMessage("§cИгрок §a" + player.getName() + " §cудрал от маньяка!");
+                }
+                return;
+            }
+        }
         player.damage(1000);
         player.teleport(arena.getPlayerSpawnPoints().get(0));
         for (Player p : arena.getPlayers()) {
@@ -269,10 +282,10 @@ public class ArenaEvents implements Listener {
         if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
             stack.setAmount(3 * e.getItem().getItemStack().getAmount());
         }
-        user.getPerks()
-                .stream()
-                .filter(perk -> perk.getId() == 1)
-                .forEach(perk -> perk.handle(user.getPlayer(), null, arena));
+        if (Perk.has(user.getPlayer(), ExtremeGoldPerk.class)) {
+            Perk.getPerkByClass(ExtremeGoldPerk.class).handle(user.getPlayer(), null, arena);
+        }
+
         ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
         user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
         ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
@@ -316,7 +329,7 @@ public class ArenaEvents implements Listener {
             u.setShots(u.getShots() + 1);
         }
         if (attacker.getInventory().getItemInMainHand().isSimilar(UdavkaNahuyPerk.item)) {
-            if(Perk.has(attacker, UdavkaNahuyPerk.class)) {
+            if (Perk.has(attacker, UdavkaNahuyPerk.class)) {
                 Perk.getPerkByClass(UdavkaNahuyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
             }
 

@@ -5,21 +5,16 @@ import lombok.NonNull;
 import lombok.val;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 
 public abstract class Perk {
-
-    @Getter
-    @NotNull
-    private Integer id;
 
     @Getter
     @NotNull
@@ -30,18 +25,15 @@ public abstract class Perk {
     private static List<Perk> allPerks = new ArrayList<>();
 
     @Getter
-    private List<ItemStack> items;
-
-    @Getter
-    private List<PotionEffect> effects;
-
-    @Getter
     @NotNull
     private ItemStack displayItem;
 
     @NonNull
     @Getter
     private Double price;
+
+    @Getter
+    private ScheduledExecutorService scheduler;
 
     public static void init() {
         new SpeedPerk();
@@ -51,15 +43,16 @@ public abstract class Perk {
         new SecondChancePerk();
     }
 
-
-    protected Perk(@NotNull Integer id, @NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem, @Nullable List<ItemStack> items, @Nullable List<PotionEffect> effects) {
-        this.id = id;
+    protected Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem, ScheduledExecutorService scheduler) {
         this.name = name;
         this.price = price;
         this.displayItem = displayItem;
-        this.items = items;
-        this.effects = effects;
+        this.scheduler = scheduler;
         allPerks.add(this);
+    }
+
+    public boolean success() {
+        return true;
     }
 
     public boolean buy(Player player) {
@@ -93,14 +86,6 @@ public abstract class Perk {
         return null;
     }
 
-    public static Perk getPerkById(Integer id) {
-        for(Perk perk : getAllPerks()) {
-            if(perk.getId().equals(id)) {
-                return perk;
-            }
-        }
-        return null;
-    }
 
     public static Perk getPerkByClass(Class<? extends Perk> clazz) {
         for(Perk perk : getAllPerks()) {
@@ -119,6 +104,8 @@ public abstract class Perk {
         }
         return false;
     }
+
+
 
 
 
