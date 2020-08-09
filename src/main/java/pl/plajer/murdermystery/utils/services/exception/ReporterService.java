@@ -18,17 +18,14 @@
 
 package pl.plajer.murdermystery.utils.services.exception;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.bukkit.plugin.java.JavaPlugin;
-
-import pl.plajer.murdermystery.utils.Debugger;
 
 /**
  * Reporter service for reporting exceptions directly to website reporter panel
@@ -66,7 +63,6 @@ public class ReporterService {
       os.close();
 
       plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
-      Debugger.debug(Level.INFO, "[Reporter service] Code: {0} ({1})", conn.getResponseCode(), conn.getResponseMessage());
     } catch (IOException ignored) {/*cannot connect or there is a problem*/
     }
   }

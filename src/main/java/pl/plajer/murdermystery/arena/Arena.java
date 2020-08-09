@@ -52,9 +52,7 @@ import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.perks.InvisibleHeadPerk;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SpeedPerk;
-import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -62,7 +60,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class Arena extends BukkitRunnable {
@@ -143,22 +140,17 @@ public class Arena extends BukkitRunnable {
         if (getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
             return;
         }
-        Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
-        long start = System.currentTimeMillis();
         switch (getArenaState()) {
             case WAITING_FOR_PLAYERS:
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
                     plugin.getServer().setWhitelist(false);
                 }
-
-
                 if (getPlayers().size() < getMinimumPlayers()) {
                     if (getTimer() <= 0) {
                         setTimer(60);
                         ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
                         break;
                     }
-
                 } else {
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
@@ -227,109 +219,98 @@ public class Arena extends BukkitRunnable {
                 if (getTimer() == 0 || forceStart) {
                     MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
                     Bukkit.getPluginManager().callEvent(gameStartEvent);
+                    setArenaState(ArenaState.IN_GAME);
                     Bukkit.getOnlinePlayers()
                             .stream()
                             .filter(p -> !getPlayers().contains(p))
                             .forEach(p -> p.sendMessage("§6Арена §a" + getMapName() + " §6была только что запущена!"));
+                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                        gameBar.setProgress(1.0);
+                    }
+                    setTimer(5);
+                    if (players.isEmpty()) {
+                        break;
+                    }
+                    teleportAllToStartLocation();
+                    for (Player player : getPlayers()) {
+                        ArenaUtils.updateNameTagsVisibility(player);
+                        player.getInventory().clear();
+                        player.setGameMode(GameMode.ADVENTURE);
+                        ArenaUtils.hidePlayersOutsideTheGame(player, this);
+                        player.updateInventory();
+                        plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+                        setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
+                        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+                    }
 
-                }
-                setArenaState(ArenaState.IN_GAME);
-                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                    gameBar.setProgress(1.0);
-                }
-                setTimer(5);
-                if (players.isEmpty()) {
-                    break;
-                }
-                teleportAllToStartLocation();
+                    Map<User, Double> murdererChances = new HashMap<>();
+                    Map<User, Double> detectiveChances = new HashMap<>();
+                    for (Player p : getPlayers()) {
+                        User user = plugin.getUserManager().getUser(p);
+                        murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
+                        detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
+                    }
+                    Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+                            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-                for (Player player : getPlayers()) {
-                    ArenaUtils.updateNameTagsVisibility(player);
-                    player.getInventory().clear();
-                    player.setGameMode(GameMode.ADVENTURE);
-                    ArenaUtils.hidePlayersOutsideTheGame(player, this);
-                    player.updateInventory();
-                    plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-                    setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
-                    player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
-                    val user = plugin.getUserManager().getUser(player);
-                    if (user.getPotion() != null) {
-                        player.getInventory().addItem(user.getPotion());
+                    Set<Player> playersToSet = new HashSet<>(getPlayers());
+                    int maxmurderer = 1;
+                    int maxdetectives = 1;
+                    if (murderers > 1 && getPlayers().size() > murderers) {
+                        maxmurderer = (getPlayers().size() / murderers);
+                    }
+                    if (detectives > 1 && getPlayers().size() > detectives) {
+                        maxdetectives = (getPlayers().size() / detectives);
+                    }
+                    if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
+                        ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
+                        //Make sure to have one innocent!
+                        if (maxdetectives > 1) {
+                            maxdetectives--;
+                        } else if (maxmurderer > 1) {
+                            maxmurderer--;
+                        }
+                    }
+
+                    for (int i = 0; i < maxmurderer; i++) {
+                        Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
+                        setCharacter(CharacterType.MURDERER, murderer);
+                        allMurderer.add(murderer);
+                        plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+                        playersToSet.remove(murderer);
+                        murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+                                ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+                        detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
+                    }
+
+                    Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                    for (int i = 0; i < (maxdetectives); i++) {
+                        Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
+                        setCharacter(CharacterType.DETECTIVE, detective);
+                        allDetectives.add(detective);
+                        plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+                        detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
+                                ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+                        playersToSet.remove(detective);
+                        ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+                        ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+                        if(plugin.getUserManager().getUser(detective).getPotion() != null) {
+                            detective.getInventory().addItem(plugin.getUserManager().getUser(detective).getPotion());
+                        }
+                    }
+
+
+                    for (Player p : playersToSet) {
+                        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+                        User u = plugin.getUserManager().getUser(p);
+                        if (u.getPotion() != null) {
+                            p.getInventory().addItem(u.getPotion());
+                        }
+                    }
+                    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+                        gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
                     }
                 }
-
-                Map<User, Double> murdererChances = new HashMap<>();
-                Map<User, Double> detectiveChances = new HashMap<>();
-                for (Player p : getPlayers()) {
-                    User user = plugin.getUserManager().getUser(p);
-                    murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
-                    detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
-                }
-                Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-                Set<Player> playersToSet = new HashSet<>(getPlayers());
-                int maxmurderer = 1;
-                int maxdetectives = 1;
-                Debugger.debug(Level.INFO, "Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
-                        getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-                if (murderers > 1 && getPlayers().size() > murderers) {
-                    maxmurderer = (getPlayers().size() / murderers);
-                }
-                if (detectives > 1 && getPlayers().size() > detectives) {
-                    maxdetectives = (getPlayers().size() / detectives);
-                }
-                if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-                    ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
-                    //Make sure to have one innocent!
-                    if (maxdetectives > 1) {
-                        maxdetectives--;
-                    } else if (maxmurderer > 1) {
-                        maxmurderer--;
-                    }
-                }
-
-                Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
-                        getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-                for (int i = 0; i < maxmurderer; i++) {
-                    Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
-                    setCharacter(CharacterType.MURDERER, murderer);
-                    allMurderer.add(murderer);
-                    plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-                    playersToSet.remove(murderer);
-                    murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-                            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-                    detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
-                }
-
-                Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-                for (int i = 0; i < (maxdetectives); i++) {
-                    Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
-                    setCharacter(CharacterType.DETECTIVE, detective);
-                    allDetectives.add(detective);
-                    plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-                    detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
-                            ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
-                    playersToSet.remove(detective);
-                    ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-                    ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-
-                }
-
-                for (val user : plugin.getUserManager().getUsers(this)) {
-                    if (Perk.has(user.getPlayer(), UdavkaNahuyPerk.class)) {
-                        ItemPosition.setItem(user.getPlayer(), ItemPosition.UDAVKA, UdavkaNahuyPerk.item);
-                    }
-                }
-
-
-                for (Player p : playersToSet) {
-                    p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-                }
-                if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                    gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
-                }
-
                 if (forceStart) {
                     forceStart = false;
                 }
@@ -352,27 +333,27 @@ public class Arena extends BukkitRunnable {
                         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                     }
                     if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-                        for (Player p : getPlayers()) {
+                        for(Player p : getPlayers()) {
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_AMBIENT, 0.5f, 1f);
                             p.sendMessage("§cМаньяк получил меч! Бегите, глупцы!");
-                            if (allMurderer.contains(p)) continue;
+                            if(allMurderer.contains(p)) continue;
                             p.sendTitle("§cМаньяк получил меч!", "", 10, 30, 5);
                         }
                         for (Player p : allMurderer) {
                             User murderer = plugin.getUserManager().getUser(p);
                             if (murderer.isSpectator()) continue;
                             ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+                            User u = plugin.getUserManager().getUser(p);
+                            if (u.getPotion() != null) {
+                                p.getInventory().addItem(u.getPotion());
+                            }
                             p.getInventory().setHeldItemSlot(0);
                         }
                     }
                 }
 
-                getPlayersLeft()
-                        .stream()
-                        .filter(p -> Perk.has(p, SpeedPerk.class))
-                        .forEach(player -> Perk.getPerkByClass(SpeedPerk.class).handle(player, null, this));
+                this.handlePerks();
 
-                this.handlePerk();
 
                 //every 30 secs survive reward
                 if (getTimer() % 30 == 0) {
@@ -382,7 +363,6 @@ public class Arena extends BukkitRunnable {
                         }
                     }
                 }
-
 
                 if (getTimer() == 30 || getTimer() == 60) {
                     String title = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
@@ -520,11 +500,8 @@ public class Arena extends BukkitRunnable {
             default:
                 break; //o.o?
         }
-        Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms",
 
-                getId(), System.
 
-                        currentTimeMillis() - start);
     }
 
     private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
@@ -545,10 +522,12 @@ public class Arena extends BukkitRunnable {
     }
 
 
-    private void handlePerk() {
+    private void handlePerks() {
         for (val player : getPlayersLeft()) {
             if (Perk.has(player, InvisibleHeadPerk.class)) {
                 Perk.getPerkByClass(InvisibleHeadPerk.class).handle(player, null, this);
+            } else if (Perk.has(player, SpeedPerk.class)) {
+                Perk.getPerkByClass(SpeedPerk.class).handle(player, null, this);
             }
         }
     }
@@ -632,7 +611,6 @@ public class Arena extends BukkitRunnable {
      */
     public void setMinimumPlayers(int minimumPlayers) {
         if (minimumPlayers < 2) {
-            Debugger.debug(Level.WARNING, "Беда с башкой? Больше {0} ставь, мало ёпта", minimumPlayers);
             setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
             return;
         }
@@ -880,7 +858,6 @@ public class Arena extends BukkitRunnable {
     }
 
     public void start() {
-        Debugger.debug(Level.INFO, "[{0}] Game instance started", getId());
         this.runTaskTimer(plugin, 20L, 20L);
         this.setArenaState(ArenaState.RESTARTING);
     }

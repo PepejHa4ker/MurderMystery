@@ -18,24 +18,21 @@
 
 package pl.plajer.murdermystery.handlers.rewards;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import pl.plajer.murdermystery.Main;
-import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
 
 /**
  * @author Plajer
@@ -110,8 +107,6 @@ public class RewardsFactory {
     if (!enabled) {
       return;
     }
-    Debugger.debug(Level.INFO, "[RewardsFactory] Starting rewards registration");
-    long start = System.currentTimeMillis();
 
     Map<Reward.RewardType, Integer> registeredRewards = new HashMap<>();
     for (Reward.RewardType rewardType : Reward.RewardType.values()) {
@@ -120,10 +115,7 @@ public class RewardsFactory {
         registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
       }
     }
-    for (Reward.RewardType rewardType : registeredRewards.keySet()) {
-      Debugger.debug(Level.INFO, "[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name());
-    }
-    Debugger.debug(Level.INFO, "[RewardsFactory] Registered all rewards took {0}ms", System.currentTimeMillis() - start);
+
   }
 
 }

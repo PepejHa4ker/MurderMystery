@@ -19,54 +19,52 @@
   package pl.plajer.murdermystery.arena;
 
   import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
-import pl.plajer.murdermystery.api.StatsStorage;
-import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
-import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
-import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
-import pl.plajer.murdermystery.arena.role.Role;
-import pl.plajer.murdermystery.events.ChatEvents;
-import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.PermissionsManager;
-import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.handlers.party.GameParty;
-import pl.plajer.murdermystery.handlers.rewards.Reward;
-import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.Debugger;
-import pl.plajer.murdermystery.utils.DonatType;
-import pl.plajer.murdermystery.utils.DonaterUtils;
-import pl.plajer.murdermystery.utils.ItemPosition;
+  import net.md_5.bungee.api.chat.ComponentBuilder;
+  import net.md_5.bungee.api.chat.HoverEvent;
+  import net.md_5.bungee.api.chat.TextComponent;
+  import org.apache.commons.lang.StringUtils;
+  import org.bukkit.Bukkit;
+  import org.bukkit.ChatColor;
+  import org.bukkit.GameMode;
+  import org.bukkit.Material;
+  import org.bukkit.attribute.Attribute;
+  import org.bukkit.configuration.file.FileConfiguration;
+  import org.bukkit.entity.Player;
+  import org.bukkit.inventory.ItemStack;
+  import org.bukkit.inventory.meta.ItemMeta;
+  import org.bukkit.plugin.java.JavaPlugin;
+  import org.bukkit.potion.PotionEffect;
+  import org.bukkit.potion.PotionEffectType;
+  import org.bukkit.scheduler.BukkitRunnable;
+  import pl.plajer.murdermystery.ConfigPreferences;
+  import pl.plajer.murdermystery.Main;
+  import pl.plajer.murdermystery.api.StatsStorage;
+  import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
+  import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
+  import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
+  import pl.plajer.murdermystery.arena.role.Role;
+  import pl.plajer.murdermystery.events.ChatEvents;
+  import pl.plajer.murdermystery.handlers.ChatManager;
+  import pl.plajer.murdermystery.handlers.PermissionsManager;
+  import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+  import pl.plajer.murdermystery.handlers.language.LanguageManager;
+  import pl.plajer.murdermystery.handlers.party.GameParty;
+  import pl.plajer.murdermystery.handlers.rewards.Reward;
+  import pl.plajer.murdermystery.user.User;
+  import pl.plajer.murdermystery.utils.DonatType;
+  import pl.plajer.murdermystery.utils.DonaterUtils;
+  import pl.plajer.murdermystery.utils.ItemPosition;
   import pl.plajer.murdermystery.utils.message.type.TitleMessage;
   import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+  import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+  import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+  import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+  import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.logging.Level;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.Objects;
+  import java.util.Random;
 
   /**
    * @author Plajer
@@ -90,8 +88,6 @@ import java.util.logging.Level;
        */
 
       public static void joinAttempt(Player player, Arena arena) {
-          Debugger.debug(Level.INFO, "[{0}] Initial join attempt for {1}", arena.getId(), player.getName());
-          long start = System.currentTimeMillis();
           MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
           Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
           if (!arena.isReady()) {
@@ -165,7 +161,6 @@ import java.util.logging.Level;
                   return;
               }
           }
-          Debugger.debug(Level.INFO, "[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
           User user = plugin.getUserManager().getUser(player);
           arena.getScoreboardManager().createScoreboard(user);
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
@@ -229,7 +224,6 @@ import java.util.logging.Level;
                   }
               }
               ArenaUtils.hidePlayersOutsideTheGame(player, arena);
-              Debugger.debug(Level.INFO, "[{0}] Join attempt as spectator finished for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
               return;
           }
           arena.teleportToLobby(player);
@@ -263,7 +257,6 @@ import java.util.logging.Level;
           }
           arena.showPlayers();
           ArenaUtils.updateNameTagsVisibility(player);
-          Debugger.debug(Level.INFO, "[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
       }
 
       /**
@@ -276,8 +269,6 @@ import java.util.logging.Level;
        * @see MMGameLeaveAttemptEvent
        */
       public static void leaveAttempt(Player player, Arena arena) {
-          Debugger.debug(Level.INFO, "[{0}] Initial leave attempt for {1}", arena.getId(), player.getName());
-          long start = System.currentTimeMillis();
 
           MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
           Bukkit.getPluginManager().callEvent(event);
@@ -386,7 +377,6 @@ import java.util.logging.Level;
 
           }
 
-          Debugger.debug(Level.INFO, "[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
       }
 
       /**
@@ -396,8 +386,6 @@ import java.util.logging.Level;
        * @see MMGameStopEvent
        */
       public static void stopGame(boolean quickStop, Arena arena) {
-          Debugger.debug(Level.INFO, "[{0}] Stop game event initialized with quickStop {1}", arena.getId(), quickStop);
-          long start = System.currentTimeMillis();
 
           MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
           Bukkit.getPluginManager().callEvent(gameStopEvent);
@@ -489,7 +477,6 @@ import java.util.logging.Level;
                   }.runTaskTimer(plugin, 30, 30);
               }
           }
-          Debugger.debug(Level.INFO, "[{0}] Stop game event finished took{1}ms ", arena.getId(), System.currentTimeMillis() - start);
       }
 
       private static String formatSummaryPlaceholders(String msg, Arena arena, Player player) {

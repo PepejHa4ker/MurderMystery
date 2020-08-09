@@ -18,17 +18,14 @@
 
 package pl.plajer.murdermystery.utils.services;
 
+import lombok.experimental.UtilityClass;
+import org.bukkit.plugin.java.JavaPlugin;
+import pl.plajer.murdermystery.utils.services.locale.LocaleService;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import lombok.experimental.UtilityClass;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import pl.plajer.murdermystery.utils.services.locale.LocaleService;
-import pl.plajer.murdermystery.utils.services.metrics.MetricsService;
 
 /**
  * Class for registering new services
@@ -66,7 +63,6 @@ public class ServiceRegistry {
     registeredService = plugin;
     serviceEnabled = true;
     plugin.getLogger().log(Level.INFO, "Hooked with ServiceRegistry! Initialized services properly!");
-    new MetricsService(plugin);
     localeService = new LocaleService(plugin);
     return true;
   }

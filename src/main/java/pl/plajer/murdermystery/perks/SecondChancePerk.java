@@ -24,7 +24,7 @@ public class SecondChancePerk extends Perk {
                 500.0,
                 new ItemBuilder(Material.BED)
                         .name("§cВторой шанс")
-                        .lore("§eС шансом 50% Вы можете получить второй шанс после смерти")
+                        .lore("§eС шансом 25% Вы можете получить второй шанс после смерти")
                         .lore("§7(работает только на удары мечём)")
                         .lore("§eЦена: §c500.0§e монет")
                         .build(),
@@ -40,17 +40,17 @@ public class SecondChancePerk extends Perk {
     @Override
     public synchronized void handle(Player player, Player target, Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
-        if (random < 50) {
+        if (random < 25) {
             val effect = new SpiralEffect(Main.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
-                    new ParticlePlayer(Particle.CRIT),
-                    20,
+                    new ParticlePlayer(Particle.WATER_BUBBLE),
+                    3,
                     2,
-                    2,
-                    15,
-                    0.75,
+                    10,
+                    10,
+                    1,
                     true,
-                    5
+                    3
             ).play();
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
             player.teleport(arena.getPlayerSpawnPoints().get(new Random().nextInt(arena.getPlayerSpawnPoints().size())));

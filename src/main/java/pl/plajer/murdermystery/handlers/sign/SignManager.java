@@ -18,14 +18,6 @@
 
 package pl.plajer.murdermystery.handlers.sign;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,7 +31,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
@@ -47,10 +38,15 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -174,8 +170,6 @@ public class SignManager implements Listener {
   }
 
   public void loadSigns() {
-    Debugger.debug(Level.INFO, "Signs load event started");
-    long start = System.currentTimeMillis();
 
     arenaSigns.clear();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
@@ -184,18 +178,13 @@ public class SignManager implements Listener {
         Location loc = LocationSerializer.getLocation(sign);
         if (loc.getBlock().getState() instanceof Sign) {
           arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));
-        } else {
-          Debugger.debug(Level.WARNING, "Block at location {0} for arena {1} not a sign", loc, path);
         }
       }
     }
-    Debugger.debug(Level.INFO, "Sign load event finished took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void updateSignScheduler() {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updating signs");
-      long start = System.currentTimeMillis();
 
       for (ArenaSign arenaSign : arenaSigns) {
         Sign sign = arenaSign.getSign();
@@ -241,7 +230,6 @@ public class SignManager implements Listener {
         }
         sign.update();
       }
-      Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updated signs took {0}ms", System.currentTimeMillis() - start);
     }, 10, 10);
   }
 

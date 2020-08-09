@@ -18,18 +18,13 @@
 
 package pl.plajer.murdermystery.handlers.sign;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.annotation.Nullable;
-
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
+
+import javax.annotation.Nullable;
 
 /**
  * Created for 1.14 compatibility purposes, it will cache block behind sign that will be
@@ -55,26 +50,7 @@ public class ArenaSign {
   private void setBehindBlock() {
     this.behind = null;
     if (sign.getBlock().getType() == Material.WALL_SIGN) {
-      if (plugin.is1_14_R1() || plugin.is1_15_R1()) {
-        this.behind = getBlockBehind();
-      } else {
         this.behind = getBlockBehindLegacy();
-      }
-    }
-  }
-
-  private Block getBlockBehind() {
-    try {
-      Object blockData = sign.getBlock().getState().getClass().getMethod("getBlockData").invoke(sign.getBlock().getState());
-      BlockFace face = (BlockFace) blockData.getClass().getMethod("getFacing").invoke(blockData);
-
-      Location loc = sign.getLocation();
-      Location location = new Location(sign.getWorld(), loc.getBlockX() - face.getModX(), loc.getBlockY() - face.getModY(),
-        loc.getBlockZ() - face.getModZ());
-      return location.getBlock();
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
-      return null;
     }
   }
 

@@ -21,7 +21,13 @@ public abstract class ParticleEffect {
      * @param period       Run code every x millis
      * @param unit         Unit of time (Milliseconds recommended)
      */
-    protected ParticleEffect(ScheduledExecutorService scheduler, Runnable runnable, int initialDelay, int period, TimeUnit unit) {
+    protected ParticleEffect(
+            ScheduledExecutorService scheduler,
+            Runnable runnable,
+            int initialDelay,
+            int period,
+            TimeUnit unit
+    ) {
         this.scheduler = scheduler;
         this.runnable = runnable;
         this.initialDelay = initialDelay;

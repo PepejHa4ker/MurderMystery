@@ -18,13 +18,8 @@
 
 package pl.plajer.murdermystery.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -32,7 +27,9 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.user.data.FileStats;
 import pl.plajer.murdermystery.user.data.MysqlManager;
 import pl.plajer.murdermystery.user.data.UserDatabase;
-import pl.plajer.murdermystery.utils.Debugger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -66,7 +63,6 @@ public class UserManager {
                 return user;
             }
         }
-        Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
         User user = new User(player);
         users.add(user);
         return user;

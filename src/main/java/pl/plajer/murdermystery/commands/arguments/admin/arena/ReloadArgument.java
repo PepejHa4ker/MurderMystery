@@ -18,15 +18,10 @@
 
 package pl.plajer.murdermystery.commands.arguments.admin.arena;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
@@ -37,8 +32,10 @@ import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -61,15 +58,11 @@ public class ReloadArgument {
           return;
         }
         confirmations.remove(sender);
-        Debugger.debug(Level.INFO, "Плагин перезагружен by {0}", sender.getName());
-        long start = System.currentTimeMillis();
 
         registry.getPlugin().reloadConfig();
         LanguageManager.reloadConfig();
 
         for (Arena arena : ArenaRegistry.getArenas()) {
-          Debugger.debug(Level.INFO, "[Reloader] Остановленно {0} instance.");
-          long stopTime = System.currentTimeMillis();
           for (Player player : arena.getPlayers()) {
             arena.doBarAction(Arena.BarAction.REMOVE, player);
             arena.teleportToEndLocation(player);
@@ -85,11 +78,9 @@ public class ReloadArgument {
             }
           }
           ArenaManager.stopGame(true, arena);
-          Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
         }
         ArenaRegistry.registerArenas();
         sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));
-        Debugger.debug(Level.INFO, "[Reloader] Finished reloading took {0}ms", System.currentTimeMillis() - start);
       }
     });
   }

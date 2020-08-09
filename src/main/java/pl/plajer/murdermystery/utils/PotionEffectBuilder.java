@@ -9,7 +9,7 @@ public final class PotionEffectBuilder {
     @NotNull
     private final PotionEffectType potionEffectType;
 
-    private Integer duration, amplifier ;
+    private Integer duration, amplifier;
     private Boolean visible, ambient;
 
 

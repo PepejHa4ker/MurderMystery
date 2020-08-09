@@ -55,18 +55,18 @@ import pl.plajer.murdermystery.user.RankManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
-import pl.plajer.murdermystery.utils.*;
+import pl.plajer.murdermystery.utils.ExceptionLogHandler;
+import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -108,28 +108,9 @@ public class Main extends JavaPlugin {
         exceptionLogHandler = new ExceptionLogHandler(this);
         LanguageManager.init(this);
         saveDefaultConfig();
-        if (getDescription().getVersion().contains("b")) {
-            Debugger.setEnabled(true);
-        } else {
-            Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-        }
-        Debugger.debug(Level.INFO, "[System] Initialization start");
-        if (getConfig().getBoolean("Developer-Mode", false)) {
-            Debugger.deepDebug(true);
-            Debugger.debug(Level.FINE, "Deep debug enabled");
-            for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
-                Debugger.monitorPerformance(listenable);
-            }
-        }
-        long start = System.currentTimeMillis();
-
         configPreferences = new ConfigPreferences(this);
         setupFiles();
         initializeClasses();
-        checkUpdate();
-        Debugger.debug(Level.INFO, "[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
-
-        Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
         //start hook manager later in order to allow soft-dependencies to fully load
         Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
         if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
@@ -166,15 +147,11 @@ public class Main extends JavaPlugin {
     }
 
 
-
     @Override
     public void onDisable() {
         if (forceDisable) {
             return;
         }
-
-        Debugger.debug(Level.INFO, "System disable initialized");
-        long start = System.currentTimeMillis();
 
         Bukkit.getLogger().removeHandler(exceptionLogHandler);
         saveAllUserStatistics();
@@ -206,7 +183,6 @@ public class Main extends JavaPlugin {
             arena.teleportAllToEndLocation();
             arena.cleanUpArena();
         }
-        Debugger.debug(Level.INFO, "System disable finished took {0}ms", System.currentTimeMillis() - start);
     }
 
     private void initializeClasses() {
@@ -247,38 +223,10 @@ public class Main extends JavaPlugin {
     }
 
     private void registerSoftDependenciesAndServices() {
-        Debugger.debug(Level.INFO, "Hooking into soft dependencies");
-        long start = System.currentTimeMillis();
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
             new PlaceholderManager().register();
         }
-        Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
-    }
-
-
-    private void checkUpdate() {
-        if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-            return;
-        }
-        UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
-            if (!result.requiresUpdate()) {
-                return;
-            }
-            if (result.getNewestVersion().contains("b")) {
-                if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-                            result.getNewestVersion()));
-                }
-                return;
-            }
-            MessageUtils.updateIsHere();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your MurderMystery plugin is outdated! Download it to keep with latest changes and fixes.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
-        });
     }
 
     private void setupFiles() {
@@ -294,13 +242,7 @@ public class Main extends JavaPlugin {
         return version.equalsIgnoreCase("v1_12_R1");
     }
 
-    public boolean is1_14_R1() {
-        return version.equalsIgnoreCase("v1_14_R1");
-    }
 
-    public boolean is1_15_R1() {
-        return version.equalsIgnoreCase("v1_15_R1");
-    }
 
     private void saveAllUserStatistics() {
         for (Player player : getServer().getOnlinePlayers()) {

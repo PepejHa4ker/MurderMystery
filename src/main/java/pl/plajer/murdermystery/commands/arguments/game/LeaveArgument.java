@@ -18,11 +18,8 @@
 
 package pl.plajer.murdermystery.commands.arguments.game;
 
-import java.util.logging.Level;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
@@ -30,7 +27,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
 import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.Utils;
 
 /**
@@ -52,12 +48,10 @@ public class LeaveArgument {
           player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby", player));
           if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             registry.getPlugin().getBungeeManager().connectToHub(player);
-            Debugger.debug(Level.INFO, "{0} was teleported to the Hub server", player.getName());
             return;
           }
           Arena arena = ArenaRegistry.getArena(player);
           ArenaManager.leaveAttempt(player, arena);
-          Debugger.debug(Level.INFO, "{0} has left the arena {1}! Teleported to end location.", player.getName(), arena.getId());
         }
       }
     });

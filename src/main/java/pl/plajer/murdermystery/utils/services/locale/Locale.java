@@ -18,8 +18,7 @@
 
 package pl.plajer.murdermystery.utils.services.locale;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.List;
 
@@ -28,18 +27,14 @@ import java.util.List;
  *
  * @since 1.2.0
  */
-@AllArgsConstructor
+@Value
+
 public class Locale {
-  @Getter
-  private String name;
-  @Getter
-  private String originalName;
-  @Getter
-  private String prefix;
-  @Getter
-  private String author;
-  @Getter
-  private List<String> aliases;
+  String name;
+  String originalName;
+  String prefix;
+  String author;
+  List<String> aliases;
 
 
 }

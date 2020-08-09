@@ -28,7 +28,6 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
-import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -36,7 +35,6 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -57,7 +55,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
-    Main plugin = setupInventory.getPlugin();
+    Main plugin = SetupInventory.getPlugin();
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.PAPER.parseItem())
       .name(ChatManager.colorRawMessage("&6&lВыбор специальных блоков"))
@@ -72,7 +70,6 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       .lore(ChatColor.GRAY + "Настроить котельные зелья в specialblocks.yml файле!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
       if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.CAULDRON.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Пожалуйста, нацельтесь на котёл для продолжения!");
         return;
@@ -100,7 +97,6 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       .lore(ChatColor.RED + "или проклятия от молитвы!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
       if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Пожалуйста нацельтесь на стол зачарования для продолжения!");
         return;
@@ -120,7 +116,6 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
             .name(ChatManager.colorRawMessage("&e&lДобавить волшебную кузницу"))
             .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
       if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.ANVIL.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Пожалуйста нацельтесь на наковальню для продолжения!");
         return;

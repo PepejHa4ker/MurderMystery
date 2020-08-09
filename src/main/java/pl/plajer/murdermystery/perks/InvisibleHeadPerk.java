@@ -15,8 +15,6 @@ import pl.plajer.murdermystery.utils.particle.ParticlePlayer;
 import pl.plajer.murdermystery.utils.particle.effect.SpiralEffect;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
-;
-
 public class InvisibleHeadPerk extends Perk {
 
 
@@ -48,10 +46,10 @@ public class InvisibleHeadPerk extends Perk {
                     10,
                     10,
                     1,
-                    true,
+                    false,
                     3
             ).play();
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 50);
+            Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10 * 20, 0, true, true));
         }

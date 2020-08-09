@@ -18,14 +18,12 @@
 
 package pl.plajer.murdermystery;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 
+import java.util.EnumMap;
+import java.util.Map;
 
-import pl.plajer.murdermystery.utils.Debugger;
+
 
 /**
  * @author Plajer
@@ -48,15 +46,12 @@ public class HookManager {
       for (Hook requiredHook : feature.getRequiredHooks()) {
         if (!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
           hooks.put(feature, false);
-          Debugger.debug(Level.INFO, "[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
-            feature.name(), requiredHook.getPluginName());
           hooked = false;
           break;
         }
       }
       if (hooked) {
         hooks.put(feature, true);
-        Debugger.debug(Level.INFO, "[HookManager] Feature {0} enabled!", feature.name());
 
       }
     }

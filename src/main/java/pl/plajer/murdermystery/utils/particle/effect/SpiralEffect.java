@@ -22,9 +22,18 @@ public class SpiralEffect extends ParticleEffect {
      * @param reverse        true = top to bottom
      * @param particleAmount Amount of particles per step
      */
-    public SpiralEffect(ScheduledExecutorService scheduler, final Location location, final ParticlePlayer particlePlayer,
-                        int period, final double height, final double rotations, final double stepSize,
-                        final double diameter, final boolean reverse, final int particleAmount) {
+    public SpiralEffect(
+            ScheduledExecutorService scheduler,
+            final Location location,
+            final ParticlePlayer particlePlayer,
+            int period,
+            final double height,
+            final double rotations,
+            final double stepSize,
+            final double diameter,
+            final boolean reverse,
+            final int particleAmount
+    ) {
 
         super(scheduler, new Runnable() {
 

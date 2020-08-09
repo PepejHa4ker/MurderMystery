@@ -168,6 +168,7 @@ public class ArenaEvents implements Listener {
         e.getDismounted().addPassenger(e.getEntity());
     }
 
+
     @EventHandler
     public void onFallDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) {
@@ -197,9 +198,8 @@ public class ArenaEvents implements Listener {
 
     @EventHandler
     public void onLeave(MMGameLeaveAttemptEvent event) {
-        if(event.getArena().getArenaState() == ArenaState.IN_GAME || event.getArena().getArenaState() == ArenaState.ENDING) {
-            for(final User user : plugin.getUserManager().getUsers(event.getArena())) {
-                Bukkit.broadcastMessage("АЧИЩИНА");
+        if (event.getArena().getArenaState() == ArenaState.IN_GAME || event.getArena().getArenaState() == ArenaState.ENDING) {
+            for (final User user : plugin.getUserManager().getUsers(event.getArena())) {
                 user.getPerks().clear();
             }
         }

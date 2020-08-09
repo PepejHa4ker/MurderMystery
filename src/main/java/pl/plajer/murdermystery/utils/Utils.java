@@ -18,14 +18,9 @@
 
 package pl.plajer.murdermystery.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -33,16 +28,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import org.bukkit.util.Vector;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Plajer
@@ -142,25 +136,6 @@ public class Utils {
 
   public int getRandomNumber(int lowerBound, int upperBound) {
     return new Random().nextInt(upperBound - lowerBound) + lowerBound;
-  }
-
-  public Vector rotateAroundAxisX(Vector v, double angle) {
-    angle = Math.toRadians(angle);
-    double cos = cos(angle);
-    double sin = sin(angle);
-    double y = v.getY() * cos - v.getZ() * sin;
-    double z = v.getY() * sin + v.getZ() * cos;
-    return v.setY(y).setZ(z);
-  }
-
-  public Vector rotateAroundAxisY(Vector v, double angle) {
-    angle = -angle;
-    angle = Math.toRadians(angle);
-    double cos = cos(angle);
-    double sin = sin(angle);
-    double x = v.getX() * cos + v.getZ() * sin;
-    double z = v.getX() * -sin + v.getZ() * cos;
-    return v.setX(x).setZ(z);
   }
 
 

@@ -47,6 +47,7 @@ import pl.plajer.murdermystery.handlers.gui.PotionGui;
 import pl.plajer.murdermystery.handlers.gui.StartGui;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Maths;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.message.type.TitleMessage;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
@@ -127,7 +128,7 @@ public class Events implements Listener {
         Location loc = attacker.getLocation();
         Vector vec = attacker.getLocation().getDirection();
         vec.normalize().multiply(0.75);
-        Location standStart = Utils.rotateAroundAxisY(new Vector(.75D, 0.0D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(loc);
+        Location standStart = Maths.rotateAroundAxisY(new Vector(.75D, 0.0D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(loc);
         standStart.setYaw(loc.getYaw());
         ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
         stand.setVisible(false);
@@ -139,12 +140,12 @@ public class Events implements Listener {
         stand.setGravity(false);
         stand.setRemoveWhenFarAway(true);
         stand.setMarker(true);
-        Location initialise = Utils.rotateAroundAxisY(new Vector(-0.8D, 1.45D, 0.0D),
+        Location initialise = Maths.rotateAroundAxisY(new Vector(-0.8D, 1.45D, 0.0D),
                 loc.getYaw())
                 .toLocation(attacker.getWorld())
                 .add(standStart)
-                .add(Utils.rotateAroundAxisY(
-                        Utils.rotateAroundAxisX(
+                .add(Maths.rotateAroundAxisY(
+                        Maths.rotateAroundAxisX(
                                 new Vector(0.0D,
                                         0.0D,
                                         1.0D),
