@@ -17,7 +17,7 @@ public final class Maths {
 
     public static Vector rotateAroundAxisX(Vector v, double angle) {
         double y = v.getY() * Maths.cosRad(angle) - v.getZ() * Maths.sinRad(angle);
-        double z = v.getY() * Maths.sinRad(angle) + v.getZ() *  Maths.cosRad(angle);
+        double z = v.getY() * Maths.sinRad(angle) + v.getZ() * Maths.cosRad(angle);
         return v.setY(y).setZ(z);
     }
 
@@ -29,8 +29,8 @@ public final class Maths {
     }
 
     public static Vector rotateAroundAxisZ(Vector v, double angle) {
-        double x = Maths.cosRad(angle) * v.getX() - Maths.sinRad(angle) * v.getY();
-        double y = Maths.sinRad(angle) * v.getX() - Maths.cosRad(angle) * v.getY();
+        double x = v.getX() * Maths.cosRad(angle) - v.getY() * Maths.sinRad(angle);
+        double y = v.getX() * Maths.sinRad(angle) - v.getY() * Maths.cosRad(angle);
         return v.setX(x).setY(y);
     }
 

@@ -51,7 +51,7 @@ public class SpeedPerk extends Perk {
                     0.75,
                     true,
                     5
-            ).play();
+            );
 
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
         }

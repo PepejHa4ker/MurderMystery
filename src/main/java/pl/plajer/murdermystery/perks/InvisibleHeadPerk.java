@@ -48,7 +48,7 @@ public class InvisibleHeadPerk extends Perk {
                     1,
                     false,
                     3
-            ).play();
+            );
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10 * 20, 0, true, true));

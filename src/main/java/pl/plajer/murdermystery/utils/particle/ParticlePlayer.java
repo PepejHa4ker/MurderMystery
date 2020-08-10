@@ -27,7 +27,19 @@ public class ParticlePlayer {
 
         try {
             valueOf = enumParticleClass.getMethod("valueOf", String.class);
-            packetConstructor = packetPlayOutWorldParticlesClass.getConstructor(enumParticleClass, boolean.class, float.class, float.class, float.class, float.class, float.class, float.class, float.class, int.class, int[].class);
+            packetConstructor = packetPlayOutWorldParticlesClass.getConstructor(
+                    enumParticleClass,
+                    boolean.class,
+                    float.class,
+                    float.class,
+                    float.class,
+                    float.class,
+                    float.class,
+                    float.class,
+                    float.class,
+                    int.class,
+                    int[].class
+            );
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -69,7 +81,16 @@ public class ParticlePlayer {
      * @param players  Players to play the particles to
      */
     public void play(Location location, int amount, Player... players) {
-        Object packet = createPacket(particle, (float) location.getX(), (float) location.getY(), (float) location.getZ(), 0f, 0f, 0f, 0f, amount);
+        Object packet = createPacket(
+                particle,
+                (float) location.getX(),
+                (float) location.getY(),
+                (float) location.getZ(),
+                0f,
+                0f,
+                0f,
+                0f, amount
+        );
 
         for (Player player : players) {
             Reflection.sendPacket(player, packet);
@@ -101,7 +122,17 @@ public class ParticlePlayer {
      * @param amount   Amount of particles
      * @return The packet
      */
-    private Object createPacket(Object particle, float x, float y, float z, float xOffset, float yOffset, float zOffset, float data, int amount) {
+    private Object createPacket(
+            Object particle,
+            float x,
+            float y,
+            float z,
+            float xOffset,
+            float yOffset,
+            float zOffset,
+            float data,
+            int amount
+    ) {
         try {
 
             return packetConstructor.newInstance(particle, true, x, y, z, xOffset, yOffset, zOffset, data, amount, null);
