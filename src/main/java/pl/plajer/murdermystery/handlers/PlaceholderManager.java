@@ -19,9 +19,7 @@
 package pl.plajer.murdermystery.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-
 import org.bukkit.entity.Player;
-
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -92,6 +90,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
             return null;
         }
         switch (data[1].toLowerCase()) {
+            case "time":
+                return String.valueOf(arena.getTimer());
             case "min_players":
                 return String.valueOf(arena.getMinimumPlayers());
             case "players":

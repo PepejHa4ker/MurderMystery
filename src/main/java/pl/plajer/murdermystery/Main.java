@@ -80,7 +80,6 @@ public class Main extends JavaPlugin {
     private boolean forceDisable = false;
     @Getter private ExecutorService executorService;
     @Getter private ScheduledExecutorService scheduledExecutorService;
-
     @Getter private BungeeManager bungeeManager;
     @Getter private RewardsFactory rewardsHandler;
     @Getter private MysqlDatabase database;

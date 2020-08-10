@@ -127,7 +127,7 @@ public class Events implements Listener {
     private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
         Location loc = attacker.getLocation();
         Vector vec = attacker.getLocation().getDirection();
-        vec.normalize().multiply(0.75);
+        vec.normalize().multiply(0.80);
         Location standStart = Maths.rotateAroundAxisY(new Vector(.75D, 0.0D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(loc);
         standStart.setYaw(loc.getYaw());
         ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);

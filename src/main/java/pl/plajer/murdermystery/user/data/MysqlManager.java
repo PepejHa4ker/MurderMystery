@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.user.data;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -37,6 +38,7 @@ import java.sql.Statement;
 public class MysqlManager implements UserDatabase {
 
   private Main plugin;
+  @Getter
   private MysqlDatabase database;
 
   public MysqlManager(Main plugin) {
@@ -100,7 +102,4 @@ public class MysqlManager implements UserDatabase {
     });
   }
 
-  public MysqlDatabase getDatabase() {
-    return database;
-  }
 }

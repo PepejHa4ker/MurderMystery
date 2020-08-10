@@ -1,16 +1,16 @@
 package me.tigerhix.lib.scoreboard.common.animate;
 
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@NoArgsConstructor
 public class FrameAnimatedString implements AnimatableString {
 
     protected List<String> frames = new ArrayList<>();
     protected int currentFrame = -1;
-
-    public FrameAnimatedString() {
-    }
 
     public FrameAnimatedString(String... frames) {
         this.frames = Arrays.asList(frames);

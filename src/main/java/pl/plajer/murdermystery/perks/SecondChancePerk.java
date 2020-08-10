@@ -43,7 +43,7 @@ public class SecondChancePerk extends Perk {
         if (random < 25) {
             val effect = new SpiralEffect(Main.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
-                    new ParticlePlayer(Particle.WATER_BUBBLE),
+                    new ParticlePlayer(Particle.CRIT_MAGIC),
                     3,
                     2,
                     10,
@@ -51,7 +51,7 @@ public class SecondChancePerk extends Perk {
                     1,
                     true,
                     3
-            ).play();
+            );
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
             player.teleport(arena.getPlayerSpawnPoints().get(new Random().nextInt(arena.getPlayerSpawnPoints().size())));
             player.sendMessage("§cВот же повезло удрать!");

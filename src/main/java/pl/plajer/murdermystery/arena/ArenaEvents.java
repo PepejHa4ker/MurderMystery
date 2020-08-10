@@ -147,10 +147,14 @@ public class ArenaEvents implements Listener {
                             }
                         }
 
-                    }).build().show(p);
+                    })
+                    .build()
+                    .show(p);
         }), 8, 0);
         g.show(e.getPlayer());
     }
+
+
 
     @EventHandler
     public void onArmorStandEject(EntityDismountEvent e) {

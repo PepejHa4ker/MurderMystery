@@ -26,7 +26,7 @@ public class SpiralEffect extends ParticleEffect {
             ScheduledExecutorService scheduler,
             final Location location,
             final ParticlePlayer particlePlayer,
-            int period,
+            final int period,
             final double height,
             final double rotations,
             final double stepSize,

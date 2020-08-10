@@ -18,7 +18,7 @@
 
 package pl.plajer.murdermystery.commands.arguments.data;
 
-import java.util.List;
+import lombok.Getter;
 
 /**
  * @author Plajer
@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class LabeledCommandArgument extends CommandArgument {
 
+  @Getter
   private LabelData labelData;
 
   public LabeledCommandArgument(String argumentName, String permissions, ExecutorType validExecutors, LabelData labelData) {
@@ -34,10 +35,4 @@ public class LabeledCommandArgument extends CommandArgument {
     this.labelData = labelData;
   }
 
-  /**
-   * @return label data of command (description and usages of command)
-   */
-  public LabelData getLabelData() {
-    return labelData;
-  }
 }

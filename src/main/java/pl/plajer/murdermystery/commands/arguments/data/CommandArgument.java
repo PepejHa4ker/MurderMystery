@@ -1,3 +1,5 @@
+package pl.plajer.murdermystery.commands.arguments.data;
+
 /*
  * MurderMystery - Find the murderer, kill him and survive!
  * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
@@ -16,12 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.commands.arguments.data;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
-
-import org.bukkit.command.CommandSender;
 
 
 /**
@@ -29,41 +32,28 @@ import org.bukkit.command.CommandSender;
  * <p>
  * Created at 11.01.2019
  */
+@AllArgsConstructor
 public class CommandArgument {
 
-  private String argumentName;
-  private List<String> permissions;
-  private ExecutorType validExecutors;
+    @Getter
+    private String argumentName;
+    @Getter
+    private List<String> permissions;
+    @Getter
+    private ExecutorType validExecutors;
 
-  public CommandArgument(String argumentName, String permissions, ExecutorType validExecutors) {
-    this.argumentName = argumentName;
-    this.permissions = Collections.singletonList(permissions);
-    this.validExecutors = validExecutors;
-  }
+    public CommandArgument(String argumentName, String permissions, ExecutorType validExecutors) {
+        this.argumentName = argumentName;
+        this.permissions = Collections.singletonList(permissions);
+        this.validExecutors = validExecutors;
+    }
 
-  public CommandArgument(String argumentName, List<String> permissions, ExecutorType validExecutors) {
-    this.argumentName = argumentName;
-    this.permissions = permissions;
-    this.validExecutors = validExecutors;
-  }
 
-  public String getArgumentName() {
-    return argumentName;
-  }
+    public void execute(CommandSender sender, String[] args) {
+    }
 
-  public List<String> getPermissions() {
-    return permissions;
-  }
-
-  public ExecutorType getValidExecutors() {
-    return validExecutors;
-  }
-
-  public void execute(CommandSender sender, String[] args) {
-  }
-
-  public enum ExecutorType {
-    BOTH, CONSOLE, PLAYER
-  }
+    public enum ExecutorType {
+        BOTH, CONSOLE, PLAYER
+    }
 
 }

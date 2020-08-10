@@ -14,7 +14,6 @@ public class ParticlePlayer {
     //region NMS
     private static Class<?> packetPlayOutWorldParticlesClass;
     private static Class<?> enumParticleClass;
-    private static Class<?> particleParamClass;
 
     private static Constructor<?> packetConstructor;
 

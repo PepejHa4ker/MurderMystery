@@ -18,6 +18,9 @@
 
 package pl.plajer.murdermystery.commands.completion;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
 import java.util.List;
 
 /**
@@ -25,36 +28,10 @@ import java.util.List;
  * <p>
  * Created at 18.05.2019
  */
+@AllArgsConstructor
+@Value
 public class CompletableArgument {
-
-  private String mainCommand;
-  private String argument;
-  private List<String> completions;
-
-  public CompletableArgument(String mainCommand, String argument, List<String> completions) {
-    this.mainCommand = mainCommand;
-    this.argument = argument;
-    this.completions = completions;
-  }
-
-  /**
-   * @return main command of the argument
-   */
-  public String getMainCommand() {
-    return mainCommand;
-  }
-
-  /**
-   * @return argument name
-   */
-  public String getArgument() {
-    return argument;
-  }
-
-  /**
-   * @return all possible completions for this command argument
-   */
-  public List<String> getCompletions() {
-    return completions;
-  }
+  String mainCommand;
+  String argument;
+  List<String> completions;
 }
