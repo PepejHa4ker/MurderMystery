@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.utils;
+package pl.plajer.murdermystery.utils.number;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -11,7 +11,7 @@ public final class Maths {
         double yawRadian = Math.toRadians(location.getYaw());
         double pitchRadian = Math.toRadians(location.getYaw());
         v = rotateAroundAxisX(v, yawRadian);
-        v = rotateAroundAxisY(v, -yawRadian);
+        v = rotateAroundAxisY(v, -pitchRadian);
         return v;
     }
 

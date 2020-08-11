@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajer.murdermystery.utils.particle.ParticlePlayer;
-import pl.plajer.murdermystery.utils.particle.effect.SpiralEffect;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
+import pl.plajer.murdermystery.utils.effects.particle.effect.SpiralEffect;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.Random;
 

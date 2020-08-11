@@ -32,8 +32,8 @@ import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
+import pl.plajer.murdermystery.utils.misc.MiscUtils;
 
 import java.util.ArrayList;
 import java.util.List;

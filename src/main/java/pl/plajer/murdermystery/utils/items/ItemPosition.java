@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.utils;
+package pl.plajer.murdermystery.utils.items;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

@@ -18,16 +18,15 @@
 
 package pl.plajer.murdermystery.handlers.language;
 
-import java.io.File;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.murdermystery.Main;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.migrator.MigratorUtils;
+
+import java.io.File;
 
 /*
   NOTE FOR CONTRIBUTORS - Please do not touch this class if you don't now how it works! You can break migrator modyfing these values!

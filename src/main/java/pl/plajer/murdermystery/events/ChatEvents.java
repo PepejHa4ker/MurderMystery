@@ -38,7 +38,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 import java.util.*;
 import java.util.regex.Pattern;

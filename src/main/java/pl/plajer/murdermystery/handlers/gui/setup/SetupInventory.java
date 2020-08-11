@@ -20,9 +20,6 @@ package pl.plajer.murdermystery.handlers.gui.setup;
 
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import java.util.Random;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -31,12 +28,13 @@ import lombok.val;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.components.*;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+
+import java.util.Random;
 
 /**
  * @author Plajer

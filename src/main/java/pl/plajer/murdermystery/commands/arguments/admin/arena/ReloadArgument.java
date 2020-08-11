@@ -32,7 +32,7 @@ import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -15,75 +15,43 @@ tasks.withType(JavaCompile) {
 repositories {
     mavenCentral()
     jcenter()
-    maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
-    }
-    maven {
-        name = 'bungeecord-api'
-        url = 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-    maven {
-        name = 'papermc'
-        url = 'https://papermc.io/repo/repository/maven-public/'
-    }
-    maven {
-        name = 'hd'
-        url = "https://repo.codemc.io/repository/maven-public/"
-    }
-    maven {
-        name = 'papi'
-        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
-    maven {
-        name = 'mvdwapi'
-        url = 'http://repo.mvdw-software.be/content/groups/public/'
-    }
-    maven {
-        name = 'CodeMC'
-        url = 'https://repo.codemc.org/repository/maven-public/'
-    }
-    //
-    maven {
-        name = 'simonsators-repo'
-        url = 'http://simonsator.de/repo/'
-    }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = "https://repo.codemc.io/repository/maven-public/" }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = 'http://repo.mvdw-software.be/content/groups/public/' }
+    maven { url = 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url = 'http://simonsator.de/repo/' }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
-    compile 'com.zaxxer:HikariCP:3.4.5'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile "net.md-5:bungeecord-api:1.12-SNAPSHOT"
-    compile "com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT"
-    compile "org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT"
-    //
-    compile "net.milkbowl.vault:VaultAPI:1.7"
-    compile "com.zaxxer:HikariCP:3.4.2"
-    compile "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.3.2"
-    // papi
+    implementation "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
+    implementation 'com.zaxxer:HikariCP:3.4.5'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation "net.md-5:bungeecord-api:1.12-SNAPSHOT"
+    implementation "com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT"
+    implementation "org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT"
+    implementation "net.milkbowl.vault:VaultAPI:1.7"
+    implementation "com.zaxxer:HikariCP:3.4.2"
+    implementation "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.3.2"
     compileOnly "me.clip:placeholderapi:2.10.4"
-    // include fb-api and another parties
-    compile "be.maximvdw:MVdWPlaceholderAPI:1.0.2-SNAPSHOT"
-    compile "com.alessiodp.parties:parties-api:2.6.14"
-    // jetbrains
+    implementation "be.maximvdw:MVdWPlaceholderAPI:1.0.2-SNAPSHOT"
+    implementation "com.alessiodp.parties:parties-api:2.6.14"
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-    compile "de.simonsator:Spigot-Party-API-For-RedisBungee:1.0-SNAPSHOT"
-    compile "de.simonsator:Party-and-Friends-MySQL-Edition-Spigot-API:1.3.2"
-    //
-    compile "com.github.stefvanschie.inventoryframework:IF:0.5.19"
-    // local
-    compileOnly fileTree(dir: "C:\\Libs\\CorpseReborn.jar", include: "*.jar")
-    implementation fileTree(dir: "C:\\Libs\\Plajer", include: "*.jar")
+    implementation "de.simonsator:Spigot-Party-API-For-RedisBungee:1.0-SNAPSHOT"
+    implementation "de.simonsator:Party-and-Friends-MySQL-Edition-Spigot-API:1.3.2"
+    implementation "com.github.stefvanschie.inventoryframework:IF:0.5.19"
     implementation 'org.jetbrains:annotations:15.0'
+    compileOnly fileTree(dir: "C:\\Users\\pepej\\IdeaProjects\\MurderMystery\\libs\\CorpseReborn.jar", include: "*.jar")
+
 }
 
 shadowJar {
-    destinationDir = file("C:\\Users\\Глад Валакас\\Desktop\\Server\\lobby\\plugins")
     dependencies {
         include(dependency("com.alessiodp.parties:parties-api:2.6.14"))
         include(dependency("com.zaxxer:HikariCP:3.4.5"))

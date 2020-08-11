@@ -32,7 +32,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import pl.plajer.murdermystery.utils.strings.StringFormatUtils;
 
 import java.util.ArrayList;
 import java.util.List;

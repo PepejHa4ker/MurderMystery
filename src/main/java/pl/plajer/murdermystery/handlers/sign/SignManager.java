@@ -38,9 +38,9 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.serialization.LocationSerializer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

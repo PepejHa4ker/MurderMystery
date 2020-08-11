@@ -26,8 +26,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

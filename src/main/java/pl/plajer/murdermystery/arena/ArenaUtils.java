@@ -22,7 +22,6 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 
-import lombok.val;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -41,10 +40,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.ItemPosition;
-
-import java.util.Random;
-import java.util.Scanner;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 
 /**
  * @author Plajer

@@ -53,11 +53,11 @@ import pl.plajer.murdermystery.perks.InvisibleHeadPerk;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SpeedPerk;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.ItemPosition;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
-import pl.plajerlair.commonsbox.number.NumberUtils;
+import pl.plajer.murdermystery.utils.number.NumberUtils;
+import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 import java.util.*;
 import java.util.stream.Collectors;

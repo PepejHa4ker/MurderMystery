@@ -40,7 +40,7 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import pl.plajer.murdermystery.utils.strings.StringFormatUtils;
 
 /**
  * @author Plajer

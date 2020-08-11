@@ -20,19 +20,17 @@ package pl.plajer.murdermystery.handlers.gui.setup.components;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 /**
  * @author Plajer

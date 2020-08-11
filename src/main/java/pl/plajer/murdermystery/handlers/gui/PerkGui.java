@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.perks.Perk;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

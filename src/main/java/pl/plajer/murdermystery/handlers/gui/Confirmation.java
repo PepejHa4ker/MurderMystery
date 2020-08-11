@@ -15,7 +15,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.function.BiConsumer;
 

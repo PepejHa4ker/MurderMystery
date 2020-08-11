@@ -9,9 +9,9 @@ import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 
 
 public class ExtremeGoldPerk extends Perk {

@@ -48,7 +48,7 @@ import pl.plajer.murdermystery.commands.completion.TabCompletion;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.string.StringMatcher;
+import pl.plajer.murdermystery.utils.strings.StringMatcher;
 
 /**
  * @author Plajer

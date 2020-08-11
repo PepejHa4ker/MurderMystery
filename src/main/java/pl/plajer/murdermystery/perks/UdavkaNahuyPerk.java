@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.PotionEffectBuilder;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajer.murdermystery.utils.effects.PotionEffectBuilder;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 
 public class UdavkaNahuyPerk extends Perk {
 

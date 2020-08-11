@@ -14,10 +14,8 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
-import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-
-import java.util.HashMap;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 
 public class StartGui implements GuiComponent {
 

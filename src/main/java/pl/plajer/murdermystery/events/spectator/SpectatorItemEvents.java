@@ -44,8 +44,8 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 /**
  * @author Plajer

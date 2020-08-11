@@ -39,10 +39,10 @@ import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.ItemPosition;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer

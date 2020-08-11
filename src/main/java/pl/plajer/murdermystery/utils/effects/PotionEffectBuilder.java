@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.utils;
+package pl.plajer.murdermystery.utils.effects;
 
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

@@ -58,10 +58,10 @@ import pl.plajer.murdermystery.user.data.MysqlManager;
 import pl.plajer.murdermystery.utils.ExceptionLogHandler;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajer.murdermystery.utils.database.MysqlDatabase;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 import java.io.File;
 import java.util.Arrays;

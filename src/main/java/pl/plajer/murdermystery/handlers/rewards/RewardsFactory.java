@@ -25,8 +25,8 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.engine.ScriptEngine;
 
 import java.util.HashMap;
 import java.util.HashSet;

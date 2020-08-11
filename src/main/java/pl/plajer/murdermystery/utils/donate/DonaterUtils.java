@@ -1,10 +1,10 @@
-package pl.plajer.murdermystery.utils;
+package pl.plajer.murdermystery.utils.donate;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 @UtilityClass
 public class DonaterUtils {

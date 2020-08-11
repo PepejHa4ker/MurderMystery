@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.utils;
+package pl.plajer.murdermystery.utils.donate;
 
 public enum DonatType {
     DEF,

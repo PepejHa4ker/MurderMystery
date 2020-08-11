@@ -27,8 +27,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.serialization.LocationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;

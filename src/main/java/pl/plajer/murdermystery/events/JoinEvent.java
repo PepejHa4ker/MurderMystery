@@ -30,7 +30,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 
 /**

@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.utils.particle.effect;
+package pl.plajer.murdermystery.utils.effects.particle.effect;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

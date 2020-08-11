@@ -23,7 +23,7 @@ import org.bukkit.Bukkit;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajer.murdermystery.utils.database.MysqlDatabase;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Contract;
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 /**
  * @author Plajer

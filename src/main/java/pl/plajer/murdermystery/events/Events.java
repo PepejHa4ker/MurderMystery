@@ -47,10 +47,10 @@ import pl.plajer.murdermystery.handlers.gui.PotionGui;
 import pl.plajer.murdermystery.handlers.gui.StartGui;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.Maths;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.number.Maths;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.message.type.TitleMessage;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 
 /**

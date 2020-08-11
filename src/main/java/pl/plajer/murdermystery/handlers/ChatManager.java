@@ -20,17 +20,12 @@ package pl.plajer.murdermystery.handlers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajer.murdermystery.utils.services.exception.ReportedException;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import pl.plajer.murdermystery.utils.strings.StringFormatUtils;
 
 /**
  * @author Plajer

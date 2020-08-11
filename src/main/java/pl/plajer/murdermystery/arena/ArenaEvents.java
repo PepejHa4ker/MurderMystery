@@ -61,11 +61,11 @@ import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SecondChancePerk;
 import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.ItemPosition;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

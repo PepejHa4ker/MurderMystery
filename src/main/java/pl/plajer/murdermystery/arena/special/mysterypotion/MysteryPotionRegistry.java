@@ -28,7 +28,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 /**
  * @author Plajer

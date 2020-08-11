@@ -51,15 +51,15 @@
   import pl.plajer.murdermystery.handlers.party.GameParty;
   import pl.plajer.murdermystery.handlers.rewards.Reward;
   import pl.plajer.murdermystery.user.User;
-  import pl.plajer.murdermystery.utils.DonatType;
-  import pl.plajer.murdermystery.utils.DonaterUtils;
-  import pl.plajer.murdermystery.utils.ItemPosition;
+  import pl.plajer.murdermystery.utils.compat.XMaterial;
+  import pl.plajer.murdermystery.utils.config.ConfigUtils;
+  import pl.plajer.murdermystery.utils.donate.DonatType;
+  import pl.plajer.murdermystery.utils.donate.DonaterUtils;
+  import pl.plajer.murdermystery.utils.items.ItemBuilder;
+  import pl.plajer.murdermystery.utils.items.ItemPosition;
   import pl.plajer.murdermystery.utils.message.type.TitleMessage;
-  import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-  import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-  import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-  import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-  import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+  import pl.plajer.murdermystery.utils.misc.MiscUtils;
+  import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
   import java.util.ArrayList;
   import java.util.List;

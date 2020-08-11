@@ -25,7 +25,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+
 
 /**
  * @author Plajer

@@ -20,10 +20,9 @@ package pl.plajer.murdermystery.handlers.gui.setup;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import pl.plajer.murdermystery.utils.serialization.LocationSerializer;
 
 /**
  * @author Plajer

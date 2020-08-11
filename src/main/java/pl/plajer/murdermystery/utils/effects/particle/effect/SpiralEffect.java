@@ -1,7 +1,7 @@
-package pl.plajer.murdermystery.utils.particle.effect;
+package pl.plajer.murdermystery.utils.effects.particle.effect;
 
 import org.bukkit.Location;
-import pl.plajer.murdermystery.utils.particle.ParticlePlayer;
+import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

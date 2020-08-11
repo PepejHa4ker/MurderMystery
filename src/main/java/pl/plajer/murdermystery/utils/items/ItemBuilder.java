@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.utils;
+package pl.plajer.murdermystery.utils.items;
 
 import lombok.val;
 import lombok.var;
