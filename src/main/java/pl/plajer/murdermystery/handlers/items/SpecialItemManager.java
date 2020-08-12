@@ -39,7 +39,7 @@ public class SpecialItemManager {
     if (specialItems.containsKey(name)) {
       return specialItems.get(name);
     }
-    return null;
+    throw new IllegalArgumentException();
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
@@ -49,6 +49,6 @@ public class SpecialItemManager {
         return key;
       }
     }
-    return null;
+    throw new IllegalArgumentException();
   }
 }

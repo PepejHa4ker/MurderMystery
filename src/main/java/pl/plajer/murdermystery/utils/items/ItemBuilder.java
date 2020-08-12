@@ -33,17 +33,18 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder data(byte data) {
-        this.itemStack.getData().setData(data);
+    public ItemBuilder color(short color) {
+        this.itemStack.setDurability(color);
         return this;
     }
 
     public ItemBuilder name(String name) {
         val meta = this.itemStack.getItemMeta();
-        meta.setDisplayName(name);
+        meta.setDisplayName(name.replace('&', '§'));
         this.itemStack.setItemMeta(meta);
         return this;
     }
+
 
     public ItemBuilder enchantment(Enchantment enchantment) {
         this.itemStack.addUnsafeEnchantment(enchantment, 1);
@@ -66,25 +67,13 @@ public class ItemBuilder {
             lore = new ArrayList();
         }
 
+        name = name.stream()
+                .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                .collect(Collectors.toList());
+
         lore.addAll(name);
         meta.setLore(lore);
         this.itemStack.setItemMeta(meta);
-        return this;
-    }
-
-    public ItemBuilder colorizeItem() {
-        val meta = this.itemStack.getItemMeta();
-        if (meta.hasDisplayName()) {
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', meta.getDisplayName()));
-        }
-
-        if (meta.hasLore()) {
-            meta.setLore(meta.getLore()
-                    .stream()
-                    .map(line -> ChatColor.translateAlternateColorCodes('&', line))
-                    .collect(Collectors.toList()));
-        }
-
         return this;
     }
 

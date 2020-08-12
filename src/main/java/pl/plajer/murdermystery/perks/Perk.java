@@ -58,29 +58,29 @@ public abstract class Perk {
     public void tryBuy(Player player) {
         val user = Main.getInstance().getUserManager().getUser(player);
         if (user.getPerks().contains(this)) {
-            user.getPlayer().sendMessage("§cПерк уже выбран");
+            user.getPlayer().sendMessage("§cСпособность уже выбрана");
             return;
         }
         if (Main.getInstance().getEconomy().getBalance(user.getPlayer()) < this.getPrice()) {
-            user.getPlayer().sendMessage("§cНедостаточно средств.");
+            user.getPlayer().sendMessage("§cНедостаточно средств");
             return;
         }
 
-        if (!player.hasPermission("murder.grand")) {
+        if (player.hasPermission("murder.prem")) {
             if (user.getPerks().size() == 2) {
-                user.getPlayer().sendMessage("§cВы можете взять только 2 способности на игру.");
+                user.getPlayer().sendMessage("§cВы можете взять только 2 способности на игру");
                 return;
             }
         } else {
             if (user.getPerks().size() == 1) {
-                user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру.");
+                user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру");
                 return;
             }
         }
 
         Main.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getPrice());
         user.getPerks().add(this);
-        player.sendMessage("§6Перк " + this.getName() + " §6успешно выбран.");
+        player.sendMessage("§6Способность " + this.getName() + " §6успешно выбрана");
     }
 
     public static Perk getPerkByName(String perkName) {
@@ -89,7 +89,7 @@ public abstract class Perk {
                 return perk;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Cannot find perk");
     }
 
 
@@ -99,7 +99,7 @@ public abstract class Perk {
                 return perk;
             }
         }
-        return null;
+       throw new IllegalArgumentException("Cannot find perk");
     }
 
     public static boolean has(Player player, Class<? extends Perk> clazz) {

@@ -37,11 +37,10 @@ public class StartGui implements GuiComponent {
     public void injectComponents(StaticPane pane) {
         pane.setOnClick(e -> e.setCancelled(true));
         pane.addItem(new GuiItem(new ItemBuilder(Material.IRON_INGOT)
-                .name("§eОбычное ускорение")
-                .lore("§6Доступно от §aVIP",
-                        "§6Позволяет сократить время запуска арены до 5 секунд и дополнительно получить 1 золото в игре.",
-                        "§3(Работает только для Вас)")
-                .colorizeItem()
+                .name("&eОбычное ускорение")
+                .lore("&6Доступно от §aVIP")
+                .lore("&6Позволяет сократить время запуска арены до 5 секунд и дополнительно получить 1 золото в игре.")
+                .lore("&3(Работает только для Вас)")
                 .build(), e -> {
             val arena = ArenaRegistry.getArena(player);
             if (arena == null) {
@@ -65,11 +64,10 @@ public class StartGui implements GuiComponent {
         }), 0, 0);
         if(player.hasPermission("murder.pstart")) {
             pane.addItem(new GuiItem(new ItemBuilder(Material.EMERALD)
-                    .name("§eМоментальное ускорение")
-                    .lore("§6Доступно от §bPREMIUM",
-                            "§6Позволяет моментально запустить игру и дополнительно получить 3 золота в игре",
-                            "§3(Работает только для Вас)")
-                    .colorizeItem()
+                    .name("&eМоментальное ускорение")
+                    .lore("&6Доступно от §bPREMIUM")
+                    .lore("&6Позволяет моментально запустить игру и дополнительно получить 3 золота в игре")
+                    .lore("&3(Работает только для Вас)")
                     .build(), e -> {
                 val arena = ArenaRegistry.getArena(player);
                 if (arena == null) {
@@ -94,11 +92,10 @@ public class StartGui implements GuiComponent {
         }
         if(player.hasPermission("murder.gstart")) {
             pane.addItem(new GuiItem(new ItemBuilder(Material.DIAMOND)
-                    .name("§eСУПЕР УСКОРЕНИЕ")
-                    .lore("§6Доступно §eGRAND",
-                            "§6Позволяет запустить игру моментально и дополнительно получить 5 золота в игре",
-                            "§3(Работает только для Вас)")
-                    .colorizeItem()
+                    .name("&eСУПЕР УСКОРЕНИЕ")
+                    .lore("&6Доступно §eGRAND")
+                    .lore("&6Позволяет запустить игру моментально и дополнительно получить 5 золота в игре")
+                    .lore("&3(Работает только для Вас)")
                     .build(), e -> {
                 val arena = ArenaRegistry.getArena(player);
                 if (arena == null) {

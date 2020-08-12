@@ -31,7 +31,7 @@ public class PerkGui implements GuiComponent {
         pane.setOnClick(event -> event.setCancelled(true));
         pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE)
                 .name("§c")
-                .data((byte) 14)
+                .color((short) 13)
                 .build());
         AtomicInteger index = new AtomicInteger(2);
         Perk.getAllPerks().forEach(perk -> {
@@ -42,7 +42,7 @@ public class PerkGui implements GuiComponent {
             index.incrementAndGet();
         });
         pane.addItem(new GuiItem(new ItemBuilder(Material.EMPTY_MAP)
-                .name("§cБаланс: §a" + plugin.getEconomy().getBalance(player))
+                .name("&cБаланс: &a" + plugin.getEconomy().getBalance(player))
                 .build()), 4, 0);
     }
 

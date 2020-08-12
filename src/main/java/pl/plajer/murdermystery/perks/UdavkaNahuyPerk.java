@@ -12,10 +12,10 @@ import pl.plajer.murdermystery.utils.items.ItemPosition;
 public class UdavkaNahuyPerk extends Perk {
 
     public static ItemStack item = new ItemBuilder(Material.LEASH)
-            .name("§8Заключённый")
-            .lore("§eПри использовании этой способности")
-            .lore("§eвы можете дать другому игроку негативные эффекты")
-            .lore("§eЦена: §c600.0§e монет")
+            .name("&8Заключённый")
+            .lore("&eПри использовании этой способности")
+            .lore("&eвы можете дать другому игроку негативные эффекты")
+            .lore("&eЦена: &c600.0&e монет")
             .build();
 
 

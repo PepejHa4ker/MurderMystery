@@ -23,10 +23,10 @@ public class SecondChancePerk extends Perk {
                 "§cВторой шанс",
                 500.0,
                 new ItemBuilder(Material.BED)
-                        .name("§cВторой шанс")
-                        .lore("§eС шансом 25% Вы можете получить второй шанс после смерти")
-                        .lore("§7(работает только на удары мечём)")
-                        .lore("§eЦена: §c500.0§e монет")
+                        .name("&cВторой шанс")
+                        .lore("&eС шансом 25% Вы можете получить второй шанс после смерти")
+                        .lore("&7(работает только на удары мечём)")
+                        .lore("&eЦена: &c500.0&e монет")
                         .build(),
                 null
         );
@@ -51,7 +51,7 @@ public class SecondChancePerk extends Perk {
                     1,
                     true,
                     3
-            );
+            ).play();
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
             player.teleport(arena.getPlayerSpawnPoints().get(new Random().nextInt(arena.getPlayerSpawnPoints().size())));
             player.sendMessage("§cВот же повезло удрать!");

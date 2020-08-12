@@ -23,10 +23,10 @@ public class InvisibleHeadPerk extends Perk {
                 "§5Магическая шляпа",
                 750.0,
                 new ItemBuilder(Material.IRON_HELMET)
-                        .name("§5Магическая шляпа")
-                        .lore("§eС помощью этой способности Вы сможете")
-                        .lore("§eс маленьким шансом получить невидимость в течение игры.")
-                        .lore("§eЦена: §c750.0§e монет")
+                        .name("&5Магическая шляпа")
+                        .lore("&eС помощью этой способности Вы сможете")
+                        .lore("&eс маленьким шансом получить невидимость в течение игры.")
+                        .lore("&eЦена: &c750.0&e монет")
                         .enchantment(Enchantment.PROTECTION_ENVIRONMENTAL)
                         .build(),
                 null
@@ -48,7 +48,7 @@ public class InvisibleHeadPerk extends Perk {
                     1,
                     false,
                     3
-            );
+            ).play();
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10 * 20, 0, true, true));

@@ -2,9 +2,9 @@ name: MurderMystery
 main: pl.plajer.murdermystery.Main
 authors: [Plajer, Tigerpanzer, montlikadani]
 version: ${project.version}
-api-version: 1.13
+api-version: 1.12
 depend: [HolographicDisplays]
-softdepend: [CorpseReborn, PlaceholderAPI, LeaderHeads, Parties, Spigot-Party-API-PAF, PartyAndFriends]
+softdepend: [CorpseReborn, PlaceholderAPI, LeaderHeads, Parties, Spigot-Party-API-PAF, PartyAndFriends, Vault]
 
 commands:
   MurderMystery:

@@ -22,9 +22,9 @@ public class SpeedPerk extends Perk {
                 "§bБеги, пока можешь",
                 200.0,
                 new ItemBuilder(Material.RABBIT_FOOT)
-                        .name("§bБеги, пока можешь")
-                        .lore("§eВы можете с некоторым шансом получить скорость")
-                        .lore("§eЦена: §c200.0§e монет")
+                        .name("&bБеги, пока можешь")
+                        .lore("&eВы можете с некоторым шансом получить скорость")
+                        .lore("&eЦена: &c200.0&e монет")
                         .build(),
                 null);
 
@@ -51,7 +51,7 @@ public class SpeedPerk extends Perk {
                     0.75,
                     true,
                     5
-            );
+            ).play();
 
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
         }

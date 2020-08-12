@@ -63,10 +63,7 @@
   import pl.plajer.murdermystery.utils.misc.MiscUtils;
   import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
-  import java.util.ArrayList;
-  import java.util.List;
-  import java.util.Objects;
-  import java.util.Random;
+  import java.util.*;
 
   /**
    * @author Plajer
@@ -77,9 +74,29 @@
   @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
   public final class ArenaManager {
 
-      private static Main plugin = JavaPlugin.getPlugin(Main.class);
+      private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
       private ArenaManager() {
+      }
+
+
+      public static void notifyPlayersNotInArena(Arena arena, String message) {
+          for(final Player player : Bukkit.getOnlinePlayers()) {
+              if(arena.getPlayers().contains(player)) continue;
+              player.sendMessage(ChatManager.colorRawMessage(message));
+          }
+      }
+
+      public static void sendArenaMessages(Arena arena, Collection<String> messages) {
+          for(final Player player : arena.getPlayers()) {
+              for(final String message : messages) {
+                  player.sendMessage(ChatManager.colorRawMessage(message));
+              }
+          }
+      }
+
+      public static void sendArenaMessages(Arena arena, String... messages) {
+         ArenaManager.sendArenaMessages(arena, Arrays.asList(messages));
       }
 
       /**
@@ -471,6 +488,7 @@
                   new BukkitRunnable() {
                       int i = 0;
 
+                      @Override
                       public void run() {
                           if (i == 4 || !arena.getPlayers().contains(player)) {
                               this.cancel();

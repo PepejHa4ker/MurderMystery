@@ -64,7 +64,7 @@ import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Arena extends BukkitRunnable {
 
     static final Random random = new Random();
@@ -158,11 +158,7 @@ public class Arena extends BukkitRunnable {
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
                     }
-                    Bukkit.getOnlinePlayers()
-                            .stream()
-                            .filter(p -> !getPlayers().contains(p))
-                            .forEach(player -> player.sendMessage("§6Арена §a" + getMapName() + " §6скоро начнётся!"));
-
+                    ArenaManager.notifyPlayersNotInArena(this, "&6Арена &a" + getMapName() + " &6скоро начнётся!");
                     ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
                     setArenaState(ArenaState.STARTING);
                     setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
@@ -215,7 +211,6 @@ public class Arena extends BukkitRunnable {
                         try {
                             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
                         } catch (NumberFormatException ignored) {
-                            //fail silently
                         }
                     }
                 }
@@ -223,10 +218,7 @@ public class Arena extends BukkitRunnable {
                     MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
                     Bukkit.getPluginManager().callEvent(gameStartEvent);
                     setArenaState(ArenaState.IN_GAME);
-                    Bukkit.getOnlinePlayers()
-                            .stream()
-                            .filter(p -> !getPlayers().contains(p))
-                            .forEach(p -> p.sendMessage("§6Арена §a" + getMapName() + " §6была только что запущена!"));
+                    ArenaManager.notifyPlayersNotInArena(this, "&6Арена &a" + getMapName() + " &6была только что запущена!");
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setProgress(1.0);
                     }
@@ -244,6 +236,13 @@ public class Arena extends BukkitRunnable {
                         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
                         setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
                         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+
+                    }
+
+                    for (final User user : plugin.getUserManager().getUsers(this)) {
+                        if (user.getPotion() != null) {
+                            ItemPosition.setItem(user.getPlayer(), ItemPosition.POTION, user.getPotion());
+                        }
                     }
 
                     Map<User, Double> murdererChances = new HashMap<>();
@@ -297,18 +296,12 @@ public class Arena extends BukkitRunnable {
                         playersToSet.remove(detective);
                         ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
                         ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-                        if(plugin.getUserManager().getUser(detective).getPotion() != null) {
-                            detective.getInventory().addItem(plugin.getUserManager().getUser(detective).getPotion());
-                        }
                     }
 
 
                     for (Player p : playersToSet) {
                         p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-                        User u = plugin.getUserManager().getUser(p);
-                        if (u.getPotion() != null) {
-                            p.getInventory().addItem(u.getPotion());
-                        }
+
                     }
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
@@ -321,11 +314,7 @@ public class Arena extends BukkitRunnable {
                 break;
             case IN_GAME:
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-                    if (getMaximumPlayers() <= getPlayers().size()) {
-                        plugin.getServer().setWhitelist(true);
-                    } else {
-                        plugin.getServer().setWhitelist(false);
-                    }
+                    plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
                 }
                 if (getTimer() <= 0) {
                     ArenaManager.stopGame(false, this);
@@ -336,10 +325,10 @@ public class Arena extends BukkitRunnable {
                         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                     }
                     if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-                        for(Player p : getPlayers()) {
+                        for (Player p : getPlayers()) {
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_AMBIENT, 0.5f, 1f);
                             p.sendMessage("§cМаньяк получил меч! Бегите, глупцы!");
-                            if(allMurderer.contains(p)) continue;
+                            if (allMurderer.contains(p)) continue;
                             p.sendTitle("§cМаньяк получил меч!", "", 10, 30, 5);
                         }
                         for (Player p : allMurderer) {
@@ -347,9 +336,6 @@ public class Arena extends BukkitRunnable {
                             if (murderer.isSpectator()) continue;
                             ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
                             User u = plugin.getUserManager().getUser(p);
-                            if (u.getPotion() != null) {
-                                p.getInventory().addItem(u.getPotion());
-                            }
                             p.getInventory().setHeldItemSlot(0);
                         }
                     }
@@ -1033,16 +1019,16 @@ public class Arena extends BukkitRunnable {
     }
 
 
-public enum BarAction {
-    ADD, REMOVE
-}
+    public enum BarAction {
+        ADD, REMOVE
+    }
 
-public enum GameLocation {
-    LOBBY, END
-}
+    public enum GameLocation {
+        LOBBY, END
+    }
 
-public enum CharacterType {
-    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
-}
+    public enum CharacterType {
+        MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+    }
 
 }

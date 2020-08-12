@@ -48,7 +48,6 @@ import pl.plajer.murdermystery.handlers.party.PartyHandler;
 import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.scheduler.Scheduler;
-import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.user.RankManager;
@@ -57,10 +56,10 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajer.murdermystery.utils.database.MysqlDatabase;
-import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.database.MysqlDatabase;
 import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
+import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 import java.io.File;
 import java.util.Arrays;
@@ -73,21 +72,34 @@ import java.util.concurrent.ScheduledExecutorService;
  * Created at 03.08.2018
  */
 public class Main extends JavaPlugin {
-    @Getter private static Main instance;
+    @Getter
+    private static Main instance;
     private String version;
     private boolean forceDisable = false;
-    @Getter private ExecutorService executorService;
-    @Getter private ScheduledExecutorService scheduledExecutorService;
-    @Getter private BungeeManager bungeeManager;
-    @Getter private RewardsFactory rewardsHandler;
-    @Getter private MysqlDatabase database;
-    @Getter private SignManager signManager;
-    @Getter private CorpseHandler corpseHandler;
-    @Getter private PartyHandler partyHandler;
-    @Getter private ConfigPreferences configPreferences;
-    @Getter private HookManager hookManager;
-    @Getter private UserManager userManager;
-    @Getter private Economy economy;
+    @Getter
+    private ExecutorService executorService;
+    @Getter
+    private ScheduledExecutorService scheduledExecutorService;
+    @Getter
+    private BungeeManager bungeeManager;
+    @Getter
+    private RewardsFactory rewardsHandler;
+    @Getter
+    private MysqlDatabase database;
+    @Getter
+    private SignManager signManager;
+    @Getter
+    private CorpseHandler corpseHandler;
+    @Getter
+    private PartyHandler partyHandler;
+    @Getter
+    private ConfigPreferences configPreferences;
+    @Getter
+    private HookManager hookManager;
+    @Getter
+    private UserManager userManager;
+    @Getter
+    private Economy economy;
 
 
     @Override
@@ -236,7 +248,6 @@ public class Main extends JavaPlugin {
     }
 
 
-
     private void saveAllUserStatistics() {
         for (Player player : getServer().getOnlinePlayers()) {
             User user = userManager.getUser(player);
@@ -256,9 +267,8 @@ public class Main extends JavaPlugin {
     }
 
     private void setupEconomy() {
-        if(getServer().getPluginManager().getPlugin("Vault") == null) {
-            return;
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
         }
-        economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
     }
 }

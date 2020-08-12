@@ -53,15 +53,15 @@ public class Confirmation implements InventoryHolder {
 
     public static ItemStack getAcceptItem() {
         return new ItemBuilder(Material.WOOL)
-                .data((byte) 13)
-                .name("§aПодтвердить")
+                .color((short) 13)
+                .name("&aПодтвердить")
                 .build();
     }
 
     public static ItemStack getDeclineItem() {
         return new ItemBuilder(Material.WOOL)
-                .data((byte) 14)
-                .name("§cОтклонить")
+                .color((short) 14)
+                .name("&cОтклонить")
                 .build();
     }
 
@@ -109,7 +109,7 @@ public class Confirmation implements InventoryHolder {
         this.inventory.setItem(6, getDeclineItem());
         for (int i = 0; i < 9; i++) {
             if(i == 2 || i == 4 || i == 6)  continue;
-            this.inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE).data((byte) 15).name("&1").build());
+            this.inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE).color((short) 13).name("&1").build());
         }
     }
 

@@ -47,7 +47,7 @@ public class ChatManager {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
   }
 
-  public static String colorMessage(String message, Player player) {
+  public String colorMessage(String message, Player player) {
     String returnString = LanguageManager.getLanguageMessage(message);
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
@@ -55,13 +55,13 @@ public class ChatManager {
     return ChatColor.translateAlternateColorCodes('&', returnString);
   }
 
-  public static void broadcast(Arena arena, String message) {
+  public void broadcast(Arena arena, String message) {
     for (Player p : arena.getPlayers()) {
       p.sendMessage(PLUGIN_PREFIX + message);
     }
   }
 
-  public static String formatMessage(Arena arena, String message, int integer) {
+  public String formatMessage(Arena arena, String message, int integer) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%NUMBER%", Integer.toString(integer));
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));

@@ -24,10 +24,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -107,12 +104,12 @@ public class ArenaEvents implements Listener {
         g.addPane(pane);
         AtomicInteger gold = new AtomicInteger(clicker.getStat(StatsStorage.StatisticType.LOCAL_GOLD));
         pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE)
-                .name("§1")
-                .data((byte) 13)
+                .name("&1")
+                .color((short) 13)
                 .build(), ev -> ev.setCancelled(true));
         pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
-                .name("§eУкажите количество золота")
-                .lore("§cЛевый §6клик - добавить", "§cПравый §6клик - убавить")
+                .name("&eУкажите количество золота")
+                .lore("&cЛевый &6клик - добавить", "&cПравый &6клик - убавить")
                 .amount(gold.get()).build(), event -> {
             event.setCancelled(true);
             if (event.getClick() == ClickType.LEFT && event.getCurrentItem() != null && event.getCurrentItem().getAmount() < clicker.getStat(StatsStorage.StatisticType.LOCAL_GOLD)) {
@@ -218,9 +215,7 @@ public class ArenaEvents implements Listener {
             val perk = Perk.getPerkByClass(SecondChancePerk.class);
             perk.handle(player, null, arena);
             if (perk.success()) {
-                for (Player p : arena.getPlayers()) {
-                    p.sendMessage("§cИгрок §a" + player.getName() + " §cудрал от маньяка!");
-                }
+               ArenaManager.sendArenaMessages(arena, "&cИгрок &a" + player.getName() + "&c удрал от маньяка!");
                 return;
             }
         }
