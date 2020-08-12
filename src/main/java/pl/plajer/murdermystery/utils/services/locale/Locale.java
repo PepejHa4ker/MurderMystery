@@ -28,7 +28,6 @@ import java.util.List;
  * @since 1.2.0
  */
 @Value
-
 public class Locale {
   String name;
   String originalName;

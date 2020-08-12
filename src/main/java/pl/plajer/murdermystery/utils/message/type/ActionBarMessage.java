@@ -7,7 +7,7 @@ import pl.plajer.murdermystery.utils.message.NMSClasses;
 public class ActionBarMessage implements IMessage {
 
     @Getter
-    private String actionBar;
+    private final String actionBar;
 
     /**
      * Create new ActionBarMessage

@@ -46,7 +46,6 @@ public class SetupInventory {
 
   public static final String VIDEO_LINK = "https://tutorial.plajer.xyz";
   static Random random = new Random();
-  @Getter
   static Main plugin = JavaPlugin.getPlugin(Main.class);
   @Getter
   FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");

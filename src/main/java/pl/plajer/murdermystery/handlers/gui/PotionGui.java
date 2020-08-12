@@ -29,8 +29,8 @@ public class PotionGui implements GuiComponent {
      * Created 15.06.2020
      */
 
-    private Player player;
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+    private final Player player;
+    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
     private Gui gui;
 
     public PotionGui(Player player) {

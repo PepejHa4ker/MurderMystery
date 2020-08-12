@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.arena.special.mysterypotion;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.bukkit.potion.PotionEffect;
 
 /**
@@ -25,28 +27,12 @@ import org.bukkit.potion.PotionEffect;
  * <p>
  * Created at 15.10.2018
  */
+@Value
+@AllArgsConstructor
 public class MysteryPotion {
 
-  private String name;
-  private String subtitle;
-  private PotionEffect potionEffect;
-
-  public MysteryPotion(String name, String subtitle, PotionEffect potionEffect) {
-    this.name = name;
-    this.subtitle = subtitle;
-    this.potionEffect = potionEffect;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getSubtitle() {
-    return subtitle;
-  }
-
-  public PotionEffect getPotionEffect() {
-    return potionEffect;
-  }
+  String name;
+  String subtitle;
+  PotionEffect potionEffect;
 
 }

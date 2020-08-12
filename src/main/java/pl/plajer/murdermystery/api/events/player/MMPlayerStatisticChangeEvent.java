@@ -48,9 +48,10 @@
 
 package pl.plajer.murdermystery.api.events.player;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.MurderMysteryEvent;
 import pl.plajer.murdermystery.arena.Arena;
@@ -62,12 +63,14 @@ import pl.plajer.murdermystery.arena.Arena;
  * <p>
  * Called when player receive new statistic.
  */
+
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MMPlayerStatisticChangeEvent extends MurderMysteryEvent {
 
-  private static final HandlerList HANDLERS = new HandlerList();
-  private Player player;
-  private StatsStorage.StatisticType statisticType;
-  private int number;
+  static HandlerList HANDLERS = new HandlerList();
+  Player player;
+  StatsStorage.StatisticType statisticType;
+  int number;
 
   public MMPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
     super(eventArena);

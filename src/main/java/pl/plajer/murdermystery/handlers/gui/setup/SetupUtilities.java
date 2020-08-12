@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.handlers.gui.setup;
 
+import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.murdermystery.arena.Arena;
@@ -29,15 +30,12 @@ import pl.plajer.murdermystery.utils.serialization.LocationSerializer;
  * <p>
  * Created at 25.05.2019
  */
+@AllArgsConstructor
 public class SetupUtilities {
 
-  private FileConfiguration config;
-  private Arena arena;
+  private final FileConfiguration config;
+  private final Arena arena;
 
-  SetupUtilities(FileConfiguration config, Arena arena) {
-    this.config = config;
-    this.arena = arena;
-  }
 
   public String isOptionDone(String path) {
     if (config.isSet(path)) {

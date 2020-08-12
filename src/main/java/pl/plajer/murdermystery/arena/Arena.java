@@ -20,6 +20,8 @@ package pl.plajer.murdermystery.arena;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.val;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -53,53 +55,54 @@ import pl.plajer.murdermystery.perks.InvisibleHeadPerk;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SpeedPerk;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
-import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.number.NumberUtils;
 import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class Arena extends BukkitRunnable {
 
-    private static final Random random = new Random();
-    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-    private final String id;
+    static final Random random = new Random();
+    static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    final String id;
 
-    private Set<Player> players = new HashSet<>();
-    private List<Location> goldSpawnPoints = new ArrayList<>();
-    private List<Item> goldSpawned = new ArrayList<>();
-    private List<Location> playerSpawnPoints = new ArrayList<>();
-    private List<Corpse> corpses = new ArrayList<>();
-    private List<SpecialBlock> specialBlocks = new ArrayList<>();
-    private List<Player> allMurderer = new ArrayList<>();
-    private List<Player> allDetectives = new ArrayList<>();
-    private int murderers = 0;
-    private int detectives = 0;
-    private int spawnGoldTimer = 0;
-    private int spawnGoldTime = 0;
+    final Set<Player> players = new HashSet<>();
+    List<Location> goldSpawnPoints = new ArrayList<>();
+    final List<Item> goldSpawned = new ArrayList<>();
+    List<Location> playerSpawnPoints = new ArrayList<>();
+    final List<Corpse> corpses = new ArrayList<>();
+    final List<SpecialBlock> specialBlocks = new ArrayList<>();
+    final List<Player> allMurderer = new ArrayList<>();
+    final List<Player> allDetectives = new ArrayList<>();
+    int murderers = 0;
+    int detectives = 0;
+    int spawnGoldTimer = 0;
+    int spawnGoldTime = 0;
 
     //contains murderer, detective, fake detective and hero
-    private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
+    final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
     //all arena values that are integers, contains constant and floating values
-    private Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+    final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
     //instead of 3 location fields we use map with GameLocation enum
-    private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+    final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
-    private Hologram bowHologram;
-    private boolean detectiveDead;
-    private boolean murdererLocatorReceived;
-    private boolean hideChances;
+    Hologram bowHologram;
+    boolean detectiveDead;
+    boolean murdererLocatorReceived;
+    boolean hideChances;
 
-    private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
-    private BossBar gameBar;
-    private ScoreboardManager scoreboardManager;
-    private String mapName = "";
-    private boolean ready = true;
-    private boolean forceStart = false;
-    private boolean canForceStart = true;
+    ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
+    BossBar gameBar;
+    final ScoreboardManager scoreboardManager;
+    String mapName = "";
+    boolean ready = true;
+    boolean forceStart = false;
+    boolean canForceStart = true;
 
 
     public Arena(String id) {

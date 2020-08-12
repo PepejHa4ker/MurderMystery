@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 public class ScriptEngine {
 
-    private javax.script.ScriptEngine scriptEngine;
+    private final javax.script.ScriptEngine scriptEngine;
 
     public ScriptEngine() {
         scriptEngine = new ScriptEngineManager().getEngineByName("js");

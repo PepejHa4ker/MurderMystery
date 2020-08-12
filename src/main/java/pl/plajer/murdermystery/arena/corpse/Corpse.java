@@ -20,6 +20,8 @@ package pl.plajer.murdermystery.arena.corpse;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 /**
@@ -27,21 +29,11 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
  * <p>
  * Created at 07.08.2018
  */
+@Value
+@AllArgsConstructor
 public class Corpse {
 
-  private Hologram hologram;
-  private Corpses.CorpseData corpseData;
+  Hologram hologram;
+  Corpses.CorpseData corpseData;
 
-  public Corpse(Hologram hologram, Corpses.CorpseData corpseData) {
-    this.hologram = hologram;
-    this.corpseData = corpseData;
-  }
-
-  public Hologram getHologram() {
-    return hologram;
-  }
-
-  public Corpses.CorpseData getCorpseData() {
-    return corpseData;
-  }
 }

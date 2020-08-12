@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.handlers;
 
+import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -32,22 +33,17 @@ import pl.plajer.murdermystery.utils.strings.StringFormatUtils;
  * <p>
  * Created at 03.08.2018
  */
-@Deprecated //remove static usage
+@UtilityClass
 public class ChatManager {
 
-  public static String PLUGIN_PREFIX;
-  private static Main plugin;
+  public final String PLUGIN_PREFIX = "§cMurderMystery §7> ";
+  private final Main plugin = Main.getInstance();
 
-  public ChatManager(String prefix, Main plugin) {
-    PLUGIN_PREFIX = prefix;
-    ChatManager.plugin = plugin;
-  }
-
-  public static String colorRawMessage(String message) {
+  public String colorRawMessage(String message) {
     return ChatColor.translateAlternateColorCodes('&', message);
   }
 
-  public static String colorMessage(String message) {
+  public String colorMessage(String message) {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
   }
 

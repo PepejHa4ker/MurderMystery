@@ -18,9 +18,6 @@
 
 package pl.plajer.murdermystery.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -28,9 +25,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -39,8 +38,8 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
  */
 public class BowTrailsHandler implements Listener {
 
-  private Main plugin;
-  private Map<String, Particle> registeredTrails = new HashMap<>();
+  private final Main plugin;
+  private final Map<String, Particle> registeredTrails = new HashMap<>();
 
   public BowTrailsHandler(Main plugin) {
     this.plugin = plugin;

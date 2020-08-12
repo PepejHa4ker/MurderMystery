@@ -23,6 +23,7 @@ package pl.plajer.murdermystery.arena.options;
  * <p>
  * Created at 24.03.2019
  */
+
 public enum ArenaOption {
   /**
    * Current arena timer, ex. 30 seconds before game starts.
@@ -37,7 +38,7 @@ public enum ArenaOption {
    */
   MAXIMUM_PLAYERS(10);
 
-  private int defaultValue;
+  int defaultValue;
 
   ArenaOption(int defaultValue) {
     this.defaultValue = defaultValue;

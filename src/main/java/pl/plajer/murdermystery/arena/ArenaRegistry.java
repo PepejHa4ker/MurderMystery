@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.arena;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,10 +38,12 @@ import java.util.List;
 /**
  * Created by Tom on 27/07/2014.
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class ArenaRegistry {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static List<Arena> arenas = new ArrayList<>();
+  static Main plugin = JavaPlugin.getPlugin(Main.class);
+  static List<Arena> arenas = new ArrayList<>();
 
   /**
    * Checks if player is in any arena

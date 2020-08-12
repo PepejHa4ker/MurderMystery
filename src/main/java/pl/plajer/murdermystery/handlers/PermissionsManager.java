@@ -29,7 +29,7 @@ import pl.plajer.murdermystery.Main;
  */
 public class PermissionsManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static String joinFullPerm = "murdermystery.fullgames";
   private static String joinPerm = "murdermystery.join.<arena>";
 

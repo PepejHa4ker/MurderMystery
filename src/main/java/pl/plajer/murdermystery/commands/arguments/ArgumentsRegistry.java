@@ -18,24 +18,18 @@
 
 package pl.plajer.murdermystery.commands.arguments;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.commands.arguments.admin.ListArenasArgument;
@@ -50,16 +44,23 @@ import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.strings.StringMatcher;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * @author Plajer
  * <p>
  * Created at 11.01.2019
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class ArgumentsRegistry implements CommandExecutor {
 
-  private Main plugin;
-  private TabCompletion tabCompletion;
-  private Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
+  Main plugin;
+  TabCompletion tabCompletion;
+  Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;

@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class MiscUtils {
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     private MiscUtils() {
     }
@@ -31,9 +31,6 @@ public class MiscUtils {
         int rt = random.nextInt(4) + 1;
         FireworkEffect.Type type;
         switch(rt) {
-            case 1:
-                type = FireworkEffect.Type.BALL;
-                break;
             case 2:
                 type = FireworkEffect.Type.BALL_LARGE;
                 break;

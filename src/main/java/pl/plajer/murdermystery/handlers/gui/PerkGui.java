@@ -14,9 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PerkGui implements GuiComponent {
 
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
-    private Gui gui;
-    private Player player;
+    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private final Gui gui;
+    private final Player player;
 
     public PerkGui(Player player) {
         this.player = player;
@@ -36,7 +36,7 @@ public class PerkGui implements GuiComponent {
         AtomicInteger index = new AtomicInteger(2);
         Perk.getAllPerks().forEach(perk -> {
             pane.addItem(new GuiItem(perk.getDisplayItem(), event -> {
-                perk.buy((Player) event.getWhoClicked());
+                perk.tryBuy((Player) event.getWhoClicked());
                 event.getWhoClicked().closeInventory();
             }), index.get(), 1);
             index.incrementAndGet();

@@ -21,7 +21,6 @@ package pl.plajer.murdermystery.handlers.sign;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 
 import javax.annotation.Nullable;
@@ -32,20 +31,16 @@ import javax.annotation.Nullable;
  */
 public class ArenaSign {
 
-  private static Main plugin;
-  private Sign sign;
+  private final Sign sign;
   private Block behind;
-  private Arena arena;
+  private final Arena arena;
 
   public ArenaSign(Sign sign, Arena arena) {
     this.sign = sign;
     this.arena = arena;
     setBehindBlock();
   }
-
-  public static void init(Main plugin) {
-    ArenaSign.plugin = plugin;
-  }
+  
 
   private void setBehindBlock() {
     this.behind = null;

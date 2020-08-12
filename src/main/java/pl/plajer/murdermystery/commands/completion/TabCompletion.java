@@ -18,30 +18,33 @@
 
 package pl.plajer.murdermystery.commands.completion;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
 import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
  * <p>
  * Created at 05.08.2018
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class TabCompletion implements TabCompleter {
 
-  private List<CompletableArgument> registeredCompletions = new ArrayList<>();
-  private ArgumentsRegistry registry;
+  List<CompletableArgument> registeredCompletions = new ArrayList<>();
+  ArgumentsRegistry registry;
 
   public TabCompletion(ArgumentsRegistry registry) {
     this.registry = registry;

@@ -21,6 +21,8 @@ package pl.plajer.murdermystery.arena;
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -61,11 +63,11 @@ import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SecondChancePerk;
 import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
-import pl.plajer.murdermystery.utils.Utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -75,6 +77,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created at 13.03.2018
  */
 @SuppressWarnings("deprecation")
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class ArenaEvents implements Listener {
 
     private Main plugin;

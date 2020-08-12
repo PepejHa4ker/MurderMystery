@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Deprecated
 public class MigratorUtils {
 
     /**

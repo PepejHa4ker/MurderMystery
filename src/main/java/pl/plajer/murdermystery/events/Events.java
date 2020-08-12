@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.events;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
@@ -58,9 +60,11 @@ import pl.plajer.murdermystery.utils.message.type.TitleMessage;
  * <p>
  * Created at 05.08.2018
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class Events implements Listener {
 
-    private Main plugin;
+    Main plugin;
 
     public Events(Main plugin) {
         this.plugin = plugin;

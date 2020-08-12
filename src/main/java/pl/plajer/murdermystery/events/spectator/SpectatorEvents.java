@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.events.spectator;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,6 +51,7 @@ import pl.plajer.murdermystery.user.User;
  * <p>
  * Created at 05.08.2018
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class SpectatorEvents implements Listener {
 
   private Main plugin;

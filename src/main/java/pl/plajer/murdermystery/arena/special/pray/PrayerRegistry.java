@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.arena.special.pray;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -45,10 +47,11 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 16.10.2018
  */
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class PrayerRegistry {
 
   private static Main plugin;
-  private static List<Prayer> prayers = new ArrayList<>();
+  private static final List<Prayer> prayers = new ArrayList<>();
   private static Random rand;
 
   private PrayerRegistry() {

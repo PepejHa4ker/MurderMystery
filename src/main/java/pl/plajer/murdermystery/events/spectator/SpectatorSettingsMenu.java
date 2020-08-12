@@ -40,8 +40,8 @@ import pl.plajer.murdermystery.utils.items.ItemBuilder;
 @Deprecated //api subject to merge
 public class SpectatorSettingsMenu implements Listener {
 
-    private String inventoryName;
-    private String speedOptionName;
+    private final String inventoryName;
+    private final String speedOptionName;
     private Inventory inv;
 
     public SpectatorSettingsMenu(JavaPlugin plugin, String inventoryName, String speedOptionName) {

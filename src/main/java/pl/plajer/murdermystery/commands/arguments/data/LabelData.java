@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.commands.arguments.data;
 
+import lombok.Data;
 import pl.plajer.murdermystery.handlers.ChatManager;
 
 /**
@@ -25,35 +26,16 @@ import pl.plajer.murdermystery.handlers.ChatManager;
  * <p>
  * Created at 11.01.2019
  */
+@Data
 public class LabelData {
 
-  private String text;
-  private String command;
-  private String description;
+  String text;
+  String command;
+  String description;
 
   public LabelData(String text, String command, String description) {
     this.text = ChatManager.colorRawMessage(text);
     this.command = command;
     this.description = ChatManager.colorRawMessage(description);
-  }
-
-  public String getText() {
-    return text;
-  }
-
-  public String getCommand() {
-    return command;
-  }
-
-  public void setCommand(String command) {
-    this.command = command;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 }

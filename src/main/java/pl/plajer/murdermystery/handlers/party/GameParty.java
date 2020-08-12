@@ -18,30 +18,18 @@
 
 package pl.plajer.murdermystery.handlers.party;
 
-import java.util.List;
-
+import lombok.Value;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * @author Plajer
  * <p>
  * Created at 09.02.2020
  */
+@Value
 public class GameParty {
-
-  private List<Player> players;
-  private Player leader;
-
-  public GameParty(List<Player> players, Player leader) {
-    this.players = players;
-    this.leader = leader;
-  }
-
-  public List<Player> getPlayers() {
-    return players;
-  }
-
-  public Player getLeader() {
-    return leader;
-  }
+  List<Player> players;
+  Player leader;
 }

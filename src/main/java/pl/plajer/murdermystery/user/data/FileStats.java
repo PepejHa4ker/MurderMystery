@@ -31,8 +31,8 @@ import pl.plajer.murdermystery.utils.config.ConfigUtils;
  */
 public class FileStats implements UserDatabase {
 
-  private Main plugin;
-  private FileConfiguration config;
+  private final Main plugin;
+  private final FileConfiguration config;
 
   public FileStats(Main plugin) {
     this.plugin = plugin;

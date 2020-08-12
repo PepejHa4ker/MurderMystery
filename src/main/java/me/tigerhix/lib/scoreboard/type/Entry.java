@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-    public class Entry {
+public class Entry {
 
-        String name;
-        int position;
-    }
+    String name;
+    int position;
+}

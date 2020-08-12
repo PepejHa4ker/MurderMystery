@@ -8,6 +8,7 @@ public class TrapRegisterComponent implements ArenaSetupGuiComponent {
 
     private SetupInventory setupInventory;
 
+
     @Override
     public void prepare(SetupInventory setupInventory) {
         this.setupInventory = setupInventory;

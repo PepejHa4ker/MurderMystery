@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.commands.arguments.admin.arena;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,9 +44,12 @@ import java.util.Set;
  * <p>
  * Created at 18.05.2019
  */
+
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class ReloadArgument {
 
-  private Set<CommandSender> confirmations = new HashSet<>();
+
+  Set<CommandSender> confirmations = new HashSet<>();
 
   public ReloadArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("reload", "murdermystery.admin.reload", CommandArgument.ExecutorType.BOTH,

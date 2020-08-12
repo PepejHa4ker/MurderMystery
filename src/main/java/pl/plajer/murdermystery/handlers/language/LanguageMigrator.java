@@ -35,7 +35,7 @@ public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 10;
   public static final int LANGUAGE_FILE_VERSION = 2;
-  private Main plugin;
+  private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
     this.plugin = plugin;

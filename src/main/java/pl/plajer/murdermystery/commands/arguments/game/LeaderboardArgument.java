@@ -18,6 +18,18 @@
 
 package pl.plajer.murdermystery.commands.arguments.game;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import pl.plajer.murdermystery.ConfigPreferences;
+import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
+import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
+import pl.plajer.murdermystery.commands.completion.CompletableArgument;
+import pl.plajer.murdermystery.handlers.ChatManager;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,27 +39,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
-import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.api.StatsStorage;
-import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
-import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
-import pl.plajer.murdermystery.commands.completion.CompletableArgument;
-import pl.plajer.murdermystery.handlers.ChatManager;
-
 /**
  * @author Plajer
  * <p>
  * Created at 18.05.2019
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class LeaderboardArgument {
 
-  private ArgumentsRegistry registry;
-
-
+  ArgumentsRegistry registry;
   public LeaderboardArgument(ArgumentsRegistry registry) {
     this.registry = registry;
     List<String> stats = new ArrayList<>();

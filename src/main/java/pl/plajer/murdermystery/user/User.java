@@ -44,14 +44,14 @@ import java.util.stream.Collectors;
  */
 
 public class User {
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static long cooldownCounter = 0;
-  private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+  private final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   @Getter
-  private Player player;
+  private final Player player;
 
   @Getter
-  private List<Perk> perks = new ArrayList<>();
+  private final List<Perk> perks = new ArrayList<>();
 
   @Getter
   @Setter
@@ -74,13 +74,13 @@ public class User {
   @Getter
   @Setter
   private boolean spectator = false;
-  private Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
+  private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
 
   @Getter
   @Setter
   private DonatType type;
 
-  private Map<String, Double> cooldowns = new HashMap<>();
+  private final Map<String, Double> cooldowns = new HashMap<>();
 
   public User(Player player) {
     this.player = player;

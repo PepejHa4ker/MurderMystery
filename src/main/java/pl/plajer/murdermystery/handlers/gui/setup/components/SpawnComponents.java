@@ -56,7 +56,6 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
-    Main plugin = setupInventory.getPlugin();
     String serializedLocation = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
       + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
@@ -71,7 +70,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
       config.set("instances." + arena.getId() + ".Endlocation", serializedLocation);
       arena.setEndLocation(player.getLocation());
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aЛокация окончания для арены " + arena.getId() + " установлена на Вашем месте!"));
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 0, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.LAPIS_BLOCK)
@@ -84,7 +83,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
       config.set("instances." + arena.getId() + ".lobbylocation", serializedLocation);
       arena.setLobbyLocation(player.getLocation());
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aЛокация лобби для арены " + arena.getId() + " установлена на Вашем месте!"));
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 1, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.EMERALD_BLOCK)
@@ -102,7 +101,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
         arena.setPlayerSpawnPoints(new ArrayList<>());
         player.sendMessage(ChatManager.colorRawMessage("&eГотово | &aТочки спавна игроков удалены, Вы можете добавить их снова!"));
         arena.setReady(false);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
+        ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
         return;
       }
       List<String> startingSpawns = config.getStringList("instances." + arena.getId() + ".playerspawnpoints");
@@ -116,7 +115,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
       List<Location> spawns = new ArrayList<>(arena.getPlayerSpawnPoints());
       spawns.add(player.getLocation());
       arena.setPlayerSpawnPoints(spawns);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 2, 0);
   }
 

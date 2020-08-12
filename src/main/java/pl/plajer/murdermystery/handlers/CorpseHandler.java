@@ -20,10 +20,6 @@ package pl.plajer.murdermystery.handlers;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,12 +28,14 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
-
 import pl.plajer.murdermystery.HookManager;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -46,9 +44,9 @@ import pl.plajer.murdermystery.arena.corpse.Corpse;
  */
 public class CorpseHandler implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
   private Corpses.CorpseData lastSpawnedCorpse;
-  private Map<String, String> registeredLastWords = new HashMap<>();
+  private final Map<String, String> registeredLastWords = new HashMap<>();
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;

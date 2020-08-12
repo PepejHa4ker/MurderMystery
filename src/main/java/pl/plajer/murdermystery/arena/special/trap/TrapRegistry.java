@@ -1,5 +1,7 @@
 package pl.plajer.murdermystery.arena.special.trap;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.event.Listener;
 import pl.plajer.murdermystery.Main;
 
@@ -7,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class TrapRegistry implements Listener {
 
-    private static Main plugin;
-    private static List<Trap> traps = new ArrayList<>();
-    private static Random rand;
+    static Main plugin;
+    static List<Trap> traps = new ArrayList<>();
+    static Random rand;
 
 
     public static void init(Main plugin) {

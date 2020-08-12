@@ -9,8 +9,9 @@ import pl.plajer.murdermystery.utils.config.ConfigUtils;
 @UtilityClass
 public class DonaterUtils {
 
-    private Main plugin = JavaPlugin.getPlugin(Main.class);
-    private FileConfiguration donatConfig = ConfigUtils.getConfig(plugin, "donaters");
+    private final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private final FileConfiguration donatConfig = ConfigUtils.getConfig(plugin, "donaters");
+
     public float getMultiplier(DonatType type) {
         return (float) donatConfig.getDouble(type.name().toLowerCase() +".multiplier");
 

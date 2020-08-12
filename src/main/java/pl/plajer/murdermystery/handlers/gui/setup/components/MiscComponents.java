@@ -67,9 +67,8 @@ public class MiscComponents implements ArenaSetupGuiComponent {
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
-    Main plugin = SetupInventory.getPlugin();
     ItemStack bungeeItem;
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if (!Main.getInstance().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       bungeeItem = new ItemBuilder(Material.SIGN)
         .name(ChatManager.colorRawMessage("&e&lДобавить табличку"))
         .lore(ChatColor.GRAY + "Наведитесь на табличку и кликните сюда.")
@@ -84,7 +83,7 @@ public class MiscComponents implements ArenaSetupGuiComponent {
         .build();
     }
     pane.addItem(new GuiItem(bungeeItem, e -> {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      if (Main.getInstance().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         return;
       }
       e.getWhoClicked().closeInventory();
@@ -100,13 +99,13 @@ public class MiscComponents implements ArenaSetupGuiComponent {
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&cВы можете проигнорировать это предупреждение и добавить табличку с помощью Shift + левый щелчок, но на данный момент операция отменена"));
         return;
       }
-      plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
+      Main.getInstance().getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
       String signLoc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
       List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
       locs.add(signLoc);
       config.set("instances." + arena.getId() + ".signs", locs);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 5, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
@@ -127,7 +126,7 @@ public class MiscComponents implements ArenaSetupGuiComponent {
           player.sendRawMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aИмя арены " + arena.getId() + " установленно на " + name));
           arena.setMapName(name);
           config.set("instances." + arena.getId() + ".mapname", arena.getMapName());
-          ConfigUtils.saveConfig(plugin, config, "arenas");
+          ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
 
           new SetupInventory(arena, player).openInventory();
           return Prompt.END_OF_CONVERSATION;
@@ -148,7 +147,7 @@ public class MiscComponents implements ArenaSetupGuiComponent {
         arena.setGoldSpawnPoints(new ArrayList<>());
         player.sendMessage(ChatManager.colorRawMessage("&eГотово | &aТочки спавна золота удаленны, Вы можете добавить их снова!"));
         arena.setReady(false);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
+        ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
         return;
       }
       List<String> goldSpawns = config.getStringList("instances." + arena.getId() + ".goldspawnpoints");
@@ -162,7 +161,7 @@ public class MiscComponents implements ArenaSetupGuiComponent {
       List<Location> spawns = new ArrayList<>(arena.getGoldSpawnPoints());
       spawns.add(player.getLocation());
       arena.setGoldSpawnPoints(spawns);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_NUGGET.parseItem())
@@ -190,7 +189,7 @@ public class MiscComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".spawngoldtime", e.getCurrentItem().getAmount());
       arena.setDetectives(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 7, 1);
 

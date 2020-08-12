@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class Scheduler {
 
-    private static SchedulerThreadFactory schedulerThreadFactory = new SchedulerThreadFactory("Thread #%THREAD_ID%");
+    private static final SchedulerThreadFactory schedulerThreadFactory = new SchedulerThreadFactory("Thread #%THREAD_ID%");
 
     /**
      * Creates new ExecutorService with {@link SchedulerThreadFactory}

@@ -55,7 +55,6 @@ import pl.plajer.murdermystery.user.RankManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
-import pl.plajer.murdermystery.utils.ExceptionLogHandler;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.database.MysqlDatabase;
@@ -75,7 +74,6 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class Main extends JavaPlugin {
     @Getter private static Main instance;
-    private ExceptionLogHandler exceptionLogHandler;
     private String version;
     private boolean forceDisable = false;
     @Getter private ExecutorService executorService;
@@ -104,7 +102,6 @@ public class Main extends JavaPlugin {
         setupEconomy();
         RankManager.setupRanks();
         ServiceRegistry.registerService(this);
-        exceptionLogHandler = new ExceptionLogHandler(this);
         LanguageManager.init(this);
         saveDefaultConfig();
         configPreferences = new ConfigPreferences(this);
@@ -152,7 +149,6 @@ public class Main extends JavaPlugin {
             return;
         }
 
-        Bukkit.getLogger().removeHandler(exceptionLogHandler);
         saveAllUserStatistics();
         if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
             for (Hologram hologram : HologramsAPI.getHolograms(this)) {
@@ -196,10 +192,8 @@ public class Main extends JavaPlugin {
         new ArgumentsRegistry(this);
         userManager = new UserManager(this);
         Utils.init(this);
-        ArenaSign.init(this);
         SpecialItem.loadAll();
         PermissionsManager.init();
-        new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"), this);
         new ArenaEvents(this);
         new SpectatorEvents(this);
         new QuitEvent(this);

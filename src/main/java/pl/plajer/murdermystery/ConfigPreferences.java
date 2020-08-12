@@ -18,14 +18,15 @@
 
 package pl.plajer.murdermystery;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -35,9 +36,9 @@ import pl.plajer.murdermystery.utils.compat.XMaterial;
  */
 public class ConfigPreferences {
 
-  private Main plugin;
+  private final Main plugin;
   private ItemStack murdererSword;
-  private Map<Option, Boolean> options = new HashMap<>();
+  private final Map<Option, Boolean> options = new HashMap<>();
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
@@ -72,22 +73,16 @@ public class ConfigPreferences {
     }
   }
 
+  @AllArgsConstructor
   public enum Option {
     BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
     DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true), NAMETAGS_HIDDEN("Nametags-Hidden", true),
     DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false);
 
+    @Getter
     private String path;
     private boolean def;
 
-    Option(String path, boolean def) {
-      this.path = path;
-      this.def = def;
-    }
-
-    public String getPath() {
-      return path;
-    }
 
     /**
      * @return default value of option if absent in config

@@ -55,7 +55,6 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
     Player player = setupInventory.getPlayer();
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
-    Main plugin = SetupInventory.getPlugin();
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.PAPER.parseItem())
       .name(ChatManager.colorRawMessage("&6&lВыбор специальных блоков"))
@@ -81,7 +80,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен Котёльный специальный блок!"));
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 1, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseItem())
@@ -109,7 +108,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       config.set("instances." + arena.getId() + ".confessionals", confessionals);
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен специальный молитвенный блок!"));
       player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aНе забудьте поместить любой рычаг в радиусе 3 рядом с чародейным столом!"));
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 2, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ANVIL.parseItem())
@@ -128,7 +127,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       anvils.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".magicanvils", anvils);
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен специальный блок кузницы!"));
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 3, 3);
   }
 

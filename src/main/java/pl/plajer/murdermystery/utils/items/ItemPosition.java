@@ -36,8 +36,8 @@ public enum ItemPosition {
   UDAVKA(6, 6),
   POTION(3, 3);
 
-  private int murdererItemPosition;
-  private int otherRolesItemPosition;
+  private final int murdererItemPosition;
+  private final int otherRolesItemPosition;
 
   ItemPosition(int murdererItemPosition, int otherRolesItemPosition) {
     this.murdererItemPosition = murdererItemPosition;

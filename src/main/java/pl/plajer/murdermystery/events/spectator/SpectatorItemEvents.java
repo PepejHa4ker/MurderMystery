@@ -18,14 +18,10 @@
 
 package pl.plajer.murdermystery.events.spectator;
 
-import java.util.*;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,7 +33,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -47,11 +42,16 @@ import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * @author Plajer
  * <p>
  * Created at 05.08.2018
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class SpectatorItemEvents implements Listener {
 
   private Main plugin;

@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class HookManager {
 
-  private Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
+  private final Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
 
 
   public HookManager() {

@@ -10,7 +10,7 @@
    * This program is distributed in the hope that it will be useful,
    * but WITHOUT ANY WARRANTY; without even the implied warranty of
    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   * GNU General Public License for more details.
+   *   * GNU General Public License for more details.
    *
    * You should have received a copy of the GNU General Public License
    * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -18,6 +18,8 @@
 
   package pl.plajer.murdermystery.arena;
 
+  import lombok.AccessLevel;
+  import lombok.experimental.FieldDefaults;
   import me.clip.placeholderapi.PlaceholderAPI;
   import net.md_5.bungee.api.chat.ComponentBuilder;
   import net.md_5.bungee.api.chat.HoverEvent;
@@ -71,6 +73,8 @@
    * <p>
    * Created at 13.05.2018
    */
+
+  @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
   public final class ArenaManager {
 
       private static Main plugin = JavaPlugin.getPlugin(Main.class);

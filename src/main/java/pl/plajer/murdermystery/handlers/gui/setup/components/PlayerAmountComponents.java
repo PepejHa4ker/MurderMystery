@@ -50,7 +50,6 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
   public void injectComponents(StaticPane pane) {
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
-    Main plugin = setupInventory.getPlugin();
     pane.addItem(new GuiItem(new ItemBuilder(Material.COAL).amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("minimumplayers"))
       .name(ChatManager.colorRawMessage("&e&lУстановить минимальное количество игроков"))
       .lore(ChatColor.GRAY + "ЛЕВЫЙ клик, чтобы уменшить")
@@ -71,7 +70,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".minimumplayers", e.getCurrentItem().getAmount());
       arena.setMinimumPlayers(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 3, 0);
 
@@ -95,7 +94,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".maximumplayers", e.getCurrentItem().getAmount());
       arena.setMaximumPlayers(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 4, 0);
 
@@ -125,7 +124,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".playerpermurderer", e.getCurrentItem().getAmount());
       arena.setMurderers(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 3, 1);
 
@@ -155,7 +154,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".playerperdetective", e.getCurrentItem().getAmount());
       arena.setDetectives(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 4, 1);
   }

@@ -42,7 +42,7 @@ public class SpecialItem {
 
   private ItemStack itemStack;
   private int slot;
-  private String name;
+  private final String name;
 
   public SpecialItem(String name) {
     this.name = name;

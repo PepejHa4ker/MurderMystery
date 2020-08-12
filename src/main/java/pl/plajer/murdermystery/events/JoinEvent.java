@@ -19,6 +19,8 @@
 package pl.plajer.murdermystery.events;
 
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,9 +40,11 @@ import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
  * <p>
  * Created at 03.08.2018
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+
 public class JoinEvent implements Listener {
 
-    private Main plugin;
+    Main plugin;
 
     public JoinEvent(Main plugin) {
         this.plugin = plugin;

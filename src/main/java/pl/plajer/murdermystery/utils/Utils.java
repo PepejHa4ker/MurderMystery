@@ -46,7 +46,7 @@ import java.util.Random;
 @UtilityClass
 public class Utils {
 
-  private static Main plugin;
+  private Main plugin;
 
   public void init(Main plugin) {
     Utils.plugin = plugin;

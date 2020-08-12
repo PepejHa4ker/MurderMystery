@@ -33,7 +33,7 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
     @Override
     public boolean persist() {

@@ -32,7 +32,9 @@ public class Confirmation implements InventoryHolder {
 
     Inventory inventory;
 
-    @Getter String mainDesc;
+
+    @Getter
+    final String mainDesc;
 
     public Confirmation(Plugin plugin, String desc) {
         this.plugin = plugin;

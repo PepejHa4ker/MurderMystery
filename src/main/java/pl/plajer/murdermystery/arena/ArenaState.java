@@ -18,20 +18,19 @@
 
 package pl.plajer.murdermystery.arena;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * @author TomTheDeveloper
  * <p>
  * Contains all GameStates.
  */
+@AllArgsConstructor
 public enum ArenaState {
+
   WAITING_FOR_PLAYERS("Ожидание"), STARTING("Начало"), IN_GAME("Идёт-игра"), ENDING("Завершение"), RESTARTING("Перезапуск");
-  String formattedName;
 
-  ArenaState(String formattedName) {
-    this.formattedName = formattedName;
-  }
+  @Getter String formattedName;
 
-  public String getFormattedName() {
-    return formattedName;
-  }
 }

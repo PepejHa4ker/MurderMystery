@@ -37,14 +37,14 @@ import java.sql.Statement;
  */
 public class MysqlManager implements UserDatabase {
 
-  private Main plugin;
+  private final Main plugin;
   @Getter
-  private MysqlDatabase database;
+  private final MysqlDatabase database;
 
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getDatabase();
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+    Bukkit.getScheduler().runTask(plugin, () -> {
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
@@ -60,11 +60,12 @@ public class MysqlManager implements UserDatabase {
           + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
           + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
           + "  `joinedtimes` int(11) NOT NULL DEFAULT '1'\n"
-            + ") ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='\\r\\n';");
+                + ") ENGINE=InnoDB;");
       } catch (SQLException e) {
         Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
         Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }
+
     });
   }
 

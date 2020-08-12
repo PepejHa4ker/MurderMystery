@@ -18,22 +18,22 @@ public abstract class Perk {
 
     @Getter
     @NotNull
-    private String name;
+    private final String name;
 
     @Getter
     @NotNull
-    private static List<Perk> allPerks = new ArrayList<>();
+    private static final List<Perk> allPerks = new ArrayList<>();
 
     @Getter
     @NotNull
-    private ItemStack displayItem;
+    private final ItemStack displayItem;
 
     @NonNull
     @Getter
-    private Double price;
+    private final Double price;
 
     @Getter
-    private ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService scheduler;
 
     public static void init() {
         new SpeedPerk();
@@ -55,33 +55,32 @@ public abstract class Perk {
         return true;
     }
 
-    public boolean buy(Player player) {
+    public void tryBuy(Player player) {
         val user = Main.getInstance().getUserManager().getUser(player);
         if (user.getPerks().contains(this)) {
             user.getPlayer().sendMessage("§cПерк уже выбран");
-            return false;
+            return;
         }
         if (Main.getInstance().getEconomy().getBalance(user.getPlayer()) < this.getPrice()) {
             user.getPlayer().sendMessage("§cНедостаточно средств.");
-            return false;
+            return;
         }
 
         if (!player.hasPermission("murder.grand")) {
             if (user.getPerks().size() == 2) {
                 user.getPlayer().sendMessage("§cВы можете взять только 2 способности на игру.");
-                return false;
+                return;
             }
         } else {
             if (user.getPerks().size() == 1) {
                 user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру.");
-                return false;
+                return;
             }
         }
 
         Main.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getPrice());
         user.getPerks().add(this);
         player.sendMessage("§6Перк " + this.getName() + " §6успешно выбран.");
-        return true;
     }
 
     public static Perk getPerkByName(String perkName) {

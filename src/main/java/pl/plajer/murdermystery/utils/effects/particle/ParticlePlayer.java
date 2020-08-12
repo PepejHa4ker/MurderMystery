@@ -11,19 +11,16 @@ import java.util.List;
 
 public class ParticlePlayer {
 
-    //region NMS
-    private static Class<?> packetPlayOutWorldParticlesClass;
-    private static Class<?> enumParticleClass;
-
     private static Constructor<?> packetConstructor;
 
     private static Method valueOf;
 
     static { // Get classes
 
-        packetPlayOutWorldParticlesClass = Reflection.getNMSClass("PacketPlayOutWorldParticles");
+        //region NMS
+        Class<?> packetPlayOutWorldParticlesClass = Reflection.getNMSClass("PacketPlayOutWorldParticles");
 
-        enumParticleClass = Reflection.getNMSClass("EnumParticle");
+        Class<?> enumParticleClass = Reflection.getNMSClass("EnumParticle");
 
         try {
             valueOf = enumParticleClass.getMethod("valueOf", String.class);

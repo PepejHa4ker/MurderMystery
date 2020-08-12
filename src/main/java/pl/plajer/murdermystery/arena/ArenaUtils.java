@@ -21,7 +21,8 @@ package pl.plajer.murdermystery.arena;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +34,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -47,9 +47,11 @@ import pl.plajer.murdermystery.utils.items.ItemPosition;
  * <p>
  * Created at 13.03.2018
  */
+
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class ArenaUtils {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  static Main plugin = JavaPlugin.getPlugin(Main.class);
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
       player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),

@@ -1,15 +1,13 @@
 package pl.plajer.murdermystery.commands.arguments.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
@@ -22,14 +20,18 @@ import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.serialization.LocationSerializer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
  * Created at 18.05.2019
  */
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class CreateArgument {
 
-  private ArgumentsRegistry registry;
+  ArgumentsRegistry registry;
 
   public CreateArgument(ArgumentsRegistry registry) {
     this.registry = registry;

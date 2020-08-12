@@ -60,7 +60,6 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
   @Override
   public void injectComponents(StaticPane pane) {
     FileConfiguration config = setupInventory.getConfig();
-    Main plugin = setupInventory.getPlugin();
     ItemStack registeredItem;
     if (!setupInventory.getArena().isReady()) {
       registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
@@ -88,7 +87,7 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       }
       String[] locations = new String[] {"lobbylocation", "Endlocation"};
       String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
-      FileConfiguration arenasConfig = ConfigUtils.getConfig(plugin, "arenas");
+      FileConfiguration arenasConfig = ConfigUtils.getConfig(Main.getInstance(), "arenas");
       for (String s : locations) {
         if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✘ &cОшибка во время проверки арены! Пожалуйста, настройте следующий спавн правильно: " + s + " (не может быть спавном в мире)"));
@@ -103,11 +102,11 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       }
       e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&a&l✔ &aПроверка арены прошла успешно! Регистрация нового экземпляра арены: " + arena.getId()));
       config.set("instances." + arena.getId() + ".isdone", true);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(setupInventory.getArena());
 
-      for (ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
+      for (ArenaSign arenaSign : Main.getInstance().getSignManager().getArenaSigns()) {
         if (arenaSign.getArena().equals(setupInventory.getArena())) {
           signsToUpdate.add(arenaSign.getSign());
         }
@@ -151,9 +150,9 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       ArenaRegistry.registerArena(arena);
       arena.start();
       for (Sign s : signsToUpdate) {
-        plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
+        Main.getInstance().getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
       }
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
     }), 8, 0);
   }
 

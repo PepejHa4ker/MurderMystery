@@ -18,34 +18,22 @@
 
 package pl.plajer.murdermystery.arena.special.pray;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
 /**
  * @author Plajer
  * <p>
  * Created at 16.10.2018
  */
+@AllArgsConstructor
+@Value
 public class Prayer {
+  PrayerType prayerType;
+  boolean goodPray;
+  String prayerDescription;
 
-  private PrayerType prayerType;
-  private boolean goodPray;
-  private String prayerDescription;
 
-  public Prayer(PrayerType prayerType, boolean goodPray, String prayerDescription) {
-    this.prayerType = prayerType;
-    this.goodPray = goodPray;
-    this.prayerDescription = prayerDescription;
-  }
-
-  public PrayerType getPrayerType() {
-    return prayerType;
-  }
-
-  public boolean isGoodPray() {
-    return goodPray;
-  }
-
-  public String getPrayerDescription() {
-    return prayerDescription;
-  }
 
   public enum PrayerType {
     BLINDNESS_CURSE, BOW_TIME, DETECTIVE_REVELATION, GOLD_BAN, GOLD_RUSH, INCOMING_DEATH, SINGLE_COMPENSATION, SLOWNESS_CURSE

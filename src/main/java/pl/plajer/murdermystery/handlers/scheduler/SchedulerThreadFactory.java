@@ -1,6 +1,7 @@
 package pl.plajer.murdermystery.handlers.scheduler;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,9 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SchedulerThreadFactory implements ThreadFactory {
 
     @Getter
-    private static AtomicInteger lastThreadID = new AtomicInteger(0);
+    private static final AtomicInteger lastThreadID = new AtomicInteger(0);
 
-    private String threadName;
+    private final String threadName;
 
     /**
      * Creates new Scheduler Thread Factory with given name
@@ -28,7 +29,7 @@ public class SchedulerThreadFactory implements ThreadFactory {
      * @return The Thread
      */
     @Override
-    public Thread newThread(Runnable runnable) {
+    public Thread newThread(@NotNull Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName(threadName.replace("%THREAD_ID%", Integer.toString(lastThreadID.incrementAndGet())));
         return thread;

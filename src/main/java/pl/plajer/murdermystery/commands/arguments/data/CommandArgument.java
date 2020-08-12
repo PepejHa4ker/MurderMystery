@@ -19,8 +19,10 @@ package pl.plajer.murdermystery.commands.arguments.data;
  */
 
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -33,6 +35,7 @@ import java.util.List;
  * Created at 11.01.2019
  */
 @AllArgsConstructor
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class CommandArgument {
 
     @Getter

@@ -55,10 +55,10 @@ import java.util.Map;
  */
 public class SignManager implements Listener {
 
-  private Main plugin;
-  private List<ArenaSign> arenaSigns = new ArrayList<>();
-  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
-  private List<String> signLines;
+  private final Main plugin;
+  private final List<ArenaSign> arenaSigns = new ArrayList<>();
+  private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+  private final List<String> signLines;
 
   public SignManager(Main plugin) {
     this.plugin = plugin;

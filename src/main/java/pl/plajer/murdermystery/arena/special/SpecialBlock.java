@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.arena.special;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.bukkit.Location;
 
 /**
@@ -25,24 +27,13 @@ import org.bukkit.Location;
  * <p>
  * Created at 15.10.2018
  */
+@AllArgsConstructor
+@Value
 public class SpecialBlock {
 
-  private Location location;
-  private SpecialBlockType specialBlockType;
-
-  public SpecialBlock(Location location, SpecialBlockType specialBlockType) {
-    this.location = location;
-    this.specialBlockType = specialBlockType;
-  }
-
-  public Location getLocation() {
-    return location;
-  }
-
-  public SpecialBlockType getSpecialBlockType() {
-    return specialBlockType;
-  }
-
+  Location location;
+  SpecialBlockType specialBlockType;
+  
   public enum SpecialBlockType {
     HORSE_PURCHASE, MYSTERY_CAULDRON, PRAISE_DEVELOPER, RAPID_TELEPORTATION, MAGIC_ANVIL
   }

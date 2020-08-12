@@ -9,10 +9,10 @@ import java.lang.reflect.Method;
 public class TitleMessage implements IMessage {
 
     @Getter
-    private String title;
+    private final String title;
 
     @Getter
-    private int fadeIn, stay, fadeOut;
+    private final int fadeIn, stay, fadeOut;
 
     /**
      * Creates new TitleMessage from parameters
