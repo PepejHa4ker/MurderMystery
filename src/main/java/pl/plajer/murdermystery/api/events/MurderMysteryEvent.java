@@ -29,8 +29,8 @@ public abstract class MurderMysteryEvent extends Event {
 
   protected Arena arena;
 
-  public MurderMysteryEvent(Arena eventArena) {
-    arena = eventArena;
+  protected MurderMysteryEvent(Arena eventArena) {
+    this.arena = eventArena;
   }
 
   /**

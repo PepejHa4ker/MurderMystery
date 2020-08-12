@@ -8,7 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
@@ -38,7 +38,7 @@ public class InvisibleHeadPerk extends Perk {
     public synchronized void handle(Player player, Player target, Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 3) {
-            val effect = new SpiralEffect(Main.getInstance().getScheduledExecutorService(),
+            val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
                     new ParticlePlayer(Particle.FLAME),
                     3,
@@ -49,7 +49,7 @@ public class InvisibleHeadPerk extends Perk {
                     false,
                     3
             ).play();
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
+            Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), effect::stop, 20);
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10 * 20, 0, true, true));
         }

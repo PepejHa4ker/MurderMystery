@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import pl.plajer.murdermystery.arena.Arena;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  */
 
 public class User {
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
   private static long cooldownCounter = 0;
   private final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   @Getter

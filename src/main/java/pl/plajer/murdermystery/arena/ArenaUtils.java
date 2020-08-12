@@ -35,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -51,7 +51,7 @@ import pl.plajer.murdermystery.utils.items.ItemPosition;
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class ArenaUtils {
 
-  static Main plugin = JavaPlugin.getPlugin(Main.class);
+  static MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
       player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),

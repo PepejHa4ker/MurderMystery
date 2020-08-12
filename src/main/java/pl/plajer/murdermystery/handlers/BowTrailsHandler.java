@@ -25,7 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 
 import java.util.HashMap;
@@ -38,10 +38,10 @@ import java.util.Map;
  */
 public class BowTrailsHandler implements Listener {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   private final Map<String, Particle> registeredTrails = new HashMap<>();
 
-  public BowTrailsHandler(Main plugin) {
+  public BowTrailsHandler(MurderMystery plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
     registerBowTrail("murdermystery.trails.heart", Particle.HEART);

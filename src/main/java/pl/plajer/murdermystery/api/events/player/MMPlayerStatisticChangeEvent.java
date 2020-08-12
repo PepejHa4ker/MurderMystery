@@ -83,6 +83,7 @@ public class MMPlayerStatisticChangeEvent extends MurderMysteryEvent {
     return HANDLERS;
   }
 
+  @Override
   public HandlerList getHandlers() {
     return HANDLERS;
   }

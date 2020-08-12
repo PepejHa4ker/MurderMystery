@@ -23,7 +23,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -80,7 +80,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен Котёльный специальный блок!"));
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 1, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseItem())
@@ -108,7 +108,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       config.set("instances." + arena.getId() + ".confessionals", confessionals);
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен специальный молитвенный блок!"));
       player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aНе забудьте поместить любой рычаг в радиусе 3 рядом с чародейным столом!"));
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 2, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ANVIL.parseItem())
@@ -127,7 +127,7 @@ public class SpecialBlocksComponents implements ArenaSetupGuiComponent {
       anvils.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".magicanvils", anvils);
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aДобавлен специальный блок кузницы!"));
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 3, 3);
   }
 

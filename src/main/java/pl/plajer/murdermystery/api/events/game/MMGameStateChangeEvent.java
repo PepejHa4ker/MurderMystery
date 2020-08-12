@@ -33,7 +33,7 @@ import pl.plajer.murdermystery.arena.ArenaState;
 public class MMGameStateChangeEvent extends MurderMysteryEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private ArenaState arenaState;
+  private final ArenaState arenaState;
 
   public MMGameStateChangeEvent(Arena eventArena, ArenaState arenaState) {
     super(eventArena);
@@ -44,6 +44,7 @@ public class MMGameStateChangeEvent extends MurderMysteryEvent {
     return HANDLERS;
   }
 
+  @Override
   public HandlerList getHandlers() {
     return HANDLERS;
   }

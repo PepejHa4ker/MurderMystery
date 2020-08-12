@@ -27,8 +27,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
@@ -48,9 +49,9 @@ import java.util.logging.Level;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsStorage {
 
-    private static Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
 
-    private static Map sortByValue(Map<?, ?> unsortMap) {
+    private static Map sortByValue(@NotNull Map<?, ?> unsortMap) {
         List list = new LinkedList<>(unsortMap.entrySet());
         list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
         Map sortedMap = new LinkedHashMap();
@@ -68,7 +69,7 @@ public class StatsStorage {
      * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
      */
     @Contract("null -> fail")
-    public static Map getStats(StatisticType stat) {
+    public static Map getStats(@NotNull StatisticType stat) {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
             try (Connection connection = plugin.getDatabase().getConnection()) {
                 Statement statement = connection.createStatement();
@@ -113,19 +114,17 @@ public class StatsStorage {
      * Available statistics to get.
      */
     public enum StatisticType {
-        @Deprecated //subject to remove and merge with randomized game points
                 CONTRIBUTION_DETECTIVE("contribdetective", true, ""),
-        @Deprecated //subject to remove and merge with randomized game points
                 CONTRIBUTION_MURDERER("contribmurderer", true, ""), DEATHS("deaths", true, "Смертей"), GAMES_PLAYED("gamesplayed", true, "Игр сыграно"), HIGHEST_SCORE("highestscore", true, "Очков"),
         KILLS("kills", true, "Убийств"), LOSES("loses", true, "Поражений"), WINS("wins", true, "Побед"), LOCAL_CURRENT_PRAY("local_pray", false, "Молитва"), LOCAL_GOLD("gold", false, "Золота"), LOCAL_KILLS("local_kills", false, "Убийств"),
         LOCAL_PRAISES("local_praises", false, "Молитв"), LOCAL_SCORE("local_score", false, "Очков"), KARMA("karma", true, "Кармы");
 
         @Getter
-        private String name;
+        private final String name;
         @Getter
-        private boolean persistent;
+        private final boolean persistent;
         @Getter
-        private String formattedName;
+        private final String formattedName;
 
         StatisticType(String name, boolean persistent, String formattedName) {
             this.name = name;

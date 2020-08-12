@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.utils.Utils;
@@ -36,7 +36,7 @@ public class ExtremeGoldPerk extends Perk {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 30) {
             ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT));
-            Main.getInstance().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
+            MurderMystery.getInstance().getUserManager().getUser(player).addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10 * 20, 0));
         }
     }

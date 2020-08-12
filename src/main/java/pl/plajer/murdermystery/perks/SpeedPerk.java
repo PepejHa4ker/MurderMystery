@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.effects.PotionEffectBuilder;
@@ -41,7 +41,7 @@ public class SpeedPerk extends Perk {
             .setAmbient(true)
             .setAmplifier(0)
             .build());
-            val effect = new SpiralEffect(Main.getInstance().getScheduledExecutorService(),
+            val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
                     new ParticlePlayer(Particle.SLIME),
                     20,
@@ -53,7 +53,7 @@ public class SpeedPerk extends Perk {
                     5
             ).play();
 
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
+            Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), effect::stop, 20);
         }
     }
 }

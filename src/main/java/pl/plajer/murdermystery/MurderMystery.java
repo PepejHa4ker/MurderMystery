@@ -20,7 +20,9 @@ package pl.plajer.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -49,7 +51,11 @@ import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.scheduler.Scheduler;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
+import pl.plajer.murdermystery.logging.LoggerImpl;
+import pl.plajer.murdermystery.logging.PluginLogger;
 import pl.plajer.murdermystery.perks.Perk;
+import pl.plajer.murdermystery.plugin.bootstrap.MurderMysteryBootstrap;
+import pl.plajer.murdermystery.plugin.scheduler.SchedulerAdapter;
 import pl.plajer.murdermystery.user.RankManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
@@ -63,44 +69,151 @@ import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Collectors;
 
-/**
- * @author Plajer
- * <p>
- * Created at 03.08.2018
- */
-public class Main extends JavaPlugin {
-    @Getter
-    private static Main instance;
-    private String version;
-    private boolean forceDisable = false;
-    @Getter
-    private ExecutorService executorService;
-    @Getter
-    private ScheduledExecutorService scheduledExecutorService;
-    @Getter
-    private BungeeManager bungeeManager;
-    @Getter
-    private RewardsFactory rewardsHandler;
-    @Getter
-    private MysqlDatabase database;
-    @Getter
-    private SignManager signManager;
-    @Getter
-    private CorpseHandler corpseHandler;
-    @Getter
-    private PartyHandler partyHandler;
-    @Getter
-    private ConfigPreferences configPreferences;
-    @Getter
-    private HookManager hookManager;
-    @Getter
-    private UserManager userManager;
-    @Getter
-    private Economy economy;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap {
+
+    @Getter
+    private static MurderMystery instance;
+
+    SchedulerAdapter schedulerAdapter;
+
+    String version;
+
+    boolean forceDisable = false;
+
+    ExecutorService executorService;
+
+    ScheduledExecutorService scheduledExecutorService;
+
+    BungeeManager bungeeManager;
+
+    RewardsFactory rewardsHandler;
+
+    MysqlDatabase database;
+
+    SignManager signManager;
+
+    CorpseHandler corpseHandler;
+
+    PartyHandler partyHandler;
+
+    ConfigPreferences configPreferences;
+
+    HookManager hookManager;
+
+    UserManager userManager;
+
+    Economy economy;
+
+    PluginLogger logger = null;
+
+
+    @Override
+    public PluginLogger getPluginLogger() {
+        if (this.logger == null) {
+            throw new IllegalStateException("Logger has not been initialised yet");
+        }
+        return this.logger;
+    }
+
+    @Override
+    public int getPlayerCount() {
+        return this.getServer().getOnlinePlayers().size();
+    }
+
+
+    @Override
+    public boolean isPlayerOnline(UUID uniqueId) {
+        return this.getServer()
+                   .getOnlinePlayers()
+                   .stream()
+                   .map(Player::getUniqueId)
+                   .collect(Collectors.toList())
+                   .contains(uniqueId);
+    }
+
+
+    @Override
+    public String getVersion() {
+        return this.version;
+    }
+
+    @Override
+    public ExecutorService getExecutorService() {
+        return this.executorService;
+    }
+
+    @Override
+    public SchedulerAdapter getScheduler() {
+        return schedulerAdapter;
+    }
+
+    @Override
+    public ScheduledExecutorService getScheduledExecutorService() {
+        return this.scheduledExecutorService;
+    }
+
+    @Override
+    public BungeeManager getBungeeManager() {
+        return this.bungeeManager;
+    }
+
+    @Override
+    public RewardsFactory getRewardsHandler() {
+        return this.rewardsHandler;
+    }
+
+    @Override
+    public MysqlDatabase getDatabase() {
+        return this.database;
+    }
+
+    @Override
+    public SignManager getSignManager() {
+        return this.signManager;
+    }
+
+    @Override
+    public CorpseHandler getSorpseHandler() {
+        return this.corpseHandler;
+    }
+
+    @Override
+    public PartyHandler getPartyHandler() {
+        return this.partyHandler;
+    }
+
+    @Override
+    public ConfigPreferences getConfigPreferences() {
+        return this.configPreferences;
+    }
+
+    @Override
+    public HookManager getHookManager() {
+        return this.hookManager;
+    }
+
+    @Override
+    public UserManager getUserManager() {
+        return this.userManager;
+    }
+
+    @Override
+    public Economy getEconomy() {
+        return this.economy;
+    }
+
+    @Override
+    public void onLoad() {
+        this.schedulerAdapter = new MurderMysterySchedulerAdapter(this);
+        this.logger = new LoggerImpl(this.getLogger());
+    }
 
     @Override
     public void onEnable() {

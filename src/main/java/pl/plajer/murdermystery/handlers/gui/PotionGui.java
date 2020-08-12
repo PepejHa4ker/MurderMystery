@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
@@ -30,7 +30,7 @@ public class PotionGui implements GuiComponent {
      */
 
     private final Player player;
-    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
     private Gui gui;
 
     public PotionGui(Player player) {

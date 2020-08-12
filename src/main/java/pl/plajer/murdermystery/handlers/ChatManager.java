@@ -23,7 +23,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.utils.strings.StringFormatUtils;
@@ -37,7 +37,7 @@ import pl.plajer.murdermystery.utils.strings.StringFormatUtils;
 public class ChatManager {
 
   public final String PLUGIN_PREFIX = "§cMurderMystery §7> ";
-  private final Main plugin = Main.getInstance();
+  private final MurderMystery plugin = MurderMystery.getInstance();
 
   public String colorRawMessage(String message) {
     return ChatColor.translateAlternateColorCodes('&', message);

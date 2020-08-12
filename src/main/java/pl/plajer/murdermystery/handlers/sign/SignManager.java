@@ -31,7 +31,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -55,12 +55,12 @@ import java.util.Map;
  */
 public class SignManager implements Listener {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   private final List<ArenaSign> arenaSigns = new ArrayList<>();
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private final List<String> signLines;
 
-  public SignManager(Main plugin) {
+  public SignManager(MurderMystery plugin) {
     this.plugin = plugin;
     gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, ChatManager.colorMessage("Signs.Game-States.Inactive"));
     gameStateToString.put(ArenaState.STARTING, ChatManager.colorMessage("Signs.Game-States.Starting"));

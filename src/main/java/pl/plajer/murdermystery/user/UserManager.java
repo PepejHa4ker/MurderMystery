@@ -21,7 +21,7 @@ package pl.plajer.murdermystery.user;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.user.data.FileStats;
@@ -41,7 +41,7 @@ public class UserManager {
     private final UserDatabase database;
     private final List<User> users = new ArrayList<>();
 
-    public UserManager(Main plugin) {
+    public UserManager(MurderMystery plugin) {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
             database = new MysqlManager(plugin);
         } else

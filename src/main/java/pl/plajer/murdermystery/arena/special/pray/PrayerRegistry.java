@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -50,14 +50,14 @@ import java.util.stream.Collectors;
 @FieldDefaults(level= AccessLevel.PRIVATE)
 public class PrayerRegistry {
 
-  private static Main plugin;
+  private static MurderMystery plugin;
   private static final List<Prayer> prayers = new ArrayList<>();
   private static Random rand;
 
   private PrayerRegistry() {
   }
 
-  public static void init(Main plugin) {
+  public static void init(MurderMystery plugin) {
     PrayerRegistry.plugin = plugin;
     //good prayers
     prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));

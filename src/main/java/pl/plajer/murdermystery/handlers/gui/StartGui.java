@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -20,7 +20,7 @@ import pl.plajer.murdermystery.utils.items.ItemPosition;
 public class StartGui implements GuiComponent {
 
     private final Player player;
-    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
     private Gui gui;
 
     /**

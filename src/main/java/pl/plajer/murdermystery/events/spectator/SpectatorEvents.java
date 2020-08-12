@@ -40,7 +40,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
@@ -54,9 +54,9 @@ import pl.plajer.murdermystery.user.User;
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class SpectatorEvents implements Listener {
 
-  private Main plugin;
+  private MurderMystery plugin;
 
-  public SpectatorEvents(Main plugin) {
+  public SpectatorEvents(MurderMystery plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }

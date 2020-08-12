@@ -13,7 +13,7 @@ import java.util.List;
 public class ScrollableString extends FrameAnimatedString {
 
     private int position;
-    private List<String> list;
+    private final List<String> list;
     private ChatColor color = ChatColor.RESET;
 
     public ScrollableString(String message, int width, int spaceBetween) {
@@ -38,13 +38,13 @@ public class ScrollableString extends FrameAnimatedString {
         // Add space between repeats
         StringBuilder space = new StringBuilder();
         for (int i = 0; i < spaceBetween; ++i) {
-            list.add(message.substring(message.length() - width + (i > width ? width : i), message.length()) + space);
+            list.add(message.substring(message.length() - width + (i > width ? width : i)) + space);
             if (space.length() < width)
                 space.append(" ");
         }
         // Wrap
         for (int i = 0; i < width - spaceBetween; ++i)
-            list.add(message.substring(message.length() - width + spaceBetween + i, message.length()) + space + message.substring(0, i));
+            list.add(message.substring(message.length() - width + spaceBetween + i) + space + message.substring(0, i));
         // Join up
         for (int i = 0; i < spaceBetween; i++) {
             if (i > space.length())

@@ -36,11 +36,11 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   private ItemStack murdererSword;
   private final Map<Option, Boolean> options = new HashMap<>();
 
-  public ConfigPreferences(Main plugin) {
+  public ConfigPreferences(MurderMystery plugin) {
     this.plugin = plugin;
     loadOptions();
     loadMurdererSword();
@@ -80,8 +80,8 @@ public class ConfigPreferences {
     DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false);
 
     @Getter
-    private String path;
-    private boolean def;
+    private final String path;
+    private final boolean def;
 
 
     /**

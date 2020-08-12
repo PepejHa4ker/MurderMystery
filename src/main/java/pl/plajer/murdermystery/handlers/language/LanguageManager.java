@@ -21,7 +21,7 @@ package pl.plajer.murdermystery.handlers.language;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
@@ -46,15 +46,15 @@ import java.util.stream.Collectors;
  */
 public class LanguageManager {
 
-  private static Main plugin;
+  private static MurderMystery plugin;
   private static Locale pluginLocale;
-  private static Properties properties = new Properties();
+  private static final Properties properties = new Properties();
   private static FileConfiguration languageConfig;
 
   private LanguageManager() {
   }
 
-  public static void init(Main plugin) {
+  public static void init(MurderMystery plugin) {
     LanguageManager.plugin = plugin;
     if (!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       LanguageManager.plugin.saveResource("language.yml", false);

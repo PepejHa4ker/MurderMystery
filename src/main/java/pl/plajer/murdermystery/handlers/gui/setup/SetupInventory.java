@@ -28,7 +28,7 @@ import lombok.val;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.components.*;
@@ -46,7 +46,7 @@ public class SetupInventory {
 
   public static final String VIDEO_LINK = "https://tutorial.plajer.xyz";
   static Random random = new Random();
-  static Main plugin = JavaPlugin.getPlugin(Main.class);
+  static MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
   @Getter
   FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
   @Getter

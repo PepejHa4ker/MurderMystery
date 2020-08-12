@@ -28,7 +28,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
@@ -87,7 +87,7 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       }
       String[] locations = new String[] {"lobbylocation", "Endlocation"};
       String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
-      FileConfiguration arenasConfig = ConfigUtils.getConfig(Main.getInstance(), "arenas");
+      FileConfiguration arenasConfig = ConfigUtils.getConfig(MurderMystery.getInstance(), "arenas");
       for (String s : locations) {
         if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✘ &cОшибка во время проверки арены! Пожалуйста, настройте следующий спавн правильно: " + s + " (не может быть спавном в мире)"));
@@ -102,11 +102,11 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       }
       e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&a&l✔ &aПроверка арены прошла успешно! Регистрация нового экземпляра арены: " + arena.getId()));
       config.set("instances." + arena.getId() + ".isdone", true);
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(setupInventory.getArena());
 
-      for (ArenaSign arenaSign : Main.getInstance().getSignManager().getArenaSigns()) {
+      for (ArenaSign arenaSign : MurderMystery.getInstance().getSignManager().getArenaSigns()) {
         if (arenaSign.getArena().equals(setupInventory.getArena())) {
           signsToUpdate.add(arenaSign.getSign());
         }
@@ -150,9 +150,9 @@ public class ArenaRegisterComponent implements ArenaSetupGuiComponent {
       ArenaRegistry.registerArena(arena);
       arena.start();
       for (Sign s : signsToUpdate) {
-        Main.getInstance().getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
+        MurderMystery.getInstance().getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
       }
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 8, 0);
   }
 

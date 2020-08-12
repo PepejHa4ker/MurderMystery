@@ -22,7 +22,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.migrator.MigratorUtils;
 
@@ -35,9 +35,9 @@ public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 10;
   public static final int LANGUAGE_FILE_VERSION = 2;
-  private final Main plugin;
+  private final MurderMystery plugin;
 
-  public LanguageMigrator(Main plugin) {
+  public LanguageMigrator(MurderMystery plugin) {
     this.plugin = plugin;
 
     //initializes migrator to update files with latest values

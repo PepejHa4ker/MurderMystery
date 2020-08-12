@@ -25,7 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
@@ -37,7 +37,7 @@ import pl.plajer.murdermystery.arena.ArenaState;
  */
 public class LobbyEvent implements Listener {
 
-  public LobbyEvent(Main plugin) {
+  public LobbyEvent(MurderMystery plugin) {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 

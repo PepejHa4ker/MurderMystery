@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class Rank {
     int xp;
 
     @Getter
-    private static FileConfiguration rankConfig = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "ranks");
+    private static FileConfiguration rankConfig = ConfigUtils.getConfig(JavaPlugin.getPlugin(MurderMystery.class), "ranks");
     @Getter
     private static List<Rank> ranks = new ArrayList<>();
 }

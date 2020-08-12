@@ -47,7 +47,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
 import pl.plajer.murdermystery.arena.role.Role;
@@ -78,10 +78,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ArenaEvents implements Listener {
 
-    private Main plugin;
+    private MurderMystery plugin;
 
 
-    public ArenaEvents(Main plugin) {
+    public ArenaEvents(MurderMystery plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -360,7 +360,6 @@ public class ArenaEvents implements Listener {
             return;
         }
 
-        //todo support for skins later
         //just don't kill user if item isn't murderer sword
         if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
             return;

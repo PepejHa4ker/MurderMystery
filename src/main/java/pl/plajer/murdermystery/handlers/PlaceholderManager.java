@@ -21,7 +21,7 @@ package pl.plajer.murdermystery.handlers;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -33,29 +33,34 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 
-    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
 
     @Override
     public boolean persist() {
         return true;
     }
 
+    @Override
     public String getIdentifier() {
         return "murdermystery";
     }
 
+    @Override
     public String getPlugin() {
         return null;
     }
 
+    @Override
     public String getAuthor() {
         return "Plajer";
     }
 
+    @Override
     public String getVersion() {
         return "1.0.1";
     }
 
+    @Override
     public String onPlaceholderRequest(Player player, String id) {
         if (player == null) {
             return null;

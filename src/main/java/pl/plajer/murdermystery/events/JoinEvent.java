@@ -28,7 +28,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
@@ -44,9 +44,9 @@ import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 public class JoinEvent implements Listener {
 
-    Main plugin;
+    MurderMystery plugin;
 
-    public JoinEvent(Main plugin) {
+    public JoinEvent(MurderMystery plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

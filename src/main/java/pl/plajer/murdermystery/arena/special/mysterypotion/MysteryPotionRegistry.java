@@ -23,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
@@ -42,7 +42,7 @@ public class MysteryPotionRegistry {
   private static final List<MysteryPotion> mysteryPotions = new ArrayList<>();
   private static Random rand;
 
-  public static void init(Main plugin) {
+  public static void init(MurderMystery plugin) {
     rand = new Random();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "specialblocks");
     String path = "Special-Blocks.Cauldron-Potions";

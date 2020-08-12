@@ -27,7 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -44,11 +44,11 @@ import java.util.Map;
  */
 public class BungeeManager implements Listener {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private final String MOTD;
 
-  public BungeeManager(Main plugin) {
+  public BungeeManager(MurderMystery plugin) {
     this.plugin = plugin;
     gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Inactive")));
     gameStateToString.put(ArenaState.STARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Starting")));

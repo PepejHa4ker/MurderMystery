@@ -31,7 +31,7 @@ import java.util.List;
 @UtilityClass
 public class LocaleRegistry {
 
-  private List<Locale> registeredLocales = new ArrayList<>();
+  private final List<Locale> registeredLocales = new ArrayList<>();
 
   /**
    * Register new locale into registry

@@ -24,7 +24,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
@@ -56,7 +56,7 @@ public class SpecialItem {
   }
 
   public void load(String displayName, String[] lore, Material material, int slot) {
-    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "lobbyitems");
+    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(MurderMystery.class), "lobbyitems");
 
     if (!config.contains(name)) {
       config.set(name + ".data", 0);
@@ -65,7 +65,7 @@ public class SpecialItem {
       config.set(name + ".material-name", material.toString());
       config.set(name + ".slot", slot);
     }
-    ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
+    ConfigUtils.saveConfig(JavaPlugin.getPlugin(MurderMystery.class), config, "lobbyitems");
     ItemStack stack = XMaterial.fromString(config.getString(name + ".material-name").toUpperCase()).parseItem();
     ItemMeta meta = stack.getItemMeta();
     meta.setDisplayName(ChatManager.colorRawMessage(config.getString(name + ".displayname")));

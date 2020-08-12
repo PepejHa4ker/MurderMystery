@@ -26,7 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
@@ -70,7 +70,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
       config.set("instances." + arena.getId() + ".Endlocation", serializedLocation);
       arena.setEndLocation(player.getLocation());
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aЛокация окончания для арены " + arena.getId() + " установлена на Вашем месте!"));
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 0, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.LAPIS_BLOCK)
@@ -83,7 +83,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
       config.set("instances." + arena.getId() + ".lobbylocation", serializedLocation);
       arena.setLobbyLocation(player.getLocation());
       player.sendMessage(ChatManager.colorRawMessage("&e✔ Завершено | &aЛокация лобби для арены " + arena.getId() + " установлена на Вашем месте!"));
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 1, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.EMERALD_BLOCK)
@@ -101,7 +101,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
         arena.setPlayerSpawnPoints(new ArrayList<>());
         player.sendMessage(ChatManager.colorRawMessage("&eГотово | &aТочки спавна игроков удалены, Вы можете добавить их снова!"));
         arena.setReady(false);
-        ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+        ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
         return;
       }
       List<String> startingSpawns = config.getStringList("instances." + arena.getId() + ".playerspawnpoints");
@@ -115,7 +115,7 @@ public class SpawnComponents implements ArenaSetupGuiComponent {
       List<Location> spawns = new ArrayList<>(arena.getPlayerSpawnPoints());
       spawns.add(player.getLocation());
       arena.setPlayerSpawnPoints(spawns);
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
     }), 2, 0);
   }
 

@@ -50,7 +50,7 @@ public class ParticlePlayer {
      *
      * @param particle Type of particle to be displayed
      */
-    public ParticlePlayer(Particle particle) { // TODO: Check for Minecraft version and use Spigot methods instead
+    public ParticlePlayer(Particle particle) {
         try {
             this.particle = valueOf.invoke(null, particle.name());
 

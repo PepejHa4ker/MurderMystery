@@ -858,7 +858,7 @@ public enum XMaterial {
     ZOMBIE_VILLAGER_SPAWN_EGG(0, "MONSTER_EGG"),
     ZOMBIE_WALL_HEAD(0, "SKULL", "SKULL_ITEM"),
     ;
-    private static HashMap<String, XMaterial> cachedSearch = new HashMap<>();
+    private static final HashMap<String, XMaterial> cachedSearch = new HashMap<>();
     String[] m;
     int data;
 
@@ -869,10 +869,7 @@ public enum XMaterial {
 
     public static boolean isNewVersion() {
         Material mat = Material.getMaterial("RED_WOOL");
-        if (mat != null) {
-            return true;
-        }
-        return false;
+        return mat != null;
     }
 
     public static XMaterial requestXMaterial(String name, byte data) {
@@ -920,14 +917,12 @@ public enum XMaterial {
             return comp.getType() == this.parseMaterial();
         }
         if (comp.getType() == this.parseMaterial() &&
-                (int) comp.getData().getData() == (int) this.data) {
+                (int) comp.getData().getData() == this.data) {
             return true;
         }
         XMaterial xmat = fromMaterial(comp.getType());
         if (isDamageable(xmat)) {
-            if (this.parseMaterial() == comp.getType()) {
-                return true;
-            }
+            return this.parseMaterial() == comp.getType();
         }
         return false;
     }

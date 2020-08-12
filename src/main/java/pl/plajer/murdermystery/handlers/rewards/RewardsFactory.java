@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
@@ -44,7 +44,7 @@ public class RewardsFactory {
   private final FileConfiguration config;
   private final boolean enabled;
 
-  public RewardsFactory(Main plugin) {
+  public RewardsFactory(MurderMystery plugin) {
     enabled = plugin.getConfig().getBoolean("Rewards-Enabled");
     config = ConfigUtils.getConfig(plugin, "rewards");
     registerRewards();

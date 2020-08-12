@@ -30,7 +30,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.commands.arguments.admin.ListArenasArgument;
 import pl.plajer.murdermystery.commands.arguments.admin.arena.*;
@@ -58,11 +58,11 @@ import java.util.stream.Collectors;
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class ArgumentsRegistry implements CommandExecutor {
 
-  Main plugin;
+  MurderMystery plugin;
   TabCompletion tabCompletion;
   Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
 
-  public ArgumentsRegistry(Main plugin) {
+  public ArgumentsRegistry(MurderMystery plugin) {
     this.plugin = plugin;
     tabCompletion = new TabCompletion(this);
     plugin.getCommand("murdermystery").setExecutor(this);
@@ -220,7 +220,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     return tabCompletion;
   }
 
-  public Main getPlugin() {
+  public MurderMystery getPlugin() {
     return plugin;
   }
 

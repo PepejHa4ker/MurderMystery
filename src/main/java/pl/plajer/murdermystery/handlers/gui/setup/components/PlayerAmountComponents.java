@@ -24,7 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
@@ -70,7 +70,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".minimumplayers", e.getCurrentItem().getAmount());
       arena.setMinimumPlayers(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 3, 0);
 
@@ -94,7 +94,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".maximumplayers", e.getCurrentItem().getAmount());
       arena.setMaximumPlayers(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 4, 0);
 
@@ -124,7 +124,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".playerpermurderer", e.getCurrentItem().getAmount());
       arena.setMurderers(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 3, 1);
 
@@ -154,7 +154,7 @@ public class PlayerAmountComponents implements ArenaSetupGuiComponent {
       }
       config.set("instances." + arena.getId() + ".playerperdetective", e.getCurrentItem().getAmount());
       arena.setDetectives(e.getCurrentItem().getAmount());
-      ConfigUtils.saveConfig(Main.getInstance(), config, "arenas");
+      ConfigUtils.saveConfig(MurderMystery.getInstance(), config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 4, 1);
   }

@@ -38,7 +38,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import pl.plajer.murdermystery.arena.*;
@@ -64,9 +64,9 @@ import pl.plajer.murdermystery.utils.message.type.TitleMessage;
 
 public class Events implements Listener {
 
-    Main plugin;
+    MurderMystery plugin;
 
-    public Events(Main plugin) {
+    public Events(MurderMystery plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -115,7 +115,6 @@ public class Events implements Listener {
         }
         Player attacker = e.getPlayer();
         User attackerUser = plugin.getUserManager().getUser(attacker);
-        //todo not hardcoded!
         if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
             return;
         }

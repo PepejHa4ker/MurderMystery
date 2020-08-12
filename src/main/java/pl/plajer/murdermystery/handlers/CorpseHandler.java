@@ -29,7 +29,7 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 import pl.plajer.murdermystery.HookManager;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
@@ -44,11 +44,11 @@ import java.util.Map;
  */
 public class CorpseHandler implements Listener {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   private Corpses.CorpseData lastSpawnedCorpse;
   private final Map<String, String> registeredLastWords = new HashMap<>();
 
-  public CorpseHandler(Main plugin) {
+  public CorpseHandler(MurderMystery plugin) {
     this.plugin = plugin;
     registerLastWord("murdermystery.lastwords.meme", ChatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
     registerLastWord("murdermystery.lastwords.rage", ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));

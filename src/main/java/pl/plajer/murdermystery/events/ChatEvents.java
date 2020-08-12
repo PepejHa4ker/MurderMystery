@@ -29,7 +29,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import pl.plajer.murdermystery.ConfigPreferences;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -51,14 +51,14 @@ import java.util.regex.Pattern;
 @SuppressWarnings("ALL")
 public class ChatEvents implements Listener {
 
-    private Main plugin;
+    private MurderMystery plugin;
     private String[] regexChars = new String[]{"$", "\\"};
 
 
     @Getter
     private static Set<UUID> said = new ConcurrentSet<>();
 
-    public ChatEvents(Main plugin) {
+    public ChatEvents(MurderMystery plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

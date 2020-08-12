@@ -20,7 +20,7 @@ package pl.plajer.murdermystery.user.data;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.database.MysqlDatabase;
@@ -37,11 +37,11 @@ import java.sql.Statement;
  */
 public class MysqlManager implements UserDatabase {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   @Getter
   private final MysqlDatabase database;
 
-  public MysqlManager(Main plugin) {
+  public MysqlManager(MurderMystery plugin) {
     this.plugin = plugin;
     database = plugin.getDatabase();
     Bukkit.getScheduler().runTask(plugin, () -> {

@@ -15,6 +15,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.function.BiConsumer;
@@ -43,7 +44,7 @@ public class Confirmation implements InventoryHolder {
 
     public Confirmation build() {
         inventory = Bukkit.createInventory(this, 9, "Вы уверены?");
-        fill();
+        this.fill();
         if (!hasRegisteredListeners) {
             Bukkit.getPluginManager().registerEvents(new ConfirmationListener(), plugin);
             hasRegisteredListeners = true;
@@ -66,6 +67,7 @@ public class Confirmation implements InventoryHolder {
     }
 
     @Getter
+    @NotNull
     BiConsumer<Player, InventoryClickEvent>
             onAccept,
             onDecline,
@@ -75,9 +77,11 @@ public class Confirmation implements InventoryHolder {
             onOutsideClick;
 
     @Getter
+    @NotNull
     private BiConsumer<Player, InventoryCloseEvent> onClose;
 
     @Getter
+    @NotNull
     private BiConsumer<Player, InventoryOpenEvent> onOpen;
 
     private static boolean hasRegisteredListeners;
@@ -122,42 +126,42 @@ public class Confirmation implements InventoryHolder {
                 : view.getBottomInventory();
     }
 
-    public Confirmation onAccept(BiConsumer<Player, InventoryClickEvent> onAccept) {
+    public Confirmation onAccept(@NotNull BiConsumer<Player, InventoryClickEvent> onAccept) {
         this.onAccept = onAccept;
         return this;
     }
 
-    public Confirmation onDecline(BiConsumer<Player, InventoryClickEvent> onDecline) {
+    public Confirmation onDecline(@NotNull BiConsumer<Player, InventoryClickEvent> onDecline) {
         this.onDecline = onDecline;
         return this;
     }
 
-    public Confirmation onOutsideClick(BiConsumer<Player, InventoryClickEvent> onOutsideClick) {
+    public Confirmation onOutsideClick(@NotNull BiConsumer<Player, InventoryClickEvent> onOutsideClick) {
         this.onOutsideClick = onOutsideClick;
         return this;
     }
 
-    public Confirmation onClose(BiConsumer<Player, InventoryCloseEvent> onClose) {
+    public Confirmation onClose(@NotNull BiConsumer<Player, InventoryCloseEvent> onClose) {
         this.onClose = onClose;
         return this;
     }
 
-    public Confirmation onOpen(BiConsumer<Player, InventoryOpenEvent> onOpen) {
+    public Confirmation onOpen(@NotNull BiConsumer<Player, InventoryOpenEvent> onOpen) {
         this.onOpen = onOpen;
         return this;
     }
 
-    public Confirmation onTopClick(BiConsumer<Player, InventoryClickEvent> onTopClick) {
+    public Confirmation onTopClick(@NotNull BiConsumer<Player, InventoryClickEvent> onTopClick) {
         this.onTopClick = onTopClick;
         return this;
     }
 
-    public Confirmation onBottomClick(BiConsumer<Player, InventoryClickEvent> onBottomClick) {
+    public Confirmation onBottomClick(@NotNull BiConsumer<Player, InventoryClickEvent> onBottomClick) {
         this.onBottomClick = onBottomClick;
         return this;
     }
 
-    public Confirmation onClick(BiConsumer<Player, InventoryClickEvent> onClick) {
+    public Confirmation onClick(@NotNull BiConsumer<Player, InventoryClickEvent> onClick) {
         this.onClick = onClick;
         return this;
     }

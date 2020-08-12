@@ -28,7 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -46,9 +46,9 @@ import java.util.Random;
 @UtilityClass
 public class Utils {
 
-  private Main plugin;
+  private MurderMystery plugin;
 
-  public void init(Main plugin) {
+  public void init(MurderMystery plugin) {
     Utils.plugin = plugin;
   }
 

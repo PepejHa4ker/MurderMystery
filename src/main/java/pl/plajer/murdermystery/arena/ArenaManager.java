@@ -39,7 +39,7 @@
   import org.bukkit.potion.PotionEffectType;
   import org.bukkit.scheduler.BukkitRunnable;
   import pl.plajer.murdermystery.ConfigPreferences;
-  import pl.plajer.murdermystery.Main;
+  import pl.plajer.murdermystery.MurderMystery;
   import pl.plajer.murdermystery.api.StatsStorage;
   import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
   import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
@@ -74,7 +74,7 @@
   @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
   public final class ArenaManager {
 
-      private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+      private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
 
       private ArenaManager() {
       }
@@ -296,7 +296,6 @@
           User user = plugin.getUserManager().getUser(player);
           user.setShots(0);
           ChatEvents.getSaid().removeIf(id -> ChatEvents.getSaid().contains(id));
-          //todo change later
           int murderDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
                   .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
           int detectiveDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))

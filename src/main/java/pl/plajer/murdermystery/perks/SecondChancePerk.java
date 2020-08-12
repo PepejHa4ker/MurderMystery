@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
@@ -41,7 +41,7 @@ public class SecondChancePerk extends Perk {
     public synchronized void handle(Player player, Player target, Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 25) {
-            val effect = new SpiralEffect(Main.getInstance().getScheduledExecutorService(),
+            val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
                     new ParticlePlayer(Particle.CRIT_MAGIC),
                     3,
@@ -52,7 +52,7 @@ public class SecondChancePerk extends Perk {
                     true,
                     3
             ).play();
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), effect::stop, 20);
+            Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), effect::stop, 20);
             player.teleport(arena.getPlayerSpawnPoints().get(new Random().nextInt(arena.getPlayerSpawnPoints().size())));
             player.sendMessage("§cВот же повезло удрать!");
             success = true;

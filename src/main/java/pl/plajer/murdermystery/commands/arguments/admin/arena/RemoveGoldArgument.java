@@ -3,7 +3,7 @@ package pl.plajer.murdermystery.commands.arguments.admin.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
@@ -11,8 +11,6 @@ import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.user.User;
-
-;
 
 public class RemoveGoldArgument {
 
@@ -32,7 +30,7 @@ public class RemoveGoldArgument {
                     return;
                 }
                 Player p = Bukkit.getPlayer(player);
-                User u = Main.getInstance().getUserManager().getUser(p);
+                User u = MurderMystery.getInstance().getUserManager().getUser(p);
                 if (ArenaRegistry.getArena(p) == null) return;
                 if (u.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < amount) return;
                 u.setStat(StatsStorage.StatisticType.LOCAL_GOLD, (u.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - amount));

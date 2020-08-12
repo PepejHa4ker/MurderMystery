@@ -26,21 +26,21 @@ public class ConfirmationListener implements Listener {
 
         val onOutsideClick = confirmation.getOnOutsideClick();
 
-        if(onOutsideClick != null && event.getClickedInventory() == null) {
+        if (event.getClickedInventory() == null) {
             onOutsideClick.accept((Player) event.getWhoClicked(), event);
             return;
         }
 
         val onAccept = confirmation.getOnAccept();
 
-        if (onAccept != null && event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aПодтвердить") ) {
+        if (event.getCurrentItem() != null && event.getCurrentItem() == Confirmation.getAcceptItem() ) {
             onAccept.accept((Player) event.getWhoClicked(), event);
             event.setCancelled(true);
             return;
         }
         val onDecline = confirmation.getOnDecline();
 
-        if (onDecline != null && event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cОтклонить") ) {
+        if (event.getCurrentItem() != null && event.getCurrentItem() == Confirmation.getDeclineItem() ) {
             onDecline.accept((Player) event.getWhoClicked(), event);
             event.setCancelled(true);
             return;
@@ -54,19 +54,18 @@ public class ConfirmationListener implements Listener {
 
         val view = event.getView();
         val inventory = Confirmation.getInventory(view, event.getRawSlot());
-
         if (inventory == null) {
             return;
         }
 
         val onTopClick = confirmation.getOnTopClick();
-        if (onTopClick != null && inventory.equals(view.getTopInventory())) {
+        if (inventory.equals(view.getTopInventory())) {
             onTopClick.accept((Player) event.getWhoClicked(), event);
         }
 
         val onBottomClick = confirmation.getOnBottomClick();
-        if (onBottomClick != null && inventory.equals(view.getBottomInventory())) {
-            onBottomClick.accept((Player) event.getWhoClicked(),event);
+        if (inventory.equals(view.getBottomInventory())) {
+            onBottomClick.accept((Player) event.getWhoClicked(), event);
         }
     }
 
@@ -77,9 +76,7 @@ public class ConfirmationListener implements Listener {
         }
         val confirmation = (Confirmation) event.getInventory().getHolder();
         val onOpen = confirmation.getOnOpen();
-        if(onOpen != null) {
-            onOpen.accept((Player) event.getPlayer(), event);
-        }
+        onOpen.accept((Player) event.getPlayer(), event);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -89,8 +86,7 @@ public class ConfirmationListener implements Listener {
         }
         val confirmation = (Confirmation) event.getInventory().getHolder();
         val onClose = confirmation.getOnClose();
-        if(onClose != null) {
-            onClose.accept((Player) event.getPlayer(), event);
-        }
+        onClose.accept((Player) event.getPlayer(), event);
+
     }
 }

@@ -24,7 +24,7 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.handlers.ChatManager;
 
 /**
@@ -34,7 +34,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
  */
 public class SimpleConversationBuilder {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
   private final ConversationFactory conversationFactory;
 
   public SimpleConversationBuilder() {

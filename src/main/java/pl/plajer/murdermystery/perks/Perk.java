@@ -6,7 +6,7 @@ import lombok.val;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 
 import java.util.ArrayList;
@@ -56,12 +56,12 @@ public abstract class Perk {
     }
 
     public void tryBuy(Player player) {
-        val user = Main.getInstance().getUserManager().getUser(player);
+        val user = MurderMystery.getInstance().getUserManager().getUser(player);
         if (user.getPerks().contains(this)) {
             user.getPlayer().sendMessage("§cСпособность уже выбрана");
             return;
         }
-        if (Main.getInstance().getEconomy().getBalance(user.getPlayer()) < this.getPrice()) {
+        if (MurderMystery.getInstance().getEconomy().getBalance(user.getPlayer()) < this.getPrice()) {
             user.getPlayer().sendMessage("§cНедостаточно средств");
             return;
         }
@@ -78,7 +78,7 @@ public abstract class Perk {
             }
         }
 
-        Main.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getPrice());
+        MurderMystery.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getPrice());
         user.getPerks().add(this);
         player.sendMessage("§6Способность " + this.getName() + " §6успешно выбрана");
     }
@@ -103,7 +103,7 @@ public abstract class Perk {
     }
 
     public static boolean has(Player player, Class<? extends Perk> clazz) {
-        for (Perk perk : Main.getInstance().getUserManager().getUser(player).getPerks()) {
+        for (Perk perk : MurderMystery.getInstance().getUserManager().getUser(player).getPerks()) {
             if (perk.getClass() == clazz) {
                 return true;
             }

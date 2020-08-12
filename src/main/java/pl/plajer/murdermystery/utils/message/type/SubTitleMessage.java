@@ -9,10 +9,14 @@ import java.lang.reflect.Method;
 public class SubTitleMessage implements IMessage {
 
     @Getter
-    private String subTitle;
+    private final String subTitle;
 
     @Getter
-    private int fadeIn, stay, fadeOut;
+    private final int fadeIn;
+    @Getter
+    private final int stay;
+    @Getter
+    private final int fadeOut;
 
     /**
      * Creates new SubTitleMessage from parameters

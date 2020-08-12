@@ -6,7 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PerkGui implements GuiComponent {
 
-    private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
     private final Gui gui;
     private final Player player;
 

@@ -20,7 +20,7 @@ package pl.plajer.murdermystery.handlers;
 
 
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 
 /**
  * @author Plajer
@@ -29,7 +29,7 @@ import pl.plajer.murdermystery.Main;
  */
 public class PermissionsManager {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
   private static String joinFullPerm = "murdermystery.fullgames";
   private static String joinPerm = "murdermystery.join.<arena>";
 

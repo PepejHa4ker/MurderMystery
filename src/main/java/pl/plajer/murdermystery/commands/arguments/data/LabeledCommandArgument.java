@@ -28,7 +28,7 @@ import lombok.Getter;
 public class LabeledCommandArgument extends CommandArgument {
 
   @Getter
-  private LabelData labelData;
+  private final LabelData labelData;
 
   public LabeledCommandArgument(String argumentName, String permissions, ExecutorType validExecutors, LabelData labelData) {
     super(argumentName, permissions, validExecutors);

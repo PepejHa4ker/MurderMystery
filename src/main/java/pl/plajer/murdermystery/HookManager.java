@@ -62,10 +62,9 @@ public class HookManager {
   }
 
   public enum HookFeature {
-    //todo hidden name tags hook
     CORPSES(Hook.CORPSE_REBORN, Hook.HOLOGRAPHIC_DISPLAYS);
 
-    private Hook[] requiredHooks;
+    private final Hook[] requiredHooks;
 
     HookFeature(Hook... requiredHooks) {
       this.requiredHooks = requiredHooks;
@@ -79,7 +78,7 @@ public class HookManager {
   public enum Hook {
     CORPSE_REBORN("CorpseReborn"), HOLOGRAPHIC_DISPLAYS("HolographicDisplays");
 
-    private String pluginName;
+    private final String pluginName;
 
     Hook(String pluginName) {
       this.pluginName = pluginName;

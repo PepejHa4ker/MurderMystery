@@ -26,7 +26,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
@@ -42,7 +42,7 @@ import java.util.List;
 
 public class ArenaRegistry {
 
-  static Main plugin = JavaPlugin.getPlugin(Main.class);
+  static MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
   static List<Arena> arenas = new ArrayList<>();
 
   /**

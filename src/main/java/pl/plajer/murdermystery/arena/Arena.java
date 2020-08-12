@@ -39,7 +39,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.HookManager;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
@@ -68,7 +68,7 @@ import java.util.stream.Collectors;
 public class Arena extends BukkitRunnable {
 
     static final Random random = new Random();
-    static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
     final String id;
 
     final Set<Player> players = new HashSet<>();
@@ -298,7 +298,6 @@ public class Arena extends BukkitRunnable {
                         ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
                     }
 
-
                     for (Player p : playersToSet) {
                         p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
 
@@ -468,13 +467,13 @@ public class Arena extends BukkitRunnable {
             case RESTARTING:
                 canForceStart = true;
                 ChatEvents.getSaid()
-                        .stream()
-                        .filter(uuid -> this.getPlayers()
-                                .stream()
-                                .map(Player::getUniqueId)
-                                .collect(Collectors.toSet())
-                                .contains(uuid))
-                        .forEach(uuid -> ChatEvents.getSaid().remove(uuid));
+                          .stream()
+                          .filter(uuid -> this.getPlayers()
+                                              .stream()
+                                              .map(Player::getUniqueId)
+                                              .collect(Collectors.toSet())
+                                              .contains(uuid))
+                          .forEach(uuid -> ChatEvents.getSaid().remove(uuid));
                 setArenaState(ArenaState.WAITING_FOR_PLAYERS);
                 getPlayers().clear();
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -875,8 +874,8 @@ public class Arena extends BukkitRunnable {
     void showPlayers() {
         for (Player player : getPlayers()) {
             for (Player p : getPlayers()) {
-                player.showPlayer(p);
-                p.showPlayer(player);
+                player.showPlayer(MurderMystery.getInstance(), p);
+                p.showPlayer(MurderMystery.getInstance(),player);
             }
         }
     }

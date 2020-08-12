@@ -29,7 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -51,15 +51,15 @@ import pl.plajer.murdermystery.utils.Utils;
  */
 public class SpecialBlockEvents implements Listener {
 
-    private Main plugin;
+    private final MurderMystery plugin;
 
     @Getter
-    private static ItemStack blazeitem = new ItemBuilder(Material.BLAZE_ROD).name("§cТаинственная трость мудреца")
-                .lore("§eЭтой тростью когда-то владел админ..")
-                .enchantment(Enchantment.KNOCKBACK, 3)
-                .build();
+    private static final ItemStack blazeitem = new ItemBuilder(Material.BLAZE_ROD).name("§cТаинственная трость мудреца")
+                                                                                  .lore("§eЭтой тростью когда-то владел админ..")
+                                                                                  .enchantment(Enchantment.KNOCKBACK, 3)
+                                                                                  .build();
 
-    public SpecialBlockEvents(Main plugin) {
+    public SpecialBlockEvents(MurderMystery plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

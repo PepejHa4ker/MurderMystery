@@ -19,7 +19,7 @@
 package pl.plajer.murdermystery.user.data;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
@@ -31,10 +31,10 @@ import pl.plajer.murdermystery.utils.config.ConfigUtils;
  */
 public class FileStats implements UserDatabase {
 
-  private final Main plugin;
+  private final MurderMystery plugin;
   private final FileConfiguration config;
 
-  public FileStats(Main plugin) {
+  public FileStats(MurderMystery plugin) {
     this.plugin = plugin;
     config = ConfigUtils.getConfig(plugin, "stats");
   }

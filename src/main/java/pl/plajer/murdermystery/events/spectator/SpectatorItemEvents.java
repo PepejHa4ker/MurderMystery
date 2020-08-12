@@ -33,7 +33,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.role.Role;
@@ -54,11 +54,11 @@ import java.util.Set;
 
 public class SpectatorItemEvents implements Listener {
 
-  private Main plugin;
+  private MurderMystery plugin;
   private SpectatorSettingsMenu spectatorSettingsMenu;
   private boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
 
-  public SpectatorItemEvents(Main plugin) {
+  public SpectatorItemEvents(MurderMystery plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
     spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),

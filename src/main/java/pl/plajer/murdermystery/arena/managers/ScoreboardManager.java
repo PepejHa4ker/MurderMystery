@@ -29,7 +29,7 @@ import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaState;
@@ -50,7 +50,7 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ScoreboardManager {
 
-    static Main plugin = JavaPlugin.getPlugin(Main.class);
+    static MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
     static String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
     List<Scoreboard> scoreboards = new ArrayList<>();
     Arena arena;
