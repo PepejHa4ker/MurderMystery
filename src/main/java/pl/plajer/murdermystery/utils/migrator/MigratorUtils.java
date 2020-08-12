@@ -1,7 +1,7 @@
 package pl.plajer.murdermystery.utils.migrator;
 
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
+import pl.plajer.murdermystery.MurderMystery;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,7 +29,7 @@ public class MigratorUtils {
             FileUtils.writeLines(file, updatedLines, false);
         } catch (IOException e) {
             e.printStackTrace();
-            Bukkit.getLogger().warning("[CommonsBox] Something went horribly wrong with migration! Please contact Plajer!");
+            MurderMystery.getInstance().getPluginLogger().warn("Something went horribly wrong with migration!");
         }
     }
 
@@ -70,7 +70,7 @@ public class MigratorUtils {
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Bukkit.getLogger().warning("[CommonsBox] Something went horribly wrong with migration! Please contact Plajer!");
+            MurderMystery.getInstance().getPluginLogger().severe("Something went horribly wrong with migration!");
         }
     }
 

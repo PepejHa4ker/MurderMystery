@@ -21,7 +21,6 @@ package pl.plajer.murdermystery.utils.services.locale;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
-import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
@@ -41,12 +40,6 @@ public class LocaleService {
   private FileConfiguration localeData;
 
   public LocaleService(JavaPlugin plugin) {
-    if (ServiceRegistry.getRegisteredService() == null || !ServiceRegistry.getRegisteredService().equals(plugin)) {
-      throw new IllegalArgumentException("LocaleService cannot be used without registering service via ServiceRegistry first!");
-    }
-    if (!ServiceRegistry.isServiceEnabled()) {
-      return;
-    }
     this.plugin = plugin;
     try (Scanner scanner = new Scanner(requestLocaleFetch(null), "UTF-8").useDelimiter("\\A")) {
       String data = scanner.hasNext() ? scanner.next() : "";

@@ -19,6 +19,7 @@
 package pl.plajer.murdermystery.handlers.items;
 
 import org.bukkit.inventory.ItemStack;
+import pl.plajer.murdermystery.exception.InvalidArugmentException;
 
 import java.util.HashMap;
 
@@ -39,7 +40,7 @@ public class SpecialItemManager {
     if (specialItems.containsKey(name)) {
       return specialItems.get(name);
     }
-    throw new IllegalArgumentException();
+    throw new InvalidArugmentException();
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
@@ -49,6 +50,6 @@ public class SpecialItemManager {
         return key;
       }
     }
-    throw new IllegalArgumentException();
+    throw new InvalidArugmentException();
   }
 }

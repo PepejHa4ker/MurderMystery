@@ -2,7 +2,7 @@ package pl.plajer.murdermystery.logging;
 
 import java.util.logging.Logger;
 
-public class LoggerImpl implements PluginLogger {
+public class LoggerImpl implements ILogger {
 
     private final Logger logger;
 
@@ -24,4 +24,5 @@ public class LoggerImpl implements PluginLogger {
     public void severe(String message) {
         this.logger.severe(message);
     }
+
 }

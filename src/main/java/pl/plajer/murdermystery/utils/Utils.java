@@ -46,12 +46,6 @@ import java.util.Random;
 @UtilityClass
 public class Utils {
 
-  private MurderMystery plugin;
-
-  public void init(MurderMystery plugin) {
-    Utils.plugin = plugin;
-  }
-
   /**
    * Serialize int to use it in Inventories size
    * ex. you have 38 kits and it will serialize it to 45 (9*5)
@@ -99,7 +93,7 @@ public class Utils {
           .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
         ticks += 10;
       }
-    }.runTaskTimer(plugin, 0, 10);
+    }.runTaskTimer(MurderMystery.getInstance(), 0, 10);
   }
 
   public List<Block> getNearbyBlocks(Location location, int radius) {

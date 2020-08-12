@@ -22,7 +22,6 @@ package pl.plajer.murdermystery.api;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,7 +29,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.MurderMystery;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 import java.sql.Connection;
@@ -38,7 +36,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -80,10 +77,9 @@ public class StatsStorage {
                 }
                 return column;
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.WARNING, "SQLException occurred! " + e.getSQLState() + " (" + e.getErrorCode() + ")");
-                MessageUtils.errorOccurred();
-                Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
-                Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+                plugin.getPluginLogger().severe("SQLException occurred! " + e.getSQLState() + " (" + e.getErrorCode() + ")");
+                plugin.getPluginLogger().severe("Cannot get contents from MySQL database!");
+                plugin.getPluginLogger().severe("Check configuration of mysql.yml file or disable mysql option in config.yml");
                 return Collections.emptyMap();
             }
         }

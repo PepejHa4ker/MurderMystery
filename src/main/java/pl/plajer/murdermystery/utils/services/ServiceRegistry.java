@@ -22,9 +22,6 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.utils.services.locale.LocaleService;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-import java.net.URL;
 import java.util.logging.Level;
 
 /**
@@ -42,26 +39,8 @@ public class ServiceRegistry {
     if (registeredService != null && registeredService.equals(plugin)) {
       return;
     }
-    plugin.getLogger().log(Level.INFO, "Connecting to services, please wait! Server may freeze a bit!");
-    try {
-      HttpsURLConnection connection = (HttpsURLConnection) new URL("https://api.plajer.xyz/ping.php").openConnection();
-      connection.setConnectTimeout(3000);
-      connection.setReadTimeout(2000);
-      connection.setRequestMethod("HEAD");
-      connection.setRequestProperty("User-Agent", "PLService/1.0");
-      int responseCode = connection.getResponseCode();
-      if (responseCode != 200) {
-        plugin.getLogger().log(Level.WARNING, "Plajer's Lair services aren't online or inaccessible from your location! Response: " + responseCode + ". Do you think it's site problem? Contact developer! Make sure Cloudflare isn't blocked in your area!");
-        serviceEnabled = false;
-        return;
-      }
-    } catch (IOException ignored) {
-      plugin.getLogger().log(Level.WARNING, "Plajer's Lair services aren't online or inaccessible from your location!");
-      serviceEnabled = false;
-      return;
-    }
-    registeredService = plugin;
     serviceEnabled = true;
+    registeredService = plugin;
     plugin.getLogger().log(Level.INFO, "Hooked with ServiceRegistry! Initialized services properly!");
     localeService = new LocaleService(plugin);
   }

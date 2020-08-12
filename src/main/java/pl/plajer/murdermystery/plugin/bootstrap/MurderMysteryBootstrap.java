@@ -8,7 +8,7 @@ import pl.plajer.murdermystery.handlers.CorpseHandler;
 import pl.plajer.murdermystery.handlers.party.PartyHandler;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
-import pl.plajer.murdermystery.logging.PluginLogger;
+import pl.plajer.murdermystery.logging.ILogger;
 import pl.plajer.murdermystery.plugin.scheduler.SchedulerAdapter;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.database.MysqlDatabase;
@@ -19,7 +19,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public interface MurderMysteryBootstrap {
 
-    PluginLogger getPluginLogger();
+    ILogger getPluginLogger();
 
     int getPlayerCount();
 
@@ -35,22 +35,22 @@ public interface MurderMysteryBootstrap {
 
     BungeeManager getBungeeManager();
 
-   RewardsFactory getRewardsHandler();
-   MysqlDatabase getDatabase();
+    RewardsFactory getRewardsHandler();
 
-   SignManager getSignManager();
+    MysqlDatabase getDatabase();
 
-   CorpseHandler getSorpseHandler();
+    SignManager getSignManager();
 
-   PartyHandler getPartyHandler();
+    CorpseHandler getCorpseHandler();
 
-   ConfigPreferences getConfigPreferences();
+    PartyHandler getPartyHandler();
 
-   HookManager getHookManager();
+    ConfigPreferences getConfigPreferences();
 
-   UserManager getUserManager();
+    HookManager getHookManager();
 
-   Economy getEconomy();
+    UserManager getUserManager();
 
+    Economy getEconomy();
 
 }

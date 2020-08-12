@@ -58,7 +58,7 @@ import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.perks.ExtremeGoldPerk;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.perks.SecondChancePerk;
-import pl.plajer.murdermystery.perks.UdavkaNahuyPerk;
+import pl.plajer.murdermystery.perks.PovodokEbaniyPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
@@ -80,9 +80,8 @@ public class ArenaEvents implements Listener {
 
     private MurderMystery plugin;
 
-
-    public ArenaEvents(MurderMystery plugin) {
-        this.plugin = plugin;
+    public ArenaEvents() {
+        this.plugin = MurderMystery.getInstance();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -342,9 +341,9 @@ public class ArenaEvents implements Listener {
             }
             u.setShots(u.getShots() + 1);
         }
-        if (attacker.getInventory().getItemInMainHand().isSimilar(UdavkaNahuyPerk.item)) {
-            if (Perk.has(attacker, UdavkaNahuyPerk.class)) {
-                Perk.getPerkByClass(UdavkaNahuyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
+        if (attacker.getInventory().getItemInMainHand().isSimilar(PovodokEbaniyPerk.item)) {
+            if (Perk.has(attacker, PovodokEbaniyPerk.class)) {
+                Perk.getPerkByClass(PovodokEbaniyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
             }
 
         }

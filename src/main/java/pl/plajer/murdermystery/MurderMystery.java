@@ -26,7 +26,6 @@ import lombok.experimental.FieldDefaults;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,8 +50,8 @@ import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.scheduler.Scheduler;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
+import pl.plajer.murdermystery.logging.ILogger;
 import pl.plajer.murdermystery.logging.LoggerImpl;
-import pl.plajer.murdermystery.logging.PluginLogger;
 import pl.plajer.murdermystery.perks.Perk;
 import pl.plajer.murdermystery.plugin.bootstrap.MurderMysteryBootstrap;
 import pl.plajer.murdermystery.plugin.scheduler.SchedulerAdapter;
@@ -60,8 +59,6 @@ import pl.plajer.murdermystery.user.RankManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
-import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.database.MysqlDatabase;
 import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
@@ -111,11 +108,11 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
 
     Economy economy;
 
-    PluginLogger logger = null;
+    ILogger logger = null;
 
 
     @Override
-    public PluginLogger getPluginLogger() {
+    public ILogger getPluginLogger() {
         if (this.logger == null) {
             throw new IllegalStateException("Logger has not been initialised yet");
         }
@@ -137,7 +134,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
                    .collect(Collectors.toList())
                    .contains(uniqueId);
     }
-
 
     @Override
     public String getVersion() {
@@ -180,7 +176,7 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
     }
 
     @Override
-    public CorpseHandler getSorpseHandler() {
+    public CorpseHandler getCorpseHandler() {
         return this.corpseHandler;
     }
 
@@ -213,6 +209,8 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
     public void onLoad() {
         this.schedulerAdapter = new MurderMysterySchedulerAdapter(this);
         this.logger = new LoggerImpl(this.getLogger());
+        this.executorService = Scheduler.createExecutorService();
+        this.scheduledExecutorService = Scheduler.createScheduledExecutorService();
     }
 
     @Override
@@ -221,13 +219,7 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         if (!validateIfPluginShouldStart()) {
             return;
         }
-        executorService = Scheduler.createExecutorService();
-        scheduledExecutorService = Scheduler.createScheduledExecutorService();
-        Perk.init();
         setupEconomy();
-        RankManager.setupRanks();
-        ServiceRegistry.registerService(this);
-        LanguageManager.init(this);
         saveDefaultConfig();
         configPreferences = new ConfigPreferences(this);
         setupFiles();
@@ -245,11 +237,9 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
 
     private boolean validateIfPluginShouldStart() {
         version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-                || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
-            MessageUtils.thisVersionIsNotSupported();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
+        if (!version.equalsIgnoreCase("v1_12_R1")) {
+            MurderMystery.getInstance().getPluginLogger().severe("Your server version is not supported by Murder Mystery!");
+            MurderMystery.getInstance().getPluginLogger().severe("Sadly, we must shut off. Maybe you consider changing your server version?");
             forceDisable = true;
             getServer().getPluginManager().disablePlugin(this);
             return false;
@@ -257,9 +247,8 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         try {
             Class.forName("org.spigotmc.SpigotConfig");
         } catch (Exception e) {
-            MessageUtils.thisVersionIsNotSupported();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Murder Mystery!");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+            MurderMystery.getInstance().getPluginLogger().severe("Your server software is not supported by Murder Mystery!");
+            MurderMystery.getInstance().getPluginLogger().severe( "We support only Spigot and Spigot forks only! Shutting off...");
             forceDisable = true;
             getServer().getPluginManager().disablePlugin(this);
             return false;
@@ -316,10 +305,13 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         }
         new ArgumentsRegistry(this);
         userManager = new UserManager(this);
-        Utils.init(this);
         SpecialItem.loadAll();
+        Perk.init();
         PermissionsManager.init();
-        new ArenaEvents(this);
+        RankManager.setupRanks();
+        ServiceRegistry.registerService(this);
+        LanguageManager.init(this);
+        new ArenaEvents();
         new SpectatorEvents(this);
         new QuitEvent(this);
         new JoinEvent(this);
@@ -341,7 +333,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
     }
 
     private void registerSoftDependenciesAndServices() {
-
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderManager().register();
         }
@@ -355,11 +346,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
             }
         }
     }
-
-    public boolean is1_12_R1() {
-        return version.equalsIgnoreCase("v1_12_R1");
-    }
-
 
     private void saveAllUserStatistics() {
         for (Player player : getServer().getOnlinePlayers()) {

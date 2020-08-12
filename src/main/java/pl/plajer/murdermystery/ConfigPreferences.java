@@ -20,9 +20,7 @@ package pl.plajer.murdermystery;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
 
 import java.util.HashMap;
@@ -50,9 +48,7 @@ public class ConfigPreferences {
     try {
       murdererSword = XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD").toUpperCase()).parseItem();
     } catch (Exception ex) {
-      MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD"));
-      //Set the murdererSword to avoid errors
+      MurderMystery.getInstance().getPluginLogger().severe("Cannot find murder sword!");
       murdererSword = XMaterial.IRON_SWORD.parseItem();
     }
   }

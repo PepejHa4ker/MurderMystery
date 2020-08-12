@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.exception.InvalidArugmentException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class Perk {
     public static void init() {
         new SpeedPerk();
         new ExtremeGoldPerk();
-        new UdavkaNahuyPerk();
+        new PovodokEbaniyPerk();
         new InvisibleHeadPerk();
         new SecondChancePerk();
     }
@@ -83,13 +84,13 @@ public abstract class Perk {
         player.sendMessage("§6Способность " + this.getName() + " §6успешно выбрана");
     }
 
-    public static Perk getPerkByName(String perkName) {
+    public static Perk getPerkByName(String perkName) throws InvalidArugmentException {
         for (Perk perk : getAllPerks()) {
             if (perk.getName().equalsIgnoreCase(perkName)) {
                 return perk;
             }
         }
-        throw new IllegalArgumentException("Cannot find perk");
+        throw new InvalidArugmentException("Cannot find perk");
     }
 
 

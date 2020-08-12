@@ -2,7 +2,7 @@ package pl.plajer.murdermystery.utils.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import pl.plajer.murdermystery.MurderMystery;
-import pl.plajer.murdermystery.logging.PluginLogger;
+import pl.plajer.murdermystery.logging.ILogger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class MysqlDatabase {
 
     private HikariDataSource hikariDataSource;
-    private final PluginLogger logger = MurderMystery.getInstance().getPluginLogger();
+    private final ILogger logger = MurderMystery.getInstance().getPluginLogger();
 
     public MysqlDatabase(String user, String password, String jdbcUrl) {
         logger.info("Configuring MySQL connection!");

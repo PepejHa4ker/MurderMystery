@@ -39,7 +39,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajer.murdermystery.utils.compat.XMaterial;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 
 import java.util.Collections;
@@ -93,11 +92,7 @@ public class SpectatorItemEvents implements Listener {
     for (Player player : world.getPlayers()) {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull;
-        if (plugin.is1_12_R1()) {
-          skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        } else {
-          skull = XMaterial.PLAYER_HEAD.parseItem();
-        }
+        skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwningPlayer(player);
         meta.setDisplayName(player.getName());

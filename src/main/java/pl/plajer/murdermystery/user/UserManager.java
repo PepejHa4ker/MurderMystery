@@ -44,6 +44,7 @@ public class UserManager {
     public UserManager(MurderMystery plugin) {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
             database = new MysqlManager(plugin);
+            MurderMystery.getInstance().getPluginLogger().info("MySQL connected!");
         } else
             database = new FileStats(plugin);
 

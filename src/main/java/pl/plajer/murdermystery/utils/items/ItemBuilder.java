@@ -64,7 +64,7 @@ public class ItemBuilder {
         val meta = this.itemStack.getItemMeta();
         var lore = meta.getLore();
         if (lore == null) {
-            lore = new ArrayList();
+            lore = new ArrayList<>();
         }
 
         name = name.stream()
