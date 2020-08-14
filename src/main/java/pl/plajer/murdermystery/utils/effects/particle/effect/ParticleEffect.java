@@ -1,17 +1,18 @@
 package pl.plajer.murdermystery.utils.effects.particle.effect;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("rawtypes")
 public abstract class ParticleEffect {
-
-    protected int initialDelay, period;
-    protected TimeUnit unit;
-    protected ScheduledExecutorService scheduler;
+    @NotNull protected Integer initialDelay, period;
+    @NotNull protected TimeUnit unit;
+    @NotNull protected ScheduledExecutorService scheduler;
     protected ScheduledFuture task;
-    protected Runnable runnable;
+    @NotNull protected Runnable runnable;
 
     /**
      * Used to create a new particle effect
@@ -23,11 +24,11 @@ public abstract class ParticleEffect {
      * @param unit         Unit of time (Milliseconds recommended)
      */
     protected ParticleEffect(
-            ScheduledExecutorService scheduler,
-            Runnable runnable,
-            int initialDelay,
-            int period,
-            TimeUnit unit
+            @NotNull ScheduledExecutorService scheduler,
+            @NotNull Runnable runnable,
+            @NotNull Integer initialDelay,
+            @NotNull Integer period,
+            @NotNull TimeUnit unit
     ) {
         this.scheduler = scheduler;
         this.runnable = runnable;

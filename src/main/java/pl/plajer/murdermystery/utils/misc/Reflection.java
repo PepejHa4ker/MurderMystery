@@ -2,6 +2,7 @@ package pl.plajer.murdermystery.utils.misc;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.plajer.murdermystery.exception.InvalidArugmentException;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -20,7 +21,7 @@ public class Reflection {
             return Class.forName("net.minecraft.server." + version + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            return null;
+            throw new InvalidArugmentException("Cannot find NMS Class");
         }
     }
 
@@ -37,7 +38,7 @@ public class Reflection {
             return Class.forName("org.bukkit.craftbukkit." + version + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            return null;
+            throw new InvalidArugmentException("Cannot find NMS Class");
         }
     }
 

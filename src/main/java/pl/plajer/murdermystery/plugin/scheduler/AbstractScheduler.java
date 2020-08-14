@@ -13,7 +13,7 @@ public abstract class AbstractScheduler implements SchedulerAdapter {
     public AbstractScheduler() {
         this.scheduler = new ScheduledThreadPoolExecutor(1, new ThreadFactoryBuilder()
                 .setDaemon(true)
-                .setNameFormat("luckperms-scheduler")
+                .setNameFormat("murdermystery-scheduler")
                 .build()
         );
         this.scheduler.setRemoveOnCancelPolicy(true);

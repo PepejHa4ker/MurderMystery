@@ -3,13 +3,13 @@ package pl.plajer.murdermystery.perks;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.utils.effects.PotionEffectBuilder;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 
-public class UdavkaNahuyPerk extends Perk {
+public class PovodokEbaniyPerk extends Perk {
 
     public static ItemStack item = new ItemBuilder(Material.LEASH)
             .name("&8Заключённый")
@@ -19,7 +19,7 @@ public class UdavkaNahuyPerk extends Perk {
             .build();
 
 
-    protected UdavkaNahuyPerk() {
+    protected PovodokEbaniyPerk() {
         super(
                 "§8Заключённый",
                 600.0,
@@ -29,21 +29,8 @@ public class UdavkaNahuyPerk extends Perk {
 
     @Override
     public void handle(Player player, Player target, Arena arena) {
-        player.addPotionEffect(
-                new PotionEffectBuilder(PotionEffectType.SLOW)
-                        .setDuration(10)
-                        .setAmplifier(0)
-                        .setVisible(false)
-                        .build()
-        );
-        player.addPotionEffect(
-                new PotionEffectBuilder(PotionEffectType.BLINDNESS)
-                        .setDuration(10)
-                        .setAmplifier(0)
-                        .setVisible(false)
-                        .build()
-        );
-
+        target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10*20, 0, false,false));
+        target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0, false,false));
         ItemPosition.setItem(player, ItemPosition.UDAVKA, null);
 
     }

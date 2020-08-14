@@ -345,7 +345,6 @@ public class ArenaEvents implements Listener {
             if (Perk.has(attacker, PovodokEbaniyPerk.class)) {
                 Perk.getPerkByClass(PovodokEbaniyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
             }
-
         }
 
 
@@ -371,6 +370,8 @@ public class ArenaEvents implements Listener {
 
         if (Role.isRole(Role.MURDERER, victim)) {
             plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
+            plugin.getEconomy().depositPlayer(attacker, 100);
+            attacker.sendMessage("§cВы получили §a100§c монет за убийство маньяка!");
         } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
             plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
             plugin.getEconomy().depositPlayer(attacker, 75);
@@ -392,7 +393,7 @@ public class ArenaEvents implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onArrowDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
             return;
@@ -557,12 +558,12 @@ public class ArenaEvents implements Listener {
     @EventHandler
     public void onPotion(PlayerItemConsumeEvent e) {
         User u = plugin.getUserManager().getUser(e.getPlayer());
-        if (e.getItem().getType() == Material.POTION && u.getPotion() != null) {
+        if (u.getPotion() != null && e.getItem().equals(u.getPotion()))  {
             e.setCancelled(true);
             PotionMeta pm = (PotionMeta) u.getPotion().getItemMeta();
             PotionEffect pe = pm.getCustomEffects().get(0);
             e.getPlayer().addPotionEffect(pe);
-            e.getPlayer().getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), null);
+            ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, null);
             u.setPotion(null);
             u.setPickedPotion(false);
 

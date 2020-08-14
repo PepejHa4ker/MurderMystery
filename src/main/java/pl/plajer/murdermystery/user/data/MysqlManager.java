@@ -62,8 +62,8 @@ public class MysqlManager implements UserDatabase {
           + "  `joinedtimes` int(11) NOT NULL DEFAULT '1'\n"
                 + ") ENGINE=InnoDB;");
       } catch (SQLException e) {
-        Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
-        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+        MurderMystery.getInstance().getPluginLogger().severe("Cannot save contents to MySQL database!");
+        MurderMystery.getInstance().getPluginLogger().severe("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }
     });
   }

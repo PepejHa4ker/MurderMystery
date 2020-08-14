@@ -49,10 +49,10 @@ import pl.plajer.murdermystery.handlers.gui.PotionGui;
 import pl.plajer.murdermystery.handlers.gui.StartGui;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.compat.XMaterial;
-import pl.plajer.murdermystery.utils.number.Maths;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
 import pl.plajer.murdermystery.utils.message.type.TitleMessage;
+import pl.plajer.murdermystery.utils.number.Maths;
 
 
 /**
@@ -70,6 +70,7 @@ public class Events implements Listener {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
+
 
     @EventHandler
     public void onItemSwap(PlayerSwapHandItemsEvent e) {
@@ -206,6 +207,8 @@ public class Events implements Listener {
         }
         victim.playSound(victim.getLocation(), Sound.ENTITY_ENDERDRAGON_SHOOT, 1f, 1f);
         attackerUser.getPlayer().playSound(attackerUser.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+        MurderMystery.getInstance().getEconomy().depositPlayer(attackerUser.getPlayer(), 50.0);
+        ChatManager.sendMessage(attackerUser.getPlayer(), "&6Вы получили &a50 &6монет за убийство игрока");
         killPlayer(victim, arena);
         new BukkitRunnable() {
             int timer = 0;
@@ -225,7 +228,7 @@ public class Events implements Listener {
         ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
         if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
             plugin.getEconomy().depositPlayer(attackerUser.getPlayer(), 75);
-            attackerUser.sendMessage("&6Вы получили &a75 &6монет за убийство детектива");
+            ChatManager.sendMessage(attackerUser.getPlayer(), "&6Вы получили &a75 &6монет за убийство детектива");
             if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
                 arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
             }

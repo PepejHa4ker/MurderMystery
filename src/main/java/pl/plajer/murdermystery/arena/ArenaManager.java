@@ -19,51 +19,50 @@
   package pl.plajer.murdermystery.arena;
 
   import lombok.AccessLevel;
-  import lombok.experimental.FieldDefaults;
-  import me.clip.placeholderapi.PlaceholderAPI;
-  import net.md_5.bungee.api.chat.ComponentBuilder;
-  import net.md_5.bungee.api.chat.HoverEvent;
-  import net.md_5.bungee.api.chat.TextComponent;
-  import org.apache.commons.lang.StringUtils;
-  import org.bukkit.Bukkit;
-  import org.bukkit.ChatColor;
-  import org.bukkit.GameMode;
-  import org.bukkit.Material;
-  import org.bukkit.attribute.Attribute;
-  import org.bukkit.configuration.file.FileConfiguration;
-  import org.bukkit.entity.Player;
-  import org.bukkit.inventory.ItemStack;
-  import org.bukkit.inventory.meta.ItemMeta;
-  import org.bukkit.plugin.java.JavaPlugin;
-  import org.bukkit.potion.PotionEffect;
-  import org.bukkit.potion.PotionEffectType;
-  import org.bukkit.scheduler.BukkitRunnable;
-  import pl.plajer.murdermystery.ConfigPreferences;
-  import pl.plajer.murdermystery.MurderMystery;
-  import pl.plajer.murdermystery.api.StatsStorage;
-  import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
-  import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
-  import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
-  import pl.plajer.murdermystery.arena.role.Role;
-  import pl.plajer.murdermystery.events.ChatEvents;
-  import pl.plajer.murdermystery.handlers.ChatManager;
-  import pl.plajer.murdermystery.handlers.PermissionsManager;
-  import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-  import pl.plajer.murdermystery.handlers.language.LanguageManager;
-  import pl.plajer.murdermystery.handlers.party.GameParty;
-  import pl.plajer.murdermystery.handlers.rewards.Reward;
-  import pl.plajer.murdermystery.user.User;
-  import pl.plajer.murdermystery.utils.compat.XMaterial;
-  import pl.plajer.murdermystery.utils.config.ConfigUtils;
-  import pl.plajer.murdermystery.utils.donate.DonatType;
-  import pl.plajer.murdermystery.utils.donate.DonaterUtils;
-  import pl.plajer.murdermystery.utils.items.ItemBuilder;
-  import pl.plajer.murdermystery.utils.items.ItemPosition;
-  import pl.plajer.murdermystery.utils.message.type.TitleMessage;
-  import pl.plajer.murdermystery.utils.misc.MiscUtils;
-  import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
+import lombok.experimental.FieldDefaults;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajer.murdermystery.ConfigPreferences;
+import pl.plajer.murdermystery.MurderMystery;
+import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.api.events.game.MMGameJoinAttemptEvent;
+import pl.plajer.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
+import pl.plajer.murdermystery.api.events.game.MMGameStopEvent;
+import pl.plajer.murdermystery.arena.role.Role;
+import pl.plajer.murdermystery.events.ChatEvents;
+import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.PermissionsManager;
+import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.party.GameParty;
+import pl.plajer.murdermystery.handlers.rewards.Reward;
+import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.compat.XMaterial;
+import pl.plajer.murdermystery.utils.config.ConfigUtils;
+import pl.plajer.murdermystery.utils.donate.DonatType;
+import pl.plajer.murdermystery.utils.donate.DonaterUtils;
+import pl.plajer.murdermystery.utils.items.ItemBuilder;
+import pl.plajer.murdermystery.utils.items.ItemPosition;
+import pl.plajer.murdermystery.utils.misc.MiscUtils;
+import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
-  import java.util.*;
+import java.util.*;
 
   /**
    * @author Plajer
@@ -204,9 +203,7 @@
           } else {
               user.setType(DonatType.DEF);
           }
-          new TitleMessage("§cДобро пожаловать на §6" + arena.getMapName(), 10, 30, 10).send(player);
-
-
+          player.sendTitle("§cДобро пожаловать", "§cна §6" + arena.getMapName(), 10, 30, 10);
           arena.addPlayer(player);
           player.setLevel(0);
           player.setExp(1);
@@ -257,8 +254,8 @@
               ChatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
           }
           if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-              player.getInventory().setItem(Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getSlot(), Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getItemStack());
-              player.getInventory().setItem(Objects.requireNonNull(SpecialItemManager.getSpecialItem("Perks")).getSlot(), Objects.requireNonNull(SpecialItemManager.getSpecialItem("Perks")).getItemStack());
+              player.getInventory().setItem(Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getSlot(),SpecialItemManager.getSpecialItem("Leave").getItemStack());
+              player.getInventory().setItem(Objects.requireNonNull(SpecialItemManager.getSpecialItem("Perks")).getSlot(), SpecialItemManager.getSpecialItem("Perks").getItemStack());
               FileConfiguration donat = ConfigUtils.getConfig(plugin, "donaters");
               if (player.hasPermission(donat.getString("Can-Forcestart-Game-Permission"))) {
                   ItemStack toAdd = SpecialItemManager.getSpecialItem("Start").getItemStack();

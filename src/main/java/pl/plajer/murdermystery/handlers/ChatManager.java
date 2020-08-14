@@ -39,6 +39,11 @@ public class ChatManager {
   public final String PLUGIN_PREFIX = "§cMurderMystery §7> ";
   private final MurderMystery plugin = MurderMystery.getInstance();
 
+  public void sendMessage(Player player, String message) {
+    message = ChatManager.colorRawMessage(message);
+    player.sendMessage(PLUGIN_PREFIX + message);
+  }
+
   public String colorRawMessage(String message) {
     return ChatColor.translateAlternateColorCodes('&', message);
   }

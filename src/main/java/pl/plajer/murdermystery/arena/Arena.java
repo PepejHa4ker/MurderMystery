@@ -53,6 +53,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.perks.InvisibleHeadPerk;
 import pl.plajer.murdermystery.perks.Perk;
+import pl.plajer.murdermystery.perks.PovodokEbaniyPerk;
 import pl.plajer.murdermystery.perks.SpeedPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
@@ -236,14 +237,17 @@ public class Arena extends BukkitRunnable {
                         plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
                         setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
                         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
-
-                    }
-
-                    for (final User user : plugin.getUserManager().getUsers(this)) {
-                        if (user.getPotion() != null) {
-                            ItemPosition.setItem(user.getPlayer(), ItemPosition.POTION, user.getPotion());
+                        if (Perk.has(player, PovodokEbaniyPerk.class)) {
+                            ItemPosition.setItem(player, ItemPosition.UDAVKA, PovodokEbaniyPerk.item);
                         }
+
+                        val user = plugin.getUserManager().getUser(player);
+                        if( user.getPotion() != null) {
+                            ItemPosition.setItem(player, ItemPosition.POTION, user.getPotion());
+                        }
+
                     }
+
 
                     Map<User, Double> murdererChances = new HashMap<>();
                     Map<User, Double> detectiveChances = new HashMap<>();
@@ -334,8 +338,6 @@ public class Arena extends BukkitRunnable {
                             User murderer = plugin.getUserManager().getUser(p);
                             if (murderer.isSpectator()) continue;
                             ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
-                            User u = plugin.getUserManager().getUser(p);
-                            p.getInventory().setHeldItemSlot(0);
                         }
                     }
                 }
