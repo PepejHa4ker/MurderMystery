@@ -5,7 +5,6 @@ import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.HookManager;
 import pl.plajer.murdermystery.handlers.BungeeManager;
 import pl.plajer.murdermystery.handlers.CorpseHandler;
-import pl.plajer.murdermystery.handlers.party.PartyHandler;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
 import pl.plajer.murdermystery.logging.ILogger;
@@ -42,8 +41,6 @@ public interface MurderMysteryBootstrap {
     SignManager getSignManager();
 
     CorpseHandler getCorpseHandler();
-
-    PartyHandler getPartyHandler();
 
     ConfigPreferences getConfigPreferences();
 

@@ -45,8 +45,6 @@ import pl.plajer.murdermystery.events.spectator.SpectatorItemEvents;
 import pl.plajer.murdermystery.handlers.*;
 import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.handlers.party.PartyHandler;
-import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.scheduler.Scheduler;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
@@ -97,8 +95,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
     SignManager signManager;
 
     CorpseHandler corpseHandler;
-
-    PartyHandler partyHandler;
 
     ConfigPreferences configPreferences;
 
@@ -178,11 +174,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
     @Override
     public CorpseHandler getCorpseHandler() {
         return this.corpseHandler;
-    }
-
-    @Override
-    public PartyHandler getPartyHandler() {
-        return this.partyHandler;
     }
 
     @Override
@@ -325,7 +316,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         rewardsHandler = new RewardsFactory(this);
         signManager = new SignManager(this);
         corpseHandler = new CorpseHandler(this);
-        partyHandler = new PartySupportInitializer().initialize();
         new BowTrailsHandler(this);
         MysteryPotionRegistry.init(this);
         PrayerRegistry.init(this);
