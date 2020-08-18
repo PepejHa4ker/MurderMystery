@@ -12,7 +12,6 @@ import pl.plajer.murdermystery.exception.InvalidArugmentException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 
 public abstract class Perk {
@@ -33,8 +32,6 @@ public abstract class Perk {
     @Getter
     private final Double price;
 
-    @Getter
-    private final ScheduledExecutorService scheduler;
 
     public static void init() {
         new SpeedPerk();
@@ -44,11 +41,10 @@ public abstract class Perk {
         new SecondChancePerk();
     }
 
-    protected Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem, ScheduledExecutorService scheduler) {
+    protected Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem) {
         this.name = name;
         this.price = price;
         this.displayItem = displayItem;
-        this.scheduler = scheduler;
         allPerks.add(this);
     }
 

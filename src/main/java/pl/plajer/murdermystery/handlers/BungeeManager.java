@@ -48,7 +48,7 @@ public class BungeeManager implements Listener {
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private final String MOTD;
 
-  public BungeeManager(MurderMystery plugin) {
+  public BungeeManager(final MurderMystery plugin) {
     this.plugin = plugin;
     gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Inactive")));
     gameStateToString.put(ArenaState.STARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Starting")));
@@ -60,7 +60,7 @@ public class BungeeManager implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  public void connectToHub(Player player) {
+  public void connectToHub(final Player player) {
     if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
       return;
     }

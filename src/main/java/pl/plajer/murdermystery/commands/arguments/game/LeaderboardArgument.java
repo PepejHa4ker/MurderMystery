@@ -53,7 +53,7 @@ public class LeaderboardArgument {
     this.registry = registry;
     List<String> stats = new ArrayList<>();
     for (StatsStorage.StatisticType value : StatsStorage.StatisticType.values()) {
-      if (!value.isPersistent()) {
+      if (!value.isPersistent() || value == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || value == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
         continue;
       }
       stats.add(value.name().toLowerCase());

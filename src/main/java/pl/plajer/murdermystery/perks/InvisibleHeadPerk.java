@@ -28,14 +28,13 @@ public class InvisibleHeadPerk extends Perk {
                         .lore("&eс маленьким шансом получить невидимость в течение игры.")
                         .lore("&eЦена: &c750.0&e монет")
                         .enchantment(Enchantment.PROTECTION_ENVIRONMENTAL)
-                        .build(),
-                null
+                        .build()
         );
     }
 
 
     @Override
-    public synchronized void handle(Player player, Player target, Arena arena) {
+    public void handle(final Player player, final Player target, final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 3) {
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),

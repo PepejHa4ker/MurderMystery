@@ -4,24 +4,24 @@ import java.util.logging.Logger;
 
 public class LoggerImpl implements ILogger {
 
-    private final Logger logger;
+    private transient final Logger logger;
 
-    public LoggerImpl(Logger logger) {
+    public LoggerImpl(final Logger logger) {
         this.logger = logger;
     }
 
     @Override
-    public void info(String message) {
+    public void info(final String message) {
         this.logger.info(message);
     }
 
     @Override
-    public void warn(String message) {
+    public void warn(final String message) {
         this.logger.warning(message);
     }
 
     @Override
-    public void severe(String message) {
+    public void severe(final String message) {
         this.logger.severe(message);
     }
 

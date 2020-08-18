@@ -31,7 +31,9 @@ import java.util.List;
 @AllArgsConstructor
 @Value
 public class CompletableArgument {
+
   String mainCommand;
   String argument;
   List<String> completions;
+
 }

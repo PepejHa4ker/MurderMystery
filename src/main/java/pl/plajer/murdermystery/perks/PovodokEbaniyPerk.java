@@ -23,12 +23,12 @@ public class PovodokEbaniyPerk extends Perk {
         super(
                 "§8Заключённый",
                 600.0,
-                item,
-                null);
+                item
+        );
     }
 
     @Override
-    public void handle(Player player, Player target, Arena arena) {
+    public void handle(final Player player, final Player target, final Arena arena) {
         target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10*20, 0, false,false));
         target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0, false,false));
         ItemPosition.setItem(player, ItemPosition.UDAVKA, null);

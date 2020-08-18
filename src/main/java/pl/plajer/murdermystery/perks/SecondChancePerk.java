@@ -27,8 +27,7 @@ public class SecondChancePerk extends Perk {
                         .lore("&eС шансом 25% Вы можете получить второй шанс после смерти")
                         .lore("&7(работает только на удары мечём)")
                         .lore("&eЦена: &c500.0&e монет")
-                        .build(),
-                null
+                        .build()
         );
     }
 
@@ -38,7 +37,7 @@ public class SecondChancePerk extends Perk {
     }
 
     @Override
-    public synchronized void handle(Player player, Player target, Arena arena) {
+    public void handle(final Player player, final Player target, final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 25) {
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),

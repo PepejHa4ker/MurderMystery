@@ -25,14 +25,14 @@ public class SpeedPerk extends Perk {
                         .name("&bБеги, пока можешь")
                         .lore("&eВы можете с некоторым шансом получить скорость")
                         .lore("&eЦена: &c200.0&e монет")
-                        .build(),
-                null);
+                        .build()
+                );
 
 
     }
 
     @Override
-    public synchronized void handle(Player player, Player target, Arena arena) {
+    public void handle(final Player player, final Player target, final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 5) {
             player.addPotionEffect(new PotionEffectBuilder(PotionEffectType.SPEED)

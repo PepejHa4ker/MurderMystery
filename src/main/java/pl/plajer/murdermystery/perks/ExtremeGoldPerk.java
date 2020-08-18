@@ -26,13 +26,12 @@ public class ExtremeGoldPerk extends Perk {
                         .lore("&eполучить дополнительный слиток золота")
                         .lore("&7(есть побочные эффекты)")
                         .lore("&eЦена: &c500.0&e монет")
-                        .build(),
-                null
+                        .build()
         );
     }
 
     @Override
-    public void handle(Player player, Player target, Arena arena) {
+    public void handle(final Player player, final Player target, final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 30) {
             ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT));
