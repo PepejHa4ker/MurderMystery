@@ -32,15 +32,14 @@ public class ConfirmationListener implements Listener {
         }
 
         val onAccept = confirmation.getOnAccept();
-
-        if (event.getCurrentItem() != null && event.getCurrentItem() == Confirmation.getAcceptItem() ) {
+        if (event.getCurrentItem() != null && event.getCurrentItem().isSimilar(Confirmation.getAcceptItem())) {
             onAccept.accept((Player) event.getWhoClicked(), event);
             event.setCancelled(true);
             return;
         }
         val onDecline = confirmation.getOnDecline();
 
-        if (event.getCurrentItem() != null && event.getCurrentItem() == Confirmation.getDeclineItem() ) {
+        if (event.getCurrentItem() != null && event.getCurrentItem().isSimilar(Confirmation.getDeclineItem()) ) {
             onDecline.accept((Player) event.getWhoClicked(), event);
             event.setCancelled(true);
             return;
@@ -76,7 +75,9 @@ public class ConfirmationListener implements Listener {
         }
         val confirmation = (Confirmation) event.getInventory().getHolder();
         val onOpen = confirmation.getOnOpen();
-        onOpen.accept((Player) event.getPlayer(), event);
+        if(onOpen != null) {
+            onOpen.accept((Player) event.getPlayer(), event);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -86,7 +87,9 @@ public class ConfirmationListener implements Listener {
         }
         val confirmation = (Confirmation) event.getInventory().getHolder();
         val onClose = confirmation.getOnClose();
-        onClose.accept((Player) event.getPlayer(), event);
+        if (onClose != null) {
+            onClose.accept((Player) event.getPlayer(), event);
+        }
 
     }
 }

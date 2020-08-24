@@ -72,7 +72,7 @@ public class ChatEvents implements Listener {
         }
         User user = plugin.getUserManager().getUser(event.getPlayer());
         if (event.getMessage().equalsIgnoreCase("gg") && arena.getArenaState() == ArenaState.ENDING) {
-            if (!said.contains(event.getPlayer().getUniqueId())) {
+            if (!getSaid().contains(event.getPlayer().getUniqueId())) {
                 int karma = Utils.getRandomNumber(10, 30);
                 getSaid().add(event.getPlayer().getUniqueId());
                 user.addStat(StatsStorage.StatisticType.KARMA, karma);
@@ -81,10 +81,10 @@ public class ChatEvents implements Listener {
         }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
             event.setCancelled(true);
-            Iterator<Player> iterator = event.getRecipients().iterator();
+            Iterator<Player> it = event.getRecipients().iterator();
             List<Player> remove = new ArrayList<>();
-            while (iterator.hasNext()) {
-                Player player = iterator.next();
+            while (it.hasNext()) {
+                Player player = it.next();
                 remove.add(player);
             }
             for (Player player : remove) {

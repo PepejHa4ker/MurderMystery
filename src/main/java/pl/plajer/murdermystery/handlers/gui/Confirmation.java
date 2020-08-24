@@ -3,6 +3,7 @@ package pl.plajer.murdermystery.handlers.gui;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -67,7 +68,6 @@ public class Confirmation implements InventoryHolder {
     }
 
     @Getter
-    @NotNull
     BiConsumer<Player, InventoryClickEvent>
             onAccept,
             onDecline,
@@ -77,11 +77,9 @@ public class Confirmation implements InventoryHolder {
             onOutsideClick;
 
     @Getter
-    @NotNull
     private BiConsumer<Player, InventoryCloseEvent> onClose;
 
     @Getter
-    @NotNull
     private BiConsumer<Player, InventoryOpenEvent> onOpen;
 
     private static boolean hasRegisteredListeners;
