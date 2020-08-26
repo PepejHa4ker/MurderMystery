@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.perks;
+package pl.plajer.murdermystery.perk.perks;
 
 import lombok.val;
 import org.bukkit.Bukkit;
@@ -8,16 +8,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.perk.Perk;
+import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajer.murdermystery.utils.effects.EffectUtils;
 import pl.plajer.murdermystery.utils.effects.PotionEffectBuilder;
 import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
 import pl.plajer.murdermystery.utils.effects.particle.effect.SpiralEffect;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
-
+@PerkAnn
 public class SpeedPerk extends Perk {
 
-    protected SpeedPerk() {
+    public SpeedPerk() {
         super(
                 "§bБеги, пока можешь",
                 200.0,
@@ -35,15 +38,10 @@ public class SpeedPerk extends Perk {
     public void handle(final Player player, final Player target, final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 5) {
-            player.addPotionEffect(new PotionEffectBuilder(PotionEffectType.SPEED)
-            .setVisible(false)
-            .setDuration(10)
-            .setAmbient(true)
-            .setAmplifier(0)
-            .build());
+            EffectUtils.addEffect(player, new PotionEffectBuilder(PotionEffectType.SPEED).setDuration(10).setAmplifier(0).setAmbient(true).setVisible(false).build());
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
-                    new ParticlePlayer(Particle.SLIME),
+                    new ParticlePlayer(Particle.END_ROD),
                     20,
                     2,
                     2,

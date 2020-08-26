@@ -50,7 +50,7 @@ import pl.plajer.murdermystery.handlers.scheduler.Scheduler;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
 import pl.plajer.murdermystery.logging.ILogger;
 import pl.plajer.murdermystery.logging.LoggerImpl;
-import pl.plajer.murdermystery.perks.Perk;
+import pl.plajer.murdermystery.perk.PerkRegister;
 import pl.plajer.murdermystery.plugin.bootstrap.MurderMysteryBootstrap;
 import pl.plajer.murdermystery.plugin.scheduler.SchedulerAdapter;
 import pl.plajer.murdermystery.user.RankManager;
@@ -297,7 +297,7 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         new ArgumentsRegistry(this);
         userManager = new UserManager(this);
         SpecialItem.loadAll();
-        Perk.init();
+        new PerkRegister().initPerks();
         PermissionsManager.init();
         RankManager.setupRanks();
         ServiceRegistry.registerService(this);

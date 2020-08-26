@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.perks;
+package pl.plajer.murdermystery.perk.perks;
 
 import lombok.val;
 import org.bukkit.Material;
@@ -9,14 +9,16 @@ import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.perk.Perk;
+import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 
-
+@PerkAnn
 public class ExtremeGoldPerk extends Perk {
 
-    protected ExtremeGoldPerk() {
+    public ExtremeGoldPerk() {
         super(
                 "§eЗолотая лихорадка",
                 500.0,

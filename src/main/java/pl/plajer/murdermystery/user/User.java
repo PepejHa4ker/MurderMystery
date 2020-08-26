@@ -31,7 +31,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.perks.Perk;
+import pl.plajer.murdermystery.perk.Perk;
 import pl.plajer.murdermystery.utils.donate.DonatType;
 
 import java.util.*;

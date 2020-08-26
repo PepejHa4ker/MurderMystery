@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.perks;
+package pl.plajer.murdermystery.perk.perks;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -6,9 +6,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.perk.Perk;
+import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 
+@PerkAnn
 public class PovodokEbaniyPerk extends Perk {
 
     public static ItemStack item = new ItemBuilder(Material.LEASH)
@@ -19,7 +22,7 @@ public class PovodokEbaniyPerk extends Perk {
             .build();
 
 
-    protected PovodokEbaniyPerk() {
+    public PovodokEbaniyPerk() {
         super(
                 "§8Заключённый",
                 600.0,

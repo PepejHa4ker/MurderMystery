@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.perks;
+package pl.plajer.murdermystery.perk;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.exception.InvalidArugmentException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +32,11 @@ public abstract class Perk {
     private final Double price;
 
 
-    public static void init() {
-        new SpeedPerk();
-        new ExtremeGoldPerk();
-        new PovodokEbaniyPerk();
-        new InvisibleHeadPerk();
-        new SecondChancePerk();
-    }
 
-    protected Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem) {
+    public Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem) {
         this.name = name;
         this.price = price;
         this.displayItem = displayItem;
-        allPerks.add(this);
     }
 
     public boolean success() {
@@ -80,19 +71,10 @@ public abstract class Perk {
         player.sendMessage("§6Способность " + this.getName() + " §6успешно выбрана");
     }
 
-    public static Perk getPerkByName(String perkName) throws InvalidArugmentException {
-        for (Perk perk : getAllPerks()) {
-            if (perk.getName().equalsIgnoreCase(perkName)) {
-                return perk;
-            }
-        }
-        throw new InvalidArugmentException("Cannot find perk");
-    }
 
-
-    public static Perk getPerkByClass(Class<? extends Perk> clazz) {
+    public static Perk get(Class<? extends Perk> clazz) {
         for (Perk perk : getAllPerks()) {
-            if (perk.getClass() == clazz) {
+            if (perk.getClass().equals(clazz)) {
                 return perk;
             }
         }

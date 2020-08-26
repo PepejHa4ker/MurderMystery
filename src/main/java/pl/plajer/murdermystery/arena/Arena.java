@@ -51,10 +51,11 @@ import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
-import pl.plajer.murdermystery.perks.InvisibleHeadPerk;
-import pl.plajer.murdermystery.perks.Perk;
-import pl.plajer.murdermystery.perks.PovodokEbaniyPerk;
-import pl.plajer.murdermystery.perks.SpeedPerk;
+import pl.plajer.murdermystery.perk.*;
+import pl.plajer.murdermystery.perk.perks.ArrowPerk;
+import pl.plajer.murdermystery.perk.perks.InvisibleHeadPerk;
+import pl.plajer.murdermystery.perk.perks.PovodokEbaniyPerk;
+import pl.plajer.murdermystery.perk.perks.SpeedPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
@@ -515,9 +516,13 @@ public class Arena extends BukkitRunnable {
     private void handlePerks() {
         for (val player : getPlayersLeft()) {
             if (Perk.has(player, InvisibleHeadPerk.class)) {
-                Perk.getPerkByClass(InvisibleHeadPerk.class).handle(player, null, this);
-            } else if (Perk.has(player, SpeedPerk.class)) {
-                Perk.getPerkByClass(SpeedPerk.class).handle(player, null, this);
+                Perk.get(InvisibleHeadPerk.class).handle(player, null, this);
+            }
+            if (Perk.has(player, SpeedPerk.class)) {
+                Perk.get(SpeedPerk.class).handle(player, null, this);
+            }
+            if (Perk.has(player, ArrowPerk.class)) {
+                Perk.get(ArrowPerk.class).handle(player, null, this);
             }
         }
     }

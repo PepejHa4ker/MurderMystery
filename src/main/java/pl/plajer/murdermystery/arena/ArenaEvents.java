@@ -55,10 +55,10 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.Confirmation;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
-import pl.plajer.murdermystery.perks.ExtremeGoldPerk;
-import pl.plajer.murdermystery.perks.Perk;
-import pl.plajer.murdermystery.perks.SecondChancePerk;
-import pl.plajer.murdermystery.perks.PovodokEbaniyPerk;
+import pl.plajer.murdermystery.perk.perks.ExtremeGoldPerk;
+import pl.plajer.murdermystery.perk.Perk;
+import pl.plajer.murdermystery.perk.perks.SecondChancePerk;
+import pl.plajer.murdermystery.perk.perks.PovodokEbaniyPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
@@ -187,7 +187,7 @@ public class ArenaEvents implements Listener {
             if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
                 if (e.getDamage() >= 20.0) {
                     //kill the player for suicidal death, else do not
-                    victim.damage(1000);
+                    victim.damage(100);
                     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50f, 1f);
                 }
             }
@@ -195,7 +195,7 @@ public class ArenaEvents implements Listener {
         }
         //kill the player and move to the spawn point
         if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-            victim.damage(1000);
+            victim.damage(100);
             victim.teleport(arena.getPlayerSpawnPoints().get(0));
         }
     }
@@ -211,14 +211,14 @@ public class ArenaEvents implements Listener {
 
     private void killPlayer(Player player, Arena arena) {
         if (Perk.has(player, SecondChancePerk.class)) {
-            val perk = Perk.getPerkByClass(SecondChancePerk.class);
+            val perk = Perk.get(SecondChancePerk.class);
             perk.handle(player, null, arena);
             if (perk.success()) {
-               ArenaManager.sendArenaMessages(arena, "&cИгрок &a" + player.getName() + "&c удрал от маньяка!");
-                return;
+               ArenaManager.sendArenaMessages(arena, "&cИгрок &a" + player.getName() + "&c удрал от смерти!");
+               return;
             }
         }
-        player.damage(1000);
+        player.damage(100);
         player.teleport(arena.getPlayerSpawnPoints().get(0));
         for (Player p : arena.getPlayers()) {
             p.playSound(p.getLocation(), Sound.ENTITY_WITCH_HURT, 1f, 1f);
@@ -296,7 +296,7 @@ public class ArenaEvents implements Listener {
             stack.setAmount(3 * e.getItem().getItemStack().getAmount());
         }
         if (Perk.has(user.getPlayer(), ExtremeGoldPerk.class)) {
-            Perk.getPerkByClass(ExtremeGoldPerk.class).handle(user.getPlayer(), null, arena);
+            Perk.get(ExtremeGoldPerk.class).handle(user.getPlayer(), null, arena);
         }
 
         ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
@@ -343,7 +343,7 @@ public class ArenaEvents implements Listener {
         }
         if (attacker.getInventory().getItemInMainHand().isSimilar(PovodokEbaniyPerk.item)) {
             if (Perk.has(attacker, PovodokEbaniyPerk.class)) {
-                Perk.getPerkByClass(PovodokEbaniyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
+                Perk.get(PovodokEbaniyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
             }
         }
 
@@ -375,7 +375,7 @@ public class ArenaEvents implements Listener {
         } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
             plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
             plugin.getEconomy().depositPlayer(attacker, 75);
-            attacker.sendMessage("§cВы получили §a75§c монет за убийство детектива!");
+            ChatManager.sendMessage(attacker, "&6Вы получили &a75 &6монет за убийство детектива");
         }
         killPlayer(victim, ArenaRegistry.getArena(victim));
         User user = plugin.getUserManager().getUser(attacker);
@@ -422,7 +422,6 @@ public class ArenaEvents implements Listener {
             arena.setCharacter(Arena.CharacterType.HERO, attacker);
         }
         killPlayer(victim, arena);
-
         User user = plugin.getUserManager().getUser(attacker);
 
         user.addStat(StatsStorage.StatisticType.KILLS, 1);
@@ -502,16 +501,15 @@ public class ArenaEvents implements Listener {
         player.setAllowFlight(true);
         player.setFlying(true);
         player.getInventory().clear();
-        ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
         //we must call it ticks later due to instant respawn bug
-
+        ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             e.getEntity().spigot().respawn();
             player.teleport(arena.getPlayerSpawnPoints().get(0));
             player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
             player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
             player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
-        }, 3);
+        }, 5);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

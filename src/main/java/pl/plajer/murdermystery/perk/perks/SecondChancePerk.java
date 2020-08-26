@@ -1,4 +1,4 @@
-package pl.plajer.murdermystery.perks;
+package pl.plajer.murdermystery.perk.perks;
 
 import lombok.val;
 import org.bukkit.Bukkit;
@@ -7,6 +7,9 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.perk.Perk;
+import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
 import pl.plajer.murdermystery.utils.effects.particle.effect.SpiralEffect;
@@ -14,18 +17,18 @@ import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.Random;
 
+@PerkAnn
 public class SecondChancePerk extends Perk {
-
     private boolean success;
 
-    protected SecondChancePerk() {
+    public SecondChancePerk() {
         super(
                 "§cВторой шанс",
                 500.0,
                 new ItemBuilder(Material.BED)
                         .name("&cВторой шанс")
                         .lore("&eС шансом 25% Вы можете получить второй шанс после смерти")
-                        .lore("&7(работает только на удары мечём)")
+                        .lore("&7(работает только на удары мечем и выстрелы)")
                         .lore("&eЦена: &c500.0&e монет")
                         .build()
         );
@@ -53,7 +56,7 @@ public class SecondChancePerk extends Perk {
             ).play();
             Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), effect::stop, 20);
             player.teleport(arena.getPlayerSpawnPoints().get(new Random().nextInt(arena.getPlayerSpawnPoints().size())));
-            player.sendMessage("§cВот же повезло удрать!");
+            ChatManager.sendMessage(player, "&cВот же повезло удрать!");
             success = true;
         } else {
             success = false;
