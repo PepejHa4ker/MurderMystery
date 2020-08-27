@@ -6,6 +6,7 @@ import lombok.val;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 
@@ -30,8 +31,6 @@ public abstract class Perk {
     @NonNull
     @Getter
     private final Double price;
-
-
 
     public Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem) {
         this.name = name;
@@ -83,7 +82,7 @@ public abstract class Perk {
 
     public static boolean has(Player player, Class<? extends Perk> clazz) {
         for (Perk perk : MurderMystery.getInstance().getUserManager().getUser(player).getPerks()) {
-            if (perk.getClass() == clazz) {
+            if (perk.getClass().equals(clazz)) {
                 return true;
             }
         }
@@ -91,7 +90,7 @@ public abstract class Perk {
     }
 
 
-    public abstract void handle(Player player, Player target, Arena arena);
+    public abstract void handle(@NonNull final Player player, @Nullable Player target, final @NonNull Arena arena);
 
 
 }

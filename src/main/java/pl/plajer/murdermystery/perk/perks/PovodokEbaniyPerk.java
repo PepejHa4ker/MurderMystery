@@ -1,5 +1,6 @@
 package pl.plajer.murdermystery.perk.perks;
 
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +32,7 @@ public class PovodokEbaniyPerk extends Perk {
     }
 
     @Override
-    public void handle(final Player player, final Player target, final Arena arena) {
+    public void handle(@NonNull final Player player, Player target, @NonNull final Arena arena) {
         target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10*20, 0, false,false));
         target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 0, false,false));
         ItemPosition.setItem(player, ItemPosition.UDAVKA, null);

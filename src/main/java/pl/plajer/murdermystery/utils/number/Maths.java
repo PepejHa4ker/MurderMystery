@@ -34,15 +34,15 @@ public final class Maths {
         return v.setX(x).setY(y);
     }
 
-    public static double cosRad(double rad) {
-        rad = Math.toRadians(rad);
-        return Math.cos(rad);
+    public static double cosRad(double angle) {
+        angle = Math.toRadians(angle);
+        return Math.cos(angle);
 
     }
 
-    public static double sinRad(double rad) {
-        rad = Math.toRadians(rad);
-        return Math.sin(rad);
+    public static double sinRad(double angle) {
+        angle = Math.toRadians(angle);
+        return Math.sin(angle);
     }
 
 

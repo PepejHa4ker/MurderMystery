@@ -1,5 +1,6 @@
 package pl.plajer.murdermystery.perk.perks;
 
+import lombok.NonNull;
 import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,7 +38,7 @@ public class InvisibleHeadPerk extends Perk {
 
 
     @Override
-    public void handle(final Player player, final Player target, final Arena arena) {
+    public void handle(@NonNull final Player player, Player target, @NonNull final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 3) {
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),
@@ -51,7 +52,7 @@ public class InvisibleHeadPerk extends Perk {
                     true,
                     5
             ).play();
-            Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), effect::stop, 20);
+            Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), effect::stop, 10);
             EffectUtils.addEffect(player, new PotionEffectBuilder(PotionEffectType.INVISIBILITY).setDuration(10).setAmplifier(0).setAmbient(true).setVisible(false).build());
 
         }

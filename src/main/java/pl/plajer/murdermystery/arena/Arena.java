@@ -24,6 +24,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
@@ -60,6 +63,7 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
+import pl.plajer.murdermystery.utils.message.builder.TextComponentMessageBuilder;
 import pl.plajer.murdermystery.utils.number.NumberUtils;
 import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
@@ -160,7 +164,13 @@ public class Arena extends BukkitRunnable {
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
                     }
-                    ArenaManager.notifyPlayersNotInArena(this, "&6Арена &a" + getMapName() + " &6скоро начнётся!");
+                    for (final Player player : Bukkit.getOnlinePlayers().stream().filter(p -> !this.getPlayers().contains(p)).collect(Collectors.toSet())) {
+                        new TextComponentMessageBuilder(player, "&6Арена &a" + this.getFormattedArenaName() + " &6скоро начнётся!")
+                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatManager.colorRawMessage("&cКликните, чтобы присоединиться!")).create()))
+                                .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mm join " + ChatColor.stripColor(this.getMapName())))
+                                .create()
+                                .send();
+                    }
                     ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
                     setArenaState(ArenaState.STARTING);
                     setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
@@ -220,7 +230,13 @@ public class Arena extends BukkitRunnable {
                     MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
                     Bukkit.getPluginManager().callEvent(gameStartEvent);
                     setArenaState(ArenaState.IN_GAME);
-                    ArenaManager.notifyPlayersNotInArena(this, "&6Арена &a" + getMapName() + " &6была только что запущена!");
+                    for (final Player player : Bukkit.getOnlinePlayers().stream().filter(p -> !this.getPlayers().contains(p)).collect(Collectors.toSet())) {
+                        new TextComponentMessageBuilder(player, "&6Арена " + this.getFormattedArenaName() + " &6Была только что запущена!")
+                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatManager.colorRawMessage("&cКликните, чтобы присоединиться!")).create()))
+                                .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mm join " + ChatColor.stripColor(this.getMapName())))
+                                .create()
+                                .send();
+                    }
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setProgress(1.0);
                     }
@@ -761,6 +777,10 @@ public class Arena extends BukkitRunnable {
         for (Player player : getPlayers()) {
             player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
         }
+    }
+
+    public String getFormattedArenaName() {
+        return this.getMapName().replace('-', ' ');
     }
 
     public void teleportAllToEndLocation() {

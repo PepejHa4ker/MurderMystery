@@ -1,5 +1,6 @@
 package pl.plajer.murdermystery.perk.perks;
 
+import lombok.NonNull;
 import lombok.val;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -30,7 +31,7 @@ public class ArrowPerk extends Perk {
     }
 
     @Override
-    public void handle(Player player, Player target, Arena arena) {
+    public void handle(@NonNull final Player player, Player target, @NonNull final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 3) {
             if (Role.isRole(Role.ANY_DETECTIVE, player)) {

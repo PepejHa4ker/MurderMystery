@@ -1,5 +1,6 @@
 package pl.plajer.murdermystery.perk.perks;
 
+import lombok.NonNull;
 import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,7 +41,7 @@ public class SecondChancePerk extends Perk {
     }
 
     @Override
-    public void handle(final Player player, final Player target, final Arena arena) {
+    public void handle(@NonNull final Player player, Player target, @NonNull final Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 25) {
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),

@@ -80,10 +80,11 @@ import java.util.*;
 
       public static void notifyPlayersNotInArena(Arena arena, String message) {
           for(final Player player : Bukkit.getOnlinePlayers()) {
-              if(arena.getPlayers().contains(player)) continue;
+              if (arena.getPlayers().contains(player)) continue;
               player.sendMessage(ChatManager.colorRawMessage(message));
           }
       }
+
 
       public static void sendArenaMessages(Arena arena, Collection<String> messages) {
           for(final Player player : arena.getPlayers()) {
@@ -176,7 +177,7 @@ import java.util.*;
           } else {
               user.setType(DonatType.DEF);
           }
-          player.sendTitle("§cДобро пожаловать", "§cна §6" + arena.getMapName(), 10, 30, 10);
+          player.sendTitle("§cДобро пожаловать", "§cна §6" + arena.getFormattedArenaName(), 10, 30, 10);
           arena.addPlayer(player);
           player.setLevel(0);
           player.setExp(1);
