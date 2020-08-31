@@ -16,18 +16,12 @@ import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.serialization.LocationSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Plajer
- * <p>
- * Created at 18.05.2019
- */
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class CreateArgument {
 
@@ -57,10 +51,6 @@ public class CreateArgument {
           createInstanceInConfig(args[1], player.getWorld().getName());
           player.sendMessage(ChatColor.BOLD + "------------------------------------------");
           player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
-          player.sendMessage("");
-          player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/mm " + args[1] + " edit" + ChatColor.GREEN + "!");
-          player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
-          player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
           player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
         }
       }

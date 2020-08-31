@@ -1,21 +1,3 @@
-/*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
@@ -60,7 +42,6 @@ import pl.plajer.murdermystery.user.data.MysqlManager;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
 import pl.plajer.murdermystery.utils.database.MysqlDatabase;
 import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
-import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 import java.io.File;
 import java.util.Arrays;
@@ -215,6 +196,8 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         configPreferences = new ConfigPreferences(this);
         setupFiles();
         initializeClasses();
+
+
         //start hook manager later in order to allow soft-dependencies to fully load
         Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
         if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
@@ -300,7 +283,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         new PerkRegister().initPerks();
         PermissionsManager.init();
         RankManager.setupRanks();
-        ServiceRegistry.registerService(this);
         LanguageManager.init(this);
         new ArenaEvents();
         new SpectatorEvents(this);

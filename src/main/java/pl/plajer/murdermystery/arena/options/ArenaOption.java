@@ -33,18 +33,18 @@ public enum ArenaOption {
    * Minimum players in arena needed to start.
    */
   MINIMUM_PLAYERS(2),
-  /**
-   * Maximum players arena can hold, users with full games permission can bypass this!
-   */
-  MAXIMUM_PLAYERS(10);
+    /**
+     * Maximum players arena can hold, users with full games permission can bypass this!
+     */
+    MAXIMUM_PLAYERS(10);
 
-  int defaultValue;
+    private final int def;
 
-  ArenaOption(int defaultValue) {
-    this.defaultValue = defaultValue;
-  }
+    ArenaOption(int def) {
+        this.def = def;
+    }
 
-  public int getDefaultValue() {
-    return defaultValue;
-  }
+    public int getDefaultValue() {
+        return def;
+    }
 }

@@ -24,7 +24,10 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -55,10 +58,10 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.gui.Confirmation;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
-import pl.plajer.murdermystery.perk.perks.ExtremeGoldPerk;
 import pl.plajer.murdermystery.perk.Perk;
-import pl.plajer.murdermystery.perk.perks.SecondChancePerk;
+import pl.plajer.murdermystery.perk.perks.ExtremeGoldPerk;
 import pl.plajer.murdermystery.perk.perks.PovodokEbaniyPerk;
+import pl.plajer.murdermystery.perk.perks.SecondChancePerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
@@ -74,7 +77,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created at 13.03.2018
  */
 @SuppressWarnings("deprecation")
-@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 
 public class ArenaEvents implements Listener {
 
@@ -98,13 +101,13 @@ public class ArenaEvents implements Listener {
         User clicked = plugin.getUserManager().getUser(player);
         if (!ArenaUtils.areInSameArena(e.getPlayer(), player) || ArenaRegistry.getArena(e.getPlayer()).getArenaState() != ArenaState.IN_GAME || clicked.isSpectator())
             return;
-        Gui g = new Gui(plugin, 1, "Укажите кол-во золота");
+        Gui gui = new Gui(plugin, 1, "Укажите кол-во золота");
         StaticPane pane = new StaticPane(9, 1);
-        g.addPane(pane);
+        gui.addPane(pane);
         AtomicInteger gold = new AtomicInteger(clicker.getStat(StatsStorage.StatisticType.LOCAL_GOLD));
         pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE)
                 .name("&1")
-                .color((short) 13)
+                .color(13)
                 .build(), ev -> ev.setCancelled(true));
         pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
                 .name("&eУкажите количество золота")
@@ -121,39 +124,27 @@ public class ArenaEvents implements Listener {
             }
         }), 4, 0);
         pane.addItem(new GuiItem(new ItemBuilder(Material.EMERALD)
-                .name("§6Отдать")
-                .build(), ev -> {
-            Player p = (Player) ev.getWhoClicked();
-            ev.getWhoClicked().closeInventory();
-            new Confirmation(plugin,
-                    "§6Вы действительно хотите передать §c" + gold.get() + " §6игроку §a" + player.getName() + "?")
-                    .onDecline((pl, event) -> pl.closeInventory())
-                    .onTopClick((pl, event) -> event.setCancelled(true))
-                    .onAccept((pl, event) -> {
-                        player.sendMessage("§6Игрок §a" + pl.getName() + " §6передал Вам §c" + gold + " золота");
-                        pl.sendMessage("§6Вы успешно передали §c" + gold.get() + " §6золота игроку §a" + player.getName());
-                        pl.closeInventory();
-                        clicker.addStat(StatsStorage.StatisticType.LOCAL_GOLD, -gold.get());
-                        clicked.addStat(StatsStorage.StatisticType.LOCAL_GOLD, gold.get());
-                        ItemPosition.addItem(pl, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -gold.get()));
-                        ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, gold.get()));
-                        if (Role.isRole(Role.INNOCENT, player)) {
-                            if (clicked.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
-                                clicked.setStat(StatsStorage.StatisticType.LOCAL_GOLD, clicked.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 10);
-                                player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
-                                ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-                                ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-                                player.getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, -10));
-                            }
-                        }
-
-                    })
-                    .build()
-                    .show(p);
-        }), 8, 0);
-        g.show(e.getPlayer());
+                        .name("&6Отдать")
+                        .build(), ev -> new Confirmation(plugin,
+                        "&6Вы действительно хотите передать &c" + gold.get() + " &6игроку &a" + player.getDisplayName() + "?")
+                        .onDecline(event -> event.getWhoClicked().closeInventory())
+                        .onTopClick(event -> event.getWhoClicked().closeInventory())
+                        .onAccept(event -> {
+                            Player accepted = (Player) event.getWhoClicked();
+                            ChatManager.sendMessage(player, "&6Игрок " + accepted.getDisplayName() + " &6передал Вам &c" + gold + " &6золота");
+                            ChatManager.sendMessage(accepted, "&6Вы успешно передали &c" + gold.get() + " &6золота игроку " + player.getDisplayName());
+                            accepted.closeInventory();
+                            clicker.addStat(StatsStorage.StatisticType.LOCAL_GOLD, -gold.get());
+                            clicked.addStat(StatsStorage.StatisticType.LOCAL_GOLD, gold.get());
+                            ItemPosition.addItem(accepted, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -gold.get()));
+                            ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, gold.get()));
+                            ArenaUtils.applyBow(clicked);
+                        })
+                        .build()
+                        .show(player))
+                , 8, 0);
+        gui.show(e.getPlayer());
     }
-
 
 
     @EventHandler
@@ -204,7 +195,7 @@ public class ArenaEvents implements Listener {
     public void onLeave(MMGameLeaveAttemptEvent event) {
         if (event.getArena().getArenaState() == ArenaState.IN_GAME || event.getArena().getArenaState() == ArenaState.ENDING) {
             for (final User user : plugin.getUserManager().getUsers(event.getArena())) {
-                user.getPerks().clear();
+                user.getCachedPerks().clear();
             }
         }
     }
@@ -214,8 +205,8 @@ public class ArenaEvents implements Listener {
             val perk = Perk.get(SecondChancePerk.class);
             perk.handle(player, null, arena);
             if (perk.success()) {
-               ArenaManager.sendArenaMessages(arena, "&cИгрок &a" + player.getName() + "&c удрал от смерти!");
-               return;
+                ArenaManager.sendArenaMessages(arena, "&cИгрок &a" + player.getName() + "&c удрал от смерти!");
+                return;
             }
         }
         player.damage(100);
@@ -262,7 +253,7 @@ public class ArenaEvents implements Listener {
             if (p.hasPermission(donatConfig.getString("Pickup-Arrows-Permission"))) {
                 if (p.getInventory().contains(Material.BOW)) {
                     p.getInventory().addItem(new ItemStack(Material.ARROW));
-                    p.sendMessage("§aВы подобрали стрелу");
+                    ChatManager.sendMessage(p, "&aВы подобрали стрелу");
                 }
                 e.getItem().remove();
                 e.setCancelled(true);
@@ -307,15 +298,7 @@ public class ArenaEvents implements Listener {
             ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
             return;
         }
-        if (Role.isRole(Role.INNOCENT, e.getPlayer())) {
-            if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
-                user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 10);
-                e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
-                ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-                ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-                e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, -10));
-            }
-        }
+        ArenaUtils.applyBow(user);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -341,9 +324,11 @@ public class ArenaEvents implements Listener {
             }
             u.setShots(u.getShots() + 1);
         }
-        if (attacker.getInventory().getItemInMainHand().isSimilar(PovodokEbaniyPerk.item)) {
+
+        if (attacker.getInventory().getItemInMainHand().isSimilar(new ItemStack(Material.LEASH))) {
             if (Perk.has(attacker, PovodokEbaniyPerk.class)) {
-                Perk.get(PovodokEbaniyPerk.class).handle(attacker, victim, ArenaRegistry.getArena(attacker));
+                val perk = Perk.get(PovodokEbaniyPerk.class);
+                perk.handle(attacker, victim, ArenaRegistry.getArena(attacker));
             }
         }
 
@@ -371,7 +356,7 @@ public class ArenaEvents implements Listener {
         if (Role.isRole(Role.MURDERER, victim)) {
             plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
             plugin.getEconomy().depositPlayer(attacker, 100);
-            attacker.sendMessage("§cВы получили §a100§c монет за убийство маньяка!");
+            ChatManager.sendMessage(attacker, "&6Вы получили &a100&c монет за убийство маньяка!");
         } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
             plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
             plugin.getEconomy().depositPlayer(attacker, 75);
@@ -393,7 +378,7 @@ public class ArenaEvents implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onArrowDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
             return;
@@ -465,6 +450,7 @@ public class ArenaEvents implements Listener {
         if (arena == null) {
             return;
         }
+
         e.setDeathMessage("");
         e.getEntity().setCollidable(false);
         e.getDrops().clear();
@@ -472,6 +458,7 @@ public class ArenaEvents implements Listener {
         plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
         e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
         Player player = e.getEntity();
+
         if (arena.getArenaState() == ArenaState.STARTING) {
             return;
         } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
@@ -492,6 +479,7 @@ public class ArenaEvents implements Listener {
             }
             ArenaUtils.dropBowAndAnnounce(arena, player);
         }
+
         User user = plugin.getUserManager().getUser(player);
         user.addStat(StatsStorage.StatisticType.DEATHS, 1);
         user.setSpectator(true);
@@ -502,14 +490,13 @@ public class ArenaEvents implements Listener {
         player.setFlying(true);
         player.getInventory().clear();
         //we must call it ticks later due to instant respawn bug
-        ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             e.getEntity().spigot().respawn();
             player.teleport(arena.getPlayerSpawnPoints().get(0));
             player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
             player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
             player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
-        }, 3);
+        }, 5);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -534,6 +521,7 @@ public class ArenaEvents implements Listener {
                 e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
             }
             user.setSpectator(true);
+            ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
             ArenaUtils.hidePlayer(player, arena);
             player.setCollidable(false);
             player.setGameMode(GameMode.ADVENTURE);
@@ -556,7 +544,7 @@ public class ArenaEvents implements Listener {
     @EventHandler
     public void onPotion(PlayerItemConsumeEvent e) {
         User u = plugin.getUserManager().getUser(e.getPlayer());
-        if (u.getPotion() != null && e.getItem().equals(u.getPotion()))  {
+        if (u.getPotion() != null && e.getItem().equals(u.getPotion())) {
             e.setCancelled(true);
             PotionMeta pm = (PotionMeta) u.getPotion().getItemMeta();
             PotionEffect pe = pm.getCustomEffects().get(0);

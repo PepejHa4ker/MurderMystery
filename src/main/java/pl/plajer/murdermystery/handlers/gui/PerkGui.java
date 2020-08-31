@@ -6,7 +6,8 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.MurderMystery;
-import pl.plajer.murdermystery.perk.Perk;
+import pl.plajer.murdermystery.economy.PriceType;
+import pl.plajer.murdermystery.perk.PerkRegister;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,13 +30,36 @@ public class PerkGui implements GuiComponent {
     public void injectComponents(StaticPane pane) {
         pane.setOnClick(event -> event.setCancelled(true));
         pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE)
-                .name("§c")
+                .name("&c")
                 .color((short) 13)
                 .build());
         AtomicInteger index = new AtomicInteger(1);
-        Perk.getAllPerks().forEach(perk -> {
-            pane.addItem(new GuiItem(perk.getDisplayItem(), event -> {
-                perk.tryBuy((Player) event.getWhoClicked());
+        PerkRegister.getCachedPerks().forEach(perk -> {
+            pane.addItem(new GuiItem(new ItemBuilder(perk.getDisplayItem())
+                    .name(perk.getName())
+                    .lore("&7&m---------------------")
+                    .lore(perk.getDescription())
+                    .lore("&7&m---------------------")
+                    .lore("&eЦена: ")
+                    .lore("     &c" + perk.getCost() + "&e монет")
+                    .lore("     &eИЛИ")
+                    .lore("     &c" + (int) (perk.getCost() / 10) + "&e кармы")
+                    .lore("&eЛКМ - &aмонеты")
+                    .lore("&eПКМ - &dкарма")
+                    .build(), event -> {
+                PriceType type;
+                switch (event.getClick()) {
+                    case LEFT:
+                        type = PriceType.COINS;
+                        break;
+                    case RIGHT:
+                        type = PriceType.KARMA;
+                        break;
+                    default:
+                        return;
+                }
+
+                perk.tryBuy((Player) event.getWhoClicked(), type);
                 event.getWhoClicked().closeInventory();
             }), index.get(), 1);
             index.incrementAndGet();

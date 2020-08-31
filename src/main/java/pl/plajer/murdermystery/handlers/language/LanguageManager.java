@@ -1,20 +1,4 @@
-/*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 package pl.plajer.murdermystery.handlers.language;
 
@@ -23,27 +7,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.locale.Locale;
+import pl.plajer.murdermystery.locale.LocaleRegistry;
 import pl.plajer.murdermystery.utils.config.ConfigUtils;
-import pl.plajer.murdermystery.utils.services.ServiceRegistry;
-import pl.plajer.murdermystery.utils.services.locale.Locale;
-import pl.plajer.murdermystery.utils.services.locale.LocaleRegistry;
-import pl.plajer.murdermystery.utils.services.locale.LocaleService;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-/**
- * @author Plajer
- * <p>
- * Created at 03.08.2018
- */
 public class LanguageManager {
 
   private static MurderMystery plugin;
@@ -66,56 +39,13 @@ public class LanguageManager {
   }
 
   private static void registerLocales() {
-    LocaleRegistry.registerLocale(new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")));
-    LocaleRegistry.registerLocale(new Locale("Chinese (Traditional)", "繁體中文", "zh_TW", "POEditor contributors", Arrays.asList("中文(繁體)", "繁體中文", "chinese_traditional", "zh_tw")));
-    LocaleRegistry.registerLocale(new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
-    LocaleRegistry.registerLocale(new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")));
     LocaleRegistry.registerLocale(new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")));
-    LocaleRegistry.registerLocale(new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")));
-    LocaleRegistry.registerLocale(new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")));
-    LocaleRegistry.registerLocale(new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")));
-    LocaleRegistry.registerLocale(new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")));
-    LocaleRegistry.registerLocale(new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")));
-    LocaleRegistry.registerLocale(new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")));
-    LocaleRegistry.registerLocale(new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")));
-    LocaleRegistry.registerLocale(new Locale("Portuguese (BR)", "Português (Brasil)", "pt_BR", "POEditor contributors", Arrays.asList("portuguese br", "português br", "português brasil", "pt_br")));
-    LocaleRegistry.registerLocale(new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors", Arrays.asList("romanian", "romanesc", "românesc", "ro")));
-    LocaleRegistry.registerLocale(new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")));
-    LocaleRegistry.registerLocale(new Locale("Slovak", "Slovenský", "sk_SK", "POEditor contributors", Arrays.asList("slovak", "slovenský", "slovensky", "sk")));
-    LocaleRegistry.registerLocale(new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")));
-    LocaleRegistry.registerLocale(new Locale("Turkish", "Türkçe", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "türkçe", "turkce", "tr")));
-    LocaleRegistry.registerLocale(new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")));
+
   }
 
   private static void loadProperties() {
-    LocaleService service = ServiceRegistry.getLocaleService(plugin);
-    if (service == null) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
-      pluginLocale = LocaleRegistry.getByName("English");
-      return;
-    }
-    if (service.isValidVersion()) {
-      LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
-      if (status == LocaleService.DownloadStatus.FAIL) {
-        pluginLocale = LocaleRegistry.getByName("English");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
-        return;
-      } else if (status == LocaleService.DownloadStatus.SUCCESS) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
-      } else if (status == LocaleService.DownloadStatus.LATEST) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
-      }
-    } else {
-      pluginLocale = LocaleRegistry.getByName("English");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
-      return;
-    }
-    try (InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
-      + pluginLocale.getPrefix() + ".properties"), StandardCharsets.UTF_8)) {
-      properties.load(reader);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+
+    pluginLocale = LocaleRegistry.getByName("English");
   }
 
   private static void setupLocale() {

@@ -25,10 +25,6 @@ import pl.plajer.murdermystery.arena.Arena;
 
 import javax.annotation.Nullable;
 
-/**
- * Created for 1.14 compatibility purposes, it will cache block behind sign that will be
- * accessed via reflection on 1.14 which is expensive
- */
 public class ArenaSign {
 
   private final Sign sign;

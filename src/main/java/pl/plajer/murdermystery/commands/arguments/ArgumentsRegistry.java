@@ -31,7 +31,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.MurderMystery;
-import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.commands.arguments.admin.ListArenasArgument;
 import pl.plajer.murdermystery.commands.arguments.admin.arena.*;
 import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
@@ -40,8 +39,6 @@ import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.commands.arguments.game.*;
 import pl.plajer.murdermystery.commands.completion.TabCompletion;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.gui.setup.SetupInventory;
-import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.strings.StringMatcher;
 
 import java.util.ArrayList;
@@ -77,6 +74,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new StatsArgument(this);
     new LeaderboardArgument(this);
     new RankArgument(this);
+    new EditArgument(this);
     //register admin related arguments
     new ListArenasArgument(this);
     new DeleteArgument(this);
@@ -94,19 +92,6 @@ public class ArgumentsRegistry implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("murdermystery")) {
           if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             sendHelpCommand(sender);
-            return true;
-          }
-          if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
-            if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER)
-              || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
-              return true;
-            }
-            if (ArenaRegistry.getArena(args[0]) == null) {
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-              return true;
-            }
-
-            new SetupInventory(ArenaRegistry.getArena(args[0]), (Player) sender).openInventory();
             return true;
           }
         }
@@ -182,8 +167,6 @@ public class ArgumentsRegistry implements CommandExecutor {
     }
     List<LabelData> data = mappedArguments.get("murdermysteryadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
       .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
-    data.add(new LabelData("/mm &6<arena>&f edit", "/mm <arena> edit",
-      "&7Edit existing arena\n&6Permission: &7murdermystery.admin.edit"));
     data.addAll(mappedArguments.get("murdermystery").stream().filter(arg -> arg instanceof LabeledCommandArgument)
       .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
     for (LabelData labelData : data) {

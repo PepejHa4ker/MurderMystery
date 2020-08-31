@@ -1,10 +1,6 @@
 package pl.plajer.murdermystery.handlers.gui;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,28 +15,20 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-@FieldDefaults(level= AccessLevel.PRIVATE)
-@AllArgsConstructor
+@Getter
 public class Confirmation implements InventoryHolder {
 
-    /**
-     * @author pepej
-     * Created 15.06.2020
-     */
+    private final Plugin plugin;
+    private final String description;
 
-    final Plugin plugin;
-
-    Inventory inventory;
+    private Inventory inventory;
 
 
-    @Getter
-    final String mainDesc;
-
-    public Confirmation(Plugin plugin, String desc) {
+    public Confirmation(Plugin plugin, String description) {
         this.plugin = plugin;
-        mainDesc = desc;
+        this.description = description;
     }
 
     public Confirmation build() {
@@ -55,20 +43,19 @@ public class Confirmation implements InventoryHolder {
 
     public static ItemStack getAcceptItem() {
         return new ItemBuilder(Material.WOOL)
-                .color((short) 13)
+                .color(13)
                 .name("&aПодтвердить")
                 .build();
     }
 
     public static ItemStack getDeclineItem() {
         return new ItemBuilder(Material.WOOL)
-                .color((short) 14)
+                .color(14)
                 .name("&cОтклонить")
                 .build();
     }
 
-    @Getter
-    BiConsumer<Player, InventoryClickEvent>
+    Consumer<InventoryClickEvent>
             onAccept,
             onDecline,
             onClick,
@@ -76,11 +63,10 @@ public class Confirmation implements InventoryHolder {
             onBottomClick,
             onOutsideClick;
 
-    @Getter
-    private BiConsumer<Player, InventoryCloseEvent> onClose;
+    private Consumer<InventoryCloseEvent> onClose;
 
-    @Getter
-    private BiConsumer<Player, InventoryOpenEvent> onOpen;
+    private Consumer<InventoryOpenEvent> onOpen;
+
 
     private static boolean hasRegisteredListeners;
 
@@ -106,12 +92,12 @@ public class Confirmation implements InventoryHolder {
         this.inventory.setItem(2, getAcceptItem());
         this.inventory.setItem(4, new ItemBuilder(Material.EMPTY_MAP)
                 .name("§1")
-                .lore(mainDesc)
+                .lore(this.description)
                 .build());
         this.inventory.setItem(6, getDeclineItem());
         for (int i = 0; i < 9; i++) {
-            if(i == 2 || i == 4 || i == 6)  continue;
-            this.inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE).color((short) 13).name("&1").build());
+            if (i == 2 || i == 4 || i == 6) continue;
+            this.inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE).color(13).name("&1").build());
         }
     }
 
@@ -124,42 +110,98 @@ public class Confirmation implements InventoryHolder {
                 : view.getBottomInventory();
     }
 
-    public Confirmation onAccept(@NotNull BiConsumer<Player, InventoryClickEvent> onAccept) {
+    /**
+     * onAccept callback
+     *
+     * @param onAccept - Called every time the player accepts the conditions
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onAccept(@NotNull Consumer<InventoryClickEvent> onAccept) {
         this.onAccept = onAccept;
         return this;
     }
 
-    public Confirmation onDecline(@NotNull BiConsumer<Player, InventoryClickEvent> onDecline) {
+    /**
+     * onDecline callback
+     *
+     * @param onDecline - Called every time the player decline the conditions
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onDecline(@NotNull Consumer<InventoryClickEvent> onDecline) {
         this.onDecline = onDecline;
         return this;
     }
 
-    public Confirmation onOutsideClick(@NotNull BiConsumer<Player, InventoryClickEvent> onOutsideClick) {
+    /**
+     * onOutsideClick callback
+     *
+     * @param onOutsideClick - Called every time the player click on outside space
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onOutsideClick(@NotNull Consumer<InventoryClickEvent> onOutsideClick) {
         this.onOutsideClick = onOutsideClick;
         return this;
     }
 
-    public Confirmation onClose(@NotNull BiConsumer<Player, InventoryCloseEvent> onClose) {
+    /**
+     * onClose callback
+     *
+     * @param onClose - Called every time the player close the inventory
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onClose(@NotNull Consumer<InventoryCloseEvent> onClose) {
         this.onClose = onClose;
         return this;
     }
 
-    public Confirmation onOpen(@NotNull BiConsumer<Player, InventoryOpenEvent> onOpen) {
+    /**
+     * onOpen callback
+     *
+     * @param onOpen - Called every time the player open the inventory
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onOpen(@NotNull Consumer<InventoryOpenEvent> onOpen) {
         this.onOpen = onOpen;
         return this;
     }
 
-    public Confirmation onTopClick(@NotNull BiConsumer<Player, InventoryClickEvent> onTopClick) {
+    /**
+     * onTopClick callback
+     *
+     * @param onTopClick - Called every time the player click on top inventory
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onTopClick(@NotNull Consumer<InventoryClickEvent> onTopClick) {
         this.onTopClick = onTopClick;
         return this;
     }
 
-    public Confirmation onBottomClick(@NotNull BiConsumer<Player, InventoryClickEvent> onBottomClick) {
+    /**
+     * onBottomClick callback
+     *
+     * @param onBottomClick - Called every time the player click on bottom inventory
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onBottomClick(@NotNull Consumer<InventoryClickEvent> onBottomClick) {
         this.onBottomClick = onBottomClick;
         return this;
     }
 
-    public Confirmation onClick(@NotNull BiConsumer<Player, InventoryClickEvent> onClick) {
+    /**
+     * Click callback
+     *
+     * @param onClick - Called every time the player click inventory
+     * @return {@link Confirmation}
+     */
+
+    public Confirmation onClick(@NotNull Consumer<InventoryClickEvent> onClick) {
         this.onClick = onClick;
         return this;
     }

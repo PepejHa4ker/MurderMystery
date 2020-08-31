@@ -11,13 +11,7 @@ import java.io.IOException;
 
 public class ConfigUtils {
 
-    /**
-     * Gets fileconfiguration from data folder of plugin, creates new if not exists
-     *
-     * @param plugin   javaplugin to get datafolder
-     * @param filename file name (without .yml)
-     * @return FileConfiguration to edit file
-     */
+
     public static FileConfiguration getConfig(JavaPlugin plugin, String filename) {
         File file = new File(plugin.getDataFolder() + File.separator + filename + ".yml");
         if(!file.exists()) {

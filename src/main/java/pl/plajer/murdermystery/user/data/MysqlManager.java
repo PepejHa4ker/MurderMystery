@@ -70,29 +70,25 @@ public class MysqlManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-      database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+    Bukkit.getScheduler().runTask(plugin, () ->
+            database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override
   public void loadStatistics(User user) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+    Bukkit.getScheduler().runTask(plugin, () -> {
       String uuid = user.getPlayer().getUniqueId().toString();
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "'");
+        ResultSet rs = statement.executeQuery("SELECT * FROM playerstats WHERE UUID='" + uuid + "'");
         if (rs.next()) {
-          //player already exists - get the stats
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;
-            int val = rs.getInt(stat.getName());
-            user.setStat(stat, val);
+          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.getNonPersistentStats()) {
+            user.setStat(stat, rs.getInt(stat.getName()));
           }
         } else {
           //player doesn't exist - make a new record
-          statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;
+          statement.executeUpdate("INSERT INTO playerstats (UUID, name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
+          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.getNonPersistentStats()) {
             user.setStat(stat, 0);
           }
         }

@@ -23,7 +23,6 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.murdermystery.MurderMystery;
@@ -34,6 +33,7 @@ import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.effects.PotionEffectBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 import pl.plajer.murdermystery.utils.misc.MiscUtils;
 
@@ -88,24 +88,12 @@ public class PrayerRegistry {
     if (prayer.isGoodPray()) {
       prayMessage = prayMessage
               .stream()
-              .map(msg -> msg
-                      .replace(
-                              "%feeling%",
-                              ChatManager.colorMessage(
-                                      "In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player)
-                      )
-              )
+              .map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player)))
               .collect(Collectors.toList());
     } else {
       prayMessage = prayMessage
               .stream()
-              .map(msg -> msg
-                      .replace(
-                              "%feeling%",
-                              ChatManager.colorMessage(
-                                      "In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player)
-                      )
-              )
+              .map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player)))
               .collect(Collectors.toList());
     }
     prayMessage = prayMessage
@@ -119,7 +107,12 @@ public class PrayerRegistry {
             .collect(Collectors.toList());
     switch (prayer.getPrayerType()) {
       case BLINDNESS_CURSE:
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
+        player.addPotionEffect(new PotionEffectBuilder(PotionEffectType.BLINDNESS)
+                .setDuration(30)
+                .setAmplifier(0)
+                .setAmbient(false)
+                .setVisible(false)
+                .build());
         break;
       case BOW_TIME:
         ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
@@ -127,12 +120,12 @@ public class PrayerRegistry {
         break;
       case DETECTIVE_REVELATION:
         String murderer;
-        murderer = arena.getCharacter(Arena.CharacterType.MURDERER) != null ? arena.getCharacter(Arena.CharacterType.MURDERER).getName() : "" ;
-        prayMessage = prayMessage.stream().map(msg -> msg.replace("%detective%", murderer)).collect(Collectors.toList());
+        murderer = arena.getCharacter(Arena.CharacterType.MURDERER) != null ? arena.getCharacter(Arena.CharacterType.MURDERER).getName() : "";
+        prayMessage = prayMessage.stream().map(msg -> msg.replace("%murderer%", murderer)).collect(Collectors.toList());
         break;
       case INCOMING_DEATH:
         new BukkitRunnable() {
-          int time = 60;
+          int time = 30;
 
           @Override
           public void run() {
@@ -150,10 +143,16 @@ public class PrayerRegistry {
         break;
       case SINGLE_COMPENSATION:
         ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
-        user.addStat(StatsStorage.StatisticType.LOCAL_GOLD,  5);
+        user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, 5);
         break;
       case SLOWNESS_CURSE:
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 100,  false, false));
+        player.addPotionEffect(new PotionEffectBuilder(PotionEffectType.SLOW)
+                .setVisible(false)
+                .setAmplifier(0)
+                .setDuration(30)
+                .setAmbient(false)
+                .build());
+
         break;
       default:
         break;

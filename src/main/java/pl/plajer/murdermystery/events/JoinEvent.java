@@ -1,20 +1,3 @@
-/*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 package pl.plajer.murdermystery.events;
 
@@ -35,13 +18,7 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.serialization.InventorySerializer;
 
 
-/**
- * @author Plajer
- * <p>
- * Created at 03.08.2018
- */
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
-
 public class JoinEvent implements Listener {
 
     MurderMystery plugin;
@@ -70,6 +47,7 @@ public class JoinEvent implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         User user = plugin.getUserManager().getUser(event.getPlayer());
+        plugin.getUserManager().loadStatistics(user);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
             return;
@@ -82,7 +60,6 @@ public class JoinEvent implements Listener {
             event.getPlayer().hidePlayer(player);
         }
 
-        plugin.getUserManager().loadStatistics(user);
         //load player inventory in case of server crash, file is deleted once loaded so if file was already
         //deleted player won't receive his backup, in case of crash he will get it back
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

@@ -16,7 +16,6 @@ public class Reflection {
      */
     public static Class<?> getNMSClass(String name) {
         String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
-
         try {
             return Class.forName("net.minecraft.server." + version + name);
         } catch (ClassNotFoundException e) {
@@ -33,7 +32,6 @@ public class Reflection {
      */
     public static Class<?> getCraftBukkitClass(String name) {
         String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
-
         try {
             return Class.forName("org.bukkit.craftbukkit." + version + name);
         } catch (ClassNotFoundException e) {

@@ -1,39 +1,14 @@
-/*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 
-/**
- * @author Plajer
- * <p>
- * Created at 08.08.2018
- */
-public class PlaceholderManager extends PlaceholderExpansion {
 
-    private static final MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
+public class PlaceholderManager extends PlaceholderExpansion {
 
     @Override
     public boolean persist() {
@@ -43,11 +18,6 @@ public class PlaceholderManager extends PlaceholderExpansion {
     @Override
     public String getIdentifier() {
         return "murdermystery";
-    }
-
-    @Override
-    public String getPlugin() {
-        return null;
     }
 
     @Override
@@ -78,8 +48,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
             case "loses":
                 return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+            case "karma":
+                return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.KARMA));
             case "rank":
-                return plugin.getUserManager().getUser(player).getRank().getName();
+                return MurderMystery.getInstance().getUserManager().getUser(player).getRank().getName().replaceAll("[^А-Яа-я]", "");
             default:
                 return handleArenaPlaceholderRequest(id);
         }

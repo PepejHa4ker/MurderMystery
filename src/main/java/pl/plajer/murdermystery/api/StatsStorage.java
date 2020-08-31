@@ -36,6 +36,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -110,10 +111,14 @@ public class StatsStorage {
      * Available statistics to get.
      */
     public enum StatisticType {
-                CONTRIBUTION_DETECTIVE("contribdetective", true, ""),
-                CONTRIBUTION_MURDERER("contribmurderer", true, ""), DEATHS("deaths", true, "Смертей"), GAMES_PLAYED("gamesplayed", true, "Игр сыграно"), HIGHEST_SCORE("highestscore", true, "Очков"),
+        CONTRIBUTION_DETECTIVE("contribdetective", true, ""),
+        CONTRIBUTION_MURDERER("contribmurderer", true, ""), DEATHS("deaths", true, "Смертей"), GAMES_PLAYED("gamesplayed", true, "Игр сыграно"), HIGHEST_SCORE("highestscore", true, "Очков"),
         KILLS("kills", true, "Убийств"), LOSES("loses", true, "Поражений"), WINS("wins", true, "Побед"), LOCAL_CURRENT_PRAY("local_pray", false, "Молитва"), LOCAL_GOLD("gold", false, "Золота"), LOCAL_KILLS("local_kills", false, "Убийств"),
         LOCAL_PRAISES("local_praises", false, "Молитв"), LOCAL_SCORE("local_score", false, "Очков"), KARMA("karma", true, "Кармы");
+
+        public static List<StatisticType> getNonPersistentStats() {
+            return Arrays.stream(StatisticType.values()).filter(StatisticType::isPersistent).collect(Collectors.toList());
+        }
 
         @Getter
         private final String name;

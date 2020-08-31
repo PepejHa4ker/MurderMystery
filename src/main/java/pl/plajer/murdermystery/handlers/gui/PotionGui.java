@@ -15,6 +15,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.economy.PriceType;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
@@ -40,35 +42,37 @@ public class PotionGui implements GuiComponent {
 
     @Override
     public void injectComponents(StaticPane pane) {
-        List<String> lore = new ArrayList<>();
-        lore.add("§6Хочешь узнать его тайну?");
-        int price = player.hasPermission("murder.potion") ? 0 : 300;
-        lore.add("§cЦена: §6" + price + " §cмонет или §650 §dкармы");
-        lore.add("§eЛКМ - Монеты");
-        lore.add("§eПКМ - Карма");
         User user = plugin.getUserManager().getUser(player);
         pane.setOnClick(e -> e.setCancelled(true));
-        pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE).name("§6").build());
-        pane.addItem(new GuiItem(new ItemBuilder(Material.POTION).name("§dМистическое зелье..").lore(lore).build(), e -> {
+        pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE).name("&6").build());
+        int cost = player.hasPermission("murder.potion") ? 0 : 300;
+        pane.addItem(new GuiItem(new ItemBuilder(Material.POTION)
+                .name("§dМистическое зелье..")
+                .lore("&6Хочешь узнать его тайну?")
+                .lore("&cЦена: &6" + cost + "&a монет &cили &650 &dкармы")
+                .lore("&eЛКМ - &aмонеты")
+                .lore("&eПКМ - &dкарма")
+                .build(), e -> {
             e.getWhoClicked().closeInventory();
             if (!user.isPickedPotion()) {
                 switch (e.getClick()) {
                     case LEFT:
-                        if (plugin.getEconomy().getBalance(player) >= price) {
-                            processPotion(user, PriceType.COINS, price);
-                        } else player.sendMessage("§6На вашем счету недостаточно средств. Вы можете взять доверительный платёж нажав 1");
+                        if (plugin.getEconomy().getBalance(player) >= cost) {
+                            processPotion(user, PriceType.COINS, cost);
+                        } else
+                            ChatManager.sendMessage(player, "&6На вашем счету недостаточно средств. Вы можете взять доверительный платёж нажав 1");
                         return;
                     case RIGHT:
                         if (user.getStat(StatsStorage.StatisticType.KARMA) >= 50) {
                             processPotion(user, PriceType.KARMA, 50);
-                        } else player.sendMessage("§6Недостаточно кармы.");
+                        } else ChatManager.sendMessage(player, "&6Недостаточно кармы(Попробуйте сделать доброе дело).");
                 }
-            } else player.sendMessage("§6Вы уже выбрали зелье");
+            } else ChatManager.sendMessage(player, "&6Вы уже выбрали зелье");
         }), 4, 0);
         pane.addItem(new GuiItem(new ItemBuilder(Material.EMPTY_MAP)
-                .name("§aБаланс:")
-                .lore("§6Монет: " + plugin.getEconomy().getBalance(player),
-                        "§dКармы: " + user.getStat(StatsStorage.StatisticType.KARMA))
+                .name("&aБаланс:")
+                .lore("&6Монет: " + plugin.getEconomy().getBalance(player))
+                .lore("&dКармы: " + user.getStat(StatsStorage.StatisticType.KARMA))
                 .build()), 8, 0);
     }
 
@@ -82,7 +86,7 @@ public class PotionGui implements GuiComponent {
                 break;
         }
         user.setPickedPotion(true);
-        player.sendMessage("§6Вы успешно выбрали зелье");
+        ChatManager.sendMessage(player, "&6Вы успешно выбрали зелье");
         user.setPotion(getRandomPotions());
     }
 
@@ -102,9 +106,15 @@ public class PotionGui implements GuiComponent {
 
     private ItemStack getRandomPotions() {
         List<ItemStack> potions = new ArrayList<>();
-        val potionInvis = new ItemBuilder(Material.POTION).name("§dМистическое зелье...").lore("§6Выпей, чтобы узнать его тайну");
-        val potionJump = new ItemBuilder(Material.POTION).name("§dМистическое зелье...").lore("§6Выпей, чтобы узнать его тайну");
-        val potionSpeed = new ItemBuilder(Material.POTION).name("§dМистическое зелье...").lore("§6Выпей, чтобы узнать его тайну");
+        val potionInvis = new ItemBuilder(Material.POTION)
+                .name("&dМистическое зелье...")
+                .lore("&6Выпей, чтобы узнать его тайну");
+        val potionJump = new ItemBuilder(Material.POTION)
+                .name("&dМистическое зелье...")
+                .lore("&6Выпей, чтобы узнать его тайну");
+        val potionSpeed = new ItemBuilder(Material.POTION)
+                .name("&dМистическое зелье...")
+                .lore("&6Выпей, чтобы узнать его тайну");
         val invisMeta = (PotionMeta) potionInvis.build().getItemMeta();
         val jumpMeta = (PotionMeta) potionJump.build().getItemMeta();
         val speedMeta = (PotionMeta) potionSpeed.build().getItemMeta();
@@ -121,9 +131,5 @@ public class PotionGui implements GuiComponent {
         potions.add(potionJump.build());
         potions.add(potionSpeed.build());
         return potions.get(new Random().nextInt(potions.size()));
-    }
-
-    private enum PriceType {
-        KARMA, COINS
     }
 }

@@ -1,17 +1,16 @@
 package pl.plajer.murdermystery.perk.perks;
 
-import lombok.NonNull;
 import lombok.val;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.perk.Perk;
 import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajer.murdermystery.utils.items.ItemBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 
 @PerkAnn
@@ -19,19 +18,17 @@ public class ArrowPerk extends Perk {
 
     public ArrowPerk() {
         super(
-                "§9Колчан",
+                "&9Колчан",
                 500.0,
-                new ItemBuilder(Material.ARROW)
-                        .name("&9Колчан")
-                        .lore("&eКаждую секунду у Вас есть &c3% &eшанс получить стрелу")
-                        .lore("&eЦена: &c500.0&e монет")
-                        .build()
+                Material.ARROW,
+                "&eКаждую секунду у Вас есть &c3% &eшанс получить стрелу"
+
         );
 
     }
 
     @Override
-    public void handle(@NonNull final Player player, Player target, @NonNull final Arena arena) {
+    public void handle(final @NotNull Player player, Player target, final @NotNull Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 3) {
             if (Role.isRole(Role.ANY_DETECTIVE, player)) {

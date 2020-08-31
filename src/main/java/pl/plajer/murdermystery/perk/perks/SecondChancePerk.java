@@ -1,11 +1,11 @@
 package pl.plajer.murdermystery.perk.perks;
 
-import lombok.NonNull;
 import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -14,24 +14,22 @@ import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.effects.particle.ParticlePlayer;
 import pl.plajer.murdermystery.utils.effects.particle.effect.SpiralEffect;
-import pl.plajer.murdermystery.utils.items.ItemBuilder;
 
 import java.util.Random;
 
 @PerkAnn
 public class SecondChancePerk extends Perk {
+
     private boolean success;
 
     public SecondChancePerk() {
         super(
-                "§cВторой шанс",
+                "&cВторой шанс",
                 500.0,
-                new ItemBuilder(Material.BED)
-                        .name("&cВторой шанс")
-                        .lore("&eС шансом 25% Вы можете получить второй шанс после смерти")
-                        .lore("&7(работает только на удары мечем и выстрелы)")
-                        .lore("&eЦена: &c500.0&e монет")
-                        .build()
+                Material.BED,
+                "&eС шансом 25% Вы можете получить второй шанс после смерти",
+                "&7(работает только на удары мечем и выстрелы)"
+
         );
     }
 
@@ -41,7 +39,7 @@ public class SecondChancePerk extends Perk {
     }
 
     @Override
-    public void handle(@NonNull final Player player, Player target, @NonNull final Arena arena) {
+    public void handle(final @NotNull Player player, Player target, final @NotNull Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
         if (random < 25) {
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),

@@ -189,8 +189,8 @@ import java.util.*;
               player.getInventory().clear();
 
               player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-              player.getInventory().setItem(5, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-              player.getInventory().setItem(8, Objects.requireNonNull(SpecialItemManager.getSpecialItem("Leave")).getItemStack());
+              player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
+              player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
 
               for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                   player.removePotionEffect(potionEffect.getType());
@@ -280,7 +280,7 @@ import java.util.*;
               user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
           }
 
-          user.getPerks().clear();
+          user.getCachedPerks().clear();
           arena.getScoreboardManager().removeScoreboard(user);
           //-1 cause we didn't remove player yet
           if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {

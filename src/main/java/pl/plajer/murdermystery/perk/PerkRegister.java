@@ -3,11 +3,18 @@ package pl.plajer.murdermystery.perk;
 import com.google.common.reflect.ClassPath;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import pl.plajer.murdermystery.MurderMystery;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 public class PerkRegister {
 
     @Getter
     private static boolean inited = false;
+
+    @Getter
+    private static final Set<Perk> cachedPerks = new TreeSet<>();
 
     @SneakyThrows
     public void initPerks() {
@@ -22,8 +29,13 @@ public class PerkRegister {
         for (ClassPath.ClassInfo foo : classpath.getTopLevelClassesRecursive("pl.plajer.murdermystery.perk.perks")) {
             if (!foo.getName().equals(getClass().getName())) {
                 Class<?> c = foo.load();
-                if (c.isAnnotationPresent(PerkAnn.class)) {
-                    Perk.getAllPerks().add((Perk) c.newInstance());
+                Class<PerkAnn> a = PerkAnn.class;
+                if (c.isAnnotationPresent(a)) {
+                    if (c.getAnnotation(a).shouldBeLoaded()) {
+                        PerkRegister.getCachedPerks().add((Perk) c.newInstance());
+                    } else {
+                        MurderMystery.getInstance().getPluginLogger().warn("Found unuse Perk: " + c.getSimpleName());
+                    }
                     inited = true;
                 }
             }

@@ -1,20 +1,23 @@
 package pl.plajer.murdermystery.perk;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.val;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pl.plajer.murdermystery.MurderMystery;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.economy.PriceType;
+import pl.plajer.murdermystery.handlers.ChatManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-public abstract class Perk {
+public abstract class Perk implements Comparable<Perk> {
 
     @Getter
     @NotNull
@@ -22,57 +25,72 @@ public abstract class Perk {
 
     @Getter
     @NotNull
-    private static final List<Perk> allPerks = new ArrayList<>();
+    private static final List<Perk> cachedPerks = new ArrayList<>();
 
     @Getter
     @NotNull
-    private final ItemStack displayItem;
+    private final List<String> description;
 
-    @NonNull
     @Getter
-    private final Double price;
+    @NotNull
+    private final Material displayItem;
 
-    public Perk(@NotNull String name, @NonNull Double price, @NotNull ItemStack displayItem) {
+    @Getter
+    @NotNull
+    private final Double cost;
+
+    public Perk(@NotNull String name, @NotNull Double cost, @NotNull Material displayItem, @NotNull String... description) {
         this.name = name;
-        this.price = price;
+        this.cost = cost;
         this.displayItem = displayItem;
+        this.description = Arrays.stream(description).map(ChatManager::colorRawMessage).collect(Collectors.toList());
     }
 
     public boolean success() {
         return true;
     }
 
-    public void tryBuy(Player player) {
+    public void tryBuy(Player player, PriceType type) {
+        int adaptedCost = (int) (type == PriceType.COINS ? this.cost : (this.cost / 10));
         val user = MurderMystery.getInstance().getUserManager().getUser(player);
-        if (user.getPerks().contains(this)) {
-            user.getPlayer().sendMessage("§cСпособность уже выбрана");
+        if (user.getCachedPerks().contains(this)) {
+            ChatManager.sendMessage(player, "&cСпособность уже выбрана");
             return;
         }
-        if (MurderMystery.getInstance().getEconomy().getBalance(user.getPlayer()) < this.getPrice()) {
-            user.getPlayer().sendMessage("§cНедостаточно средств");
-            return;
-        }
-
-        if (player.hasPermission("murder.prem")) {
-            if (user.getPerks().size() == 2) {
-                user.getPlayer().sendMessage("§cВы можете взять только 2 способности на игру");
+        if (type == PriceType.COINS) {
+            if (MurderMystery.getInstance().getEconomy().getBalance(user.getPlayer()) < adaptedCost) {
+                ChatManager.sendMessage(player, "&cНедостаточно средств");
                 return;
             }
         } else {
-            if (user.getPerks().size() == 1) {
-                user.getPlayer().sendMessage("§cВы можете взять только 1 способность на игру");
+            if (user.getStat(StatsStorage.StatisticType.KARMA) < adaptedCost) {
+                ChatManager.sendMessage(player, "&cУ Вас плохая карма :(");
                 return;
             }
         }
 
-        MurderMystery.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getPrice());
-        user.getPerks().add(this);
-        player.sendMessage("§6Способность " + this.getName() + " §6успешно выбрана");
+        if (player.hasPermission("murder.prem")) {
+            if (user.getCachedPerks().size() == 2) {
+                ChatManager.sendMessage(player, "&cВы можете взять только 2 способности на игру");
+                return;
+            }
+        } else {
+            if (user.getCachedPerks().size() == 1) {
+                ChatManager.sendMessage(player, "&cВы можете взять только 1 способность на игру");
+                return;
+            }
+        }
+        if (type == PriceType.COINS) {
+            MurderMystery.getInstance().getEconomy().withdrawPlayer(user.getPlayer(), this.getCost());
+        } else
+            user.setStat(StatsStorage.StatisticType.KARMA, user.getStat(StatsStorage.StatisticType.KARMA) - adaptedCost);
+        user.getCachedPerks().add(this);
+        ChatManager.sendMessage(player, "&6Способность " + this.getName() + " &6успешно выбрана");
     }
 
 
     public static Perk get(Class<? extends Perk> clazz) {
-        for (Perk perk : getAllPerks()) {
+        for (Perk perk : PerkRegister.getCachedPerks()) {
             if (perk.getClass().equals(clazz)) {
                 return perk;
             }
@@ -81,7 +99,7 @@ public abstract class Perk {
     }
 
     public static boolean has(Player player, Class<? extends Perk> clazz) {
-        for (Perk perk : MurderMystery.getInstance().getUserManager().getUser(player).getPerks()) {
+        for (Perk perk : MurderMystery.getInstance().getUserManager().getUser(player).getCachedPerks()) {
             if (perk.getClass().equals(clazz)) {
                 return true;
             }
@@ -90,7 +108,18 @@ public abstract class Perk {
     }
 
 
-    public abstract void handle(@NonNull final Player player, @Nullable Player target, final @NonNull Arena arena);
+    public abstract void handle(@NotNull final Player player, Player target, final @NotNull Arena arena);
 
-
+    @Override
+    public int compareTo(@NotNull Perk perk) {
+        //Comparing by cost
+        if (this.cost.equals(perk.cost)) {
+            return 1;
+        }
+        if (this.cost > perk.cost) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 }

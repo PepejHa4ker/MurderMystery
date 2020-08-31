@@ -14,6 +14,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.items.ItemBuilder;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 
@@ -129,18 +130,18 @@ public class StartGui implements GuiComponent {
 
     private void startArena(Player player, Arena arena, int timer) {
         if (arena.getPlayers().size() < arena.getMinimumPlayers()) {
-            player.sendMessage("§cНедостаточно игроков для начала! Требуется §6" + arena.getMinimumPlayers() + "§c игроков для начала игры");
+            ChatManager.sendMessage(player, "&cНедостаточно игроков для начала! Требуется &6" + arena.getMinimumPlayers() + "&c игроков для начала игры");
             return;
         }
         if(!arena.isCanForceStart()) {
-            player.sendMessage("§6Арена уже начинается!");
+            ChatManager.sendMessage(player, "&6Арена уже начинается!");
             player.closeInventory();
             return;
         }
         arena.setTimer(timer);
         arena.setCanForceStart(false);
         for (Player p : ArenaRegistry.getArena(player).getPlayers()) {
-            p.sendMessage("§eИгрок §b" + player.getName() + " §eускорил запуск игры!");
+            p.sendMessage("&eИгрок &b" + player.getName() + " &eускорил запуск игры!");
         }
     }
 

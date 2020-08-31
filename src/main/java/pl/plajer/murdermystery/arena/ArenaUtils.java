@@ -1,28 +1,10 @@
-/*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 
 package pl.plajer.murdermystery.arena;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,7 +13,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import pl.plajer.murdermystery.ConfigPreferences;
@@ -42,24 +23,28 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.items.ItemPosition;
 
-/**
- * @author Plajer
- * <p>
- * Created at 13.03.2018
- */
-
-@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class ArenaUtils {
 
-  static MurderMystery plugin = JavaPlugin.getPlugin(MurderMystery.class);
+  public static void applyBow(User user) {
+    if (!Role.isRole(Role.INNOCENT, user.getPlayer())) return;
+    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
+      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 10);
+      user.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", user.getPlayer()), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", user.getPlayer()), 5, 40, 5);
+      ItemPosition.setItem(user.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+      ItemPosition.addItem(user.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, MurderMystery.getInstance().getConfig().getInt("Detective-Default-Arrows", 3)));
+      user.getPlayer().getInventory().setItem(ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, -10));
+    }
+  }
+
+
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
       player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
+              ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
       if (Role.isRole(Role.MURDERER, player)) {
         player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
-      User loopUser = plugin.getUserManager().getUser(player);
+      User loopUser = MurderMystery.getInstance().getUserManager().getUser(player);
       if (Role.isRole(Role.INNOCENT, player)) {
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
       } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
@@ -69,10 +54,9 @@ public class ArenaUtils {
     }
     for (Player murderer : arena.getMurdererList()) {
       murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
+              ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
     }
-    //we must call it ticks later due to instant respawn bug
-    Bukkit.getScheduler().runTaskLater(plugin, () -> ArenaManager.stopGame(false, arena), 5);
+    Bukkit.getScheduler().runTaskLater(MurderMystery.getInstance(), () -> ArenaManager.stopGame(false, arena), 5);
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {
@@ -80,7 +64,7 @@ public class ArenaUtils {
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
     if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
       int score = action.getPoints() * amount;
-      if(user.getPlayer().hasPermission("murder.grand")) {
+      if (user.getPlayer().hasPermission("murder.grand")) {
         float scoreGrand = score + (score * 0.75f);
         msg = StringUtils.replace(msg, "%score%", String.valueOf(scoreGrand));
         msg = StringUtils.replace(msg, "%action%", action.getAction());
@@ -107,7 +91,7 @@ public class ArenaUtils {
       return;
     }
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
-    if (action.getPoints() < 0){
+    if (action.getPoints() < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
     msg = StringUtils.replace(msg, "%action%", action.getAction());
@@ -171,11 +155,11 @@ public class ArenaUtils {
       }
     }
 
-    Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.6, 0));
+    Hologram hologram = HologramsAPI.createHologram(MurderMystery.getInstance(), victim.getLocation().clone().add(0, 0.6, 0));
     ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
 
     itemLine.setPickupHandler(player -> {
-      if (plugin.getUserManager().getUser(player).isSpectator()) {
+      if (MurderMystery.getInstance().getUserManager().getUser(player).isSpectator()) {
         return;
       }
       if (Role.isRole(Role.INNOCENT, player)) {
@@ -190,7 +174,7 @@ public class ArenaUtils {
 
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
         ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, MurderMystery.getInstance().getConfig().getInt("Detective-Default-Arrows", 3)));
         ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
       }
     });
@@ -217,8 +201,9 @@ public class ArenaUtils {
     }
   }
 
+
   public static void hidePlayersOutsideTheGame(Player player, Arena arena) {
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
+    for (Player players : MurderMystery.getInstance().getServer().getOnlinePlayers()) {
       if (arena.getPlayers().contains(players)) {
         continue;
       }
@@ -228,10 +213,10 @@ public class ArenaUtils {
   }
 
   public static void updateNameTagsVisibility(final Player p) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+    if (!MurderMystery.getInstance().getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       return;
     }
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
+    for (Player players : MurderMystery.getInstance().getServer().getOnlinePlayers()) {
       Arena arena = ArenaRegistry.getArena(players);
       if (arena == null) {
         continue;

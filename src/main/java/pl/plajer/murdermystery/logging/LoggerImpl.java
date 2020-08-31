@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 public class LoggerImpl implements ILogger {
 
-    private transient final Logger logger;
+    private final Logger logger;
 
     public LoggerImpl(final Logger logger) {
         this.logger = logger;

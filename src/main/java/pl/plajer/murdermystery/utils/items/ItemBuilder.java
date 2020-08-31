@@ -10,9 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class ItemBuilder {
+
     private final ItemStack itemStack;
 
     public ItemBuilder(ItemStack itemStack) {
@@ -33,8 +35,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder color(short color) {
-        this.itemStack.setDurability(color);
+    public ItemBuilder color(int color) {
+        this.itemStack.setDurability((short) color);
         return this;
     }
 
@@ -68,8 +70,8 @@ public class ItemBuilder {
         }
 
         name = name.stream()
-                .map(line -> ChatColor.translateAlternateColorCodes('&', line))
-                .collect(Collectors.toList());
+                   .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                   .collect(toList());
 
         lore.addAll(name);
         meta.setLore(lore);
