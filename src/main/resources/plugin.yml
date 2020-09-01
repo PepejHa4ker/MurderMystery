@@ -1,5 +1,5 @@
 name: MurderMystery
-main: pl.plajer.murdermystery.MurderMystery
+main: MurderMystery
 authors: [Pepej, Tigerpanzer, montlikadani]
 version: ${project.version}
 api-version: 1.12
