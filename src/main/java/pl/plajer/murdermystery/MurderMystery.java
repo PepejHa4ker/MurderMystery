@@ -2,9 +2,6 @@ package pl.plajer.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.experimental.FieldDefaults;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -51,42 +48,39 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap {
 
-    @Getter
     private static MurderMystery instance;
 
-    SchedulerAdapter schedulerAdapter;
+    private SchedulerAdapter schedulerAdapter;
 
-    String version;
+    private String version;
 
-    boolean forceDisable = false;
+    private boolean forceDisable = false;
 
-    ExecutorService executorService;
+    private ExecutorService executorService;
 
-    ScheduledExecutorService scheduledExecutorService;
+    private ScheduledExecutorService scheduledExecutorService;
 
-    BungeeManager bungeeManager;
+    private BungeeManager bungeeManager;
 
-    RewardsFactory rewardsHandler;
+    private RewardsFactory rewardsHandler;
 
-    MysqlDatabase database;
+    private MysqlDatabase database;
 
-    SignManager signManager;
+    private SignManager signManager;
 
-    CorpseHandler corpseHandler;
+    private CorpseHandler corpseHandler;
 
-    ConfigPreferences configPreferences;
+    private ConfigPreferences configPreferences;
 
-    HookManager hookManager;
+    private HookManager hookManager;
 
-    UserManager userManager;
+    private UserManager userManager;
 
-    Economy economy;
+    private Economy economy;
 
-    ILogger logger = null;
-
+    private ILogger logger = null;
 
     @Override
     public ILogger getPluginLogger() {
@@ -100,7 +94,6 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
     public int getPlayerCount() {
         return this.getServer().getOnlinePlayers().size();
     }
-
 
     @Override
     public boolean isPlayerOnline(UUID uniqueId) {
@@ -341,5 +334,9 @@ public class MurderMystery extends JavaPlugin implements MurderMysteryBootstrap 
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
             economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
         }
+    }
+
+    public static MurderMystery getInstance() {
+        return instance;
     }
 }

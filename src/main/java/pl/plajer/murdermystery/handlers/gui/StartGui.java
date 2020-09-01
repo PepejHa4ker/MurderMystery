@@ -140,9 +140,7 @@ public class StartGui implements GuiComponent {
         }
         arena.setTimer(timer);
         arena.setCanForceStart(false);
-        for (Player p : ArenaRegistry.getArena(player).getPlayers()) {
-            p.sendMessage("&eИгрок &b" + player.getName() + " &eускорил запуск игры!");
-        }
+        ChatManager.broadcast(arena, " &eИгрок &b" + player.getName() + " &eускорил запуск игры!");
     }
 
     @Override

@@ -62,6 +62,7 @@ import pl.plajer.murdermystery.perk.Perk;
 import pl.plajer.murdermystery.perk.perks.ExtremeGoldPerk;
 import pl.plajer.murdermystery.perk.perks.PovodokEbaniyPerk;
 import pl.plajer.murdermystery.perk.perks.SecondChancePerk;
+import pl.plajer.murdermystery.perk.perks.SniperPerk;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.compat.XMaterial;
@@ -103,7 +104,6 @@ public class ArenaEvents implements Listener {
             return;
         Gui gui = new Gui(plugin, 1, "Укажите кол-во золота");
         StaticPane pane = new StaticPane(9, 1);
-        gui.addPane(pane);
         AtomicInteger gold = new AtomicInteger(clicker.getStat(StatsStorage.StatisticType.LOCAL_GOLD));
         pane.fillWith(new ItemBuilder(Material.STAINED_GLASS_PANE)
                 .name("&1")
@@ -125,25 +125,29 @@ public class ArenaEvents implements Listener {
         }), 4, 0);
         pane.addItem(new GuiItem(new ItemBuilder(Material.EMERALD)
                         .name("&6Отдать")
-                        .build(), ev -> new Confirmation(plugin,
-                        "&6Вы действительно хотите передать &c" + gold.get() + " &6игроку &a" + player.getDisplayName() + "?")
-                        .onDecline(event -> event.getWhoClicked().closeInventory())
-                        .onTopClick(event -> event.getWhoClicked().closeInventory())
-                        .onAccept(event -> {
-                            Player accepted = (Player) event.getWhoClicked();
-                            ChatManager.sendMessage(player, "&6Игрок " + accepted.getDisplayName() + " &6передал Вам &c" + gold + " &6золота");
-                            ChatManager.sendMessage(accepted, "&6Вы успешно передали &c" + gold.get() + " &6золота игроку " + player.getDisplayName());
-                            accepted.closeInventory();
-                            clicker.addStat(StatsStorage.StatisticType.LOCAL_GOLD, -gold.get());
-                            clicked.addStat(StatsStorage.StatisticType.LOCAL_GOLD, gold.get());
-                            ItemPosition.addItem(accepted, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -gold.get()));
-                            ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, gold.get()));
-                            ArenaUtils.applyBow(clicked);
-                        })
-                        .build()
-                        .show(player))
-                , 8, 0);
+                        .build(), ev -> {
+                    new Confirmation(plugin, "&6Вы действительно хотите передать &c" + gold.get() + " &6игроку &a" + player.getDisplayName() + "?")
+                            .onDecline(event -> event.getWhoClicked().closeInventory())
+                            .onTopClick(event -> event.getWhoClicked().closeInventory())
+                            .onOutsideClick(event -> event.getWhoClicked().closeInventory())
+                            .onAccept(event -> {
+                                Player accepted = (Player) event.getWhoClicked();
+                                ChatManager.sendMessage(player, "&6Игрок " + accepted.getDisplayName() + " &6передал Вам &c" + gold + " &6золота");
+                                ChatManager.sendMessage(accepted, "&6Вы успешно передали &c" + gold.get() + " &6золота игроку " + player.getDisplayName());
+                                accepted.closeInventory();
+                                clicker.addStat(StatsStorage.StatisticType.LOCAL_GOLD, -gold.get());
+                                clicked.addStat(StatsStorage.StatisticType.LOCAL_GOLD, gold.get());
+                                ItemPosition.addItem(accepted, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -gold.get()));
+                                ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, gold.get()));
+                                ArenaUtils.applyBow(clicked);
+                            })
+                            .build()
+                            .show((Player) ev.getWhoClicked());
+                }),
+                8, 0);
+        gui.addPane(pane);
         gui.show(e.getPlayer());
+
     }
 
 
@@ -260,6 +264,7 @@ public class ArenaEvents implements Listener {
             }
         }
     }
+
 
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent e) {
@@ -407,6 +412,9 @@ public class ArenaEvents implements Listener {
             arena.setCharacter(Arena.CharacterType.HERO, attacker);
         }
         killPlayer(victim, arena);
+        if (Perk.has(attacker, SniperPerk.class)) {
+            Perk.get(SniperPerk.class).handle(attacker, victim, arena);
+        }
         User user = plugin.getUserManager().getUser(attacker);
 
         user.addStat(StatsStorage.StatisticType.KILLS, 1);

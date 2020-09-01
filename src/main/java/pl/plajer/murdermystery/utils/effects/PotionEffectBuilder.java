@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class PotionEffectBuilder {
 
+
     @NotNull
     private final PotionEffectType potionEffectType;
 
@@ -13,7 +14,7 @@ public final class PotionEffectBuilder {
     private Boolean visible, ambient;
 
 
-    public PotionEffectBuilder(@NotNull PotionEffectType potionEffectType)  {
+    public PotionEffectBuilder(@NotNull PotionEffectType potionEffectType) {
         this.potionEffectType = potionEffectType;
     }
 

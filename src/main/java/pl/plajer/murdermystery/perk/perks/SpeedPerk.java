@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.perk.Perk;
 import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
@@ -32,7 +33,8 @@ public class SpeedPerk extends Perk {
     @Override
     public void handle(final @NotNull Player player, Player target, final @NotNull Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
-        if (random < 5) {
+        if (random < 3) {
+            ChatManager.sendMessage(player, "&bЯ чувствую скорость... Я ФЛЭШ");
             EffectUtils.addEffect(player, new PotionEffectBuilder(PotionEffectType.SPEED)
                     .setDuration(10)
                     .setAmplifier(0)

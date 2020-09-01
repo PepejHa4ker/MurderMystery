@@ -34,4 +34,5 @@ public class UtilsTest {
     Assert.assertEquals(45, Utils.serializeInt(37));
     Assert.assertEquals(45, Utils.serializeInt(43));
   }
+
 }

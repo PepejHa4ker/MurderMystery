@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import pl.plajer.murdermystery.MurderMystery;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.perk.Perk;
 import pl.plajer.murdermystery.perk.PerkAnn;
 import pl.plajer.murdermystery.utils.Utils;
@@ -34,7 +35,8 @@ public class InvisibleHeadPerk extends Perk {
     @Override
     public void handle(final @NotNull Player player, Player target, final @NotNull Arena arena) {
         val random = Utils.getRandomNumber(0, 100);
-        if (random < 3) {
+        if (random < 2) {
+            ChatManager.sendMessage(player, "&eВжух! Исчезни, если не петух");
             val effect = new SpiralEffect(MurderMystery.getInstance().getScheduledExecutorService(),
                     player.getLocation(),
                     new ParticlePlayer(Particle.FLAME),
