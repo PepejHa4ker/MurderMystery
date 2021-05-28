@@ -1,0 +1,110 @@
+instances:
+  default:
+    lobbylocation: world,364.0,63.0,-72.0,0.0,0.0
+    Endlocation: world,364.0,63.0,-72.0,0.0,0.0
+    minimumplayers: 2
+    maximumplayers: 10
+    mapname: mapname
+    world: worldname
+    signs: []
+    isdone: false
+    playerspawnpoints:
+    - world,364.0,63.0,-72.0,0.0,0.0
+    goldspawnpoints:
+    - world,364.0,63.0,-72.0,0.0,0.0
+    mystery-cauldrons:
+    - world,364.0,63.0,-72.0,0.0,0.0
+    playerpermurderer: 5
+    playerperdetective: 7
+    playerpermedic: 7
+  aa:
+    lobbylocation: world,164.0,64.0,256.0,0.0,0.0
+    Startlocation: world,164.0,64.0,256.0,0.0,0.0
+    Endlocation: world,164.0,64.0,256.0,0.0,0.0
+    playerspawnpoints: []
+    goldspawnpoints: []
+    minimumplayers: 2
+    maximumplayers: 10
+    playerpermurderer: 5
+    playerperdetective: 7
+    playerpermedic: 7
+    mapname: aa
+    signs: []
+    isdone: false
+    world: world
+    mystery-cauldrons: []
+    confessionals: []
+  '123':
+    lobbylocation: world,164.0,64.0,256.0,0.0,0.0
+    Startlocation: world,164.0,64.0,256.0,0.0,0.0
+    Endlocation: world,164.0,64.0,256.0,0.0,0.0
+    playerspawnpoints: []
+    goldspawnpoints: []
+    minimumplayers: 2
+    maximumplayers: 10
+    playerpermurderer: 5
+    playerperdetective: 7
+    mapname: '123'
+    signs: []
+    isdone: false
+    world: world
+    mystery-cauldrons: []
+    confessionals: []
+  The_Skeld:
+    lobbylocation: world,235.45691751430326,81.0,135.39647463681325,-358.25,0.0
+    Startlocation: murder,-108.0,63.0,66.0,0.0,0.0
+    Endlocation: murder,-107.5,63.0,66.5,-179.22865,0.0
+    playerspawnpoints:
+    - world,308.5,83.0,184.5
+    - world,338.5,83.0,175.5
+    - world,334.5,83.0,189.5
+    - world,306.38440228678223,83.0,185.02614970402632
+    - world,317.6547886829782,83.0,176.31215039499773
+    - world,309.0032865364947,83.0,163.62111910295857
+    - world,296.304321309742,83.0,184.27866044380465
+    - world,300.67725164757223,83.0,163.94189022424803
+    - world,321.76182094925844,83.0,171.45559737046676
+    - world,247.5,83.0,200.5
+    goldspawnpoints:
+    - world,312.6894214697627,83.0,199.21223676502132
+    - world,326.21956084517967,83.0,203.79914488845372
+    - world,309.32611426480304,83.0,227.3898923011752
+    - world,295.5588205901647,83.0,209.4229988181451
+    - world,281.4655158948516,83.0,220.29211313563553
+    - world,262.70417943566486,83.0,204.27226994431908
+    - world,252.39687159078946,83.0,198.51817590647636
+    - world,252.3049214561149,83.0,192.50697329918427
+    - world,272.44443345016356,83.0,192.45377855375807
+    - world,280.64179073738177,83.0,175.52425004892876
+    - world,284.455633497506,83.0,189.45203807370893
+    - world,344.6497981911696,83.0,188.42636834235648
+    - world,347.4564692552671,83.0,201.50783450853083
+    - world,344.479734865793,83.0,226.58372792793074
+    - world,326.3601184722405,83.0,217.57662428169255
+    minimumplayers: 2
+    maximumplayers: 20
+    playerpermedic: 1
+    playerpermurderer: 1
+    playerperdetective: 1
+    mapname: The_Skeld
+    signs: []
+    isdone: true
+    world: world
+    mystery-cauldrons:
+    - world,335.0,83.0,204.0
+    - world,306.0,83.0,222.0
+    - world,246.0,83.0,187.0
+    - world,282.0,83.0,190.0
+    - world,333.0,83.0,190.0
+    - world,330.0,83.0,226.0
+    confessionals:
+    - world,308.0,84.0,176.0
+    - world,364.0,83.0,196.0
+    spawngoldtime: 1
+    magicanvils:
+    - world,290.0,83.0,207.0
+    - world,246.0,83.0,203.0
+    - world,260.0,83.0,169.0
+    - world,346.0,83.0,170.0
+    - world,347.0,83.0,217.0
+    hidechances: false

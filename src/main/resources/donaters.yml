@@ -1,0 +1,12 @@
+vip:
+  multiplier: 0.1
+prem:
+  multiplier: 0.25
+grand:
+  multiplier: 0.4
+Pickup-Arrows-Permission: "murder.arrows"
+Can-Forcestart-Game-Permission: "murder.forcestart"
+Extra-Gold-Permission: "murder.extragold"
+
+
+
