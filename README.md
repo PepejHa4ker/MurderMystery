@@ -1,4 +1,4 @@
-# MurderMystery Squareland.ru/Gamma minigame
+# MurderMystery minigame
 
 ## author: pepej
 
