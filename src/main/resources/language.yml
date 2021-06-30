@@ -65,6 +65,7 @@ Scoreboard:
   Roles:
     Detective: "&bDetective"
     Murderer: "&cMurderer"
+    Medic: "&dMedic"
     Innocent: "&eInnocent"
     Dead: "&7Dead"
   Content:
@@ -152,7 +153,7 @@ In-Game:
       Game-Started: "&7The game has started! Survive till the end!"
       Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
       You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
-      Role-Chances-Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance%"
+      Role-Chances-Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance% &a- &cMedic Chance: %medic_chance%"
       Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %ARENANAME%"
     Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
@@ -164,6 +165,8 @@ In-Game:
       Murderer-Subtitle: "&eKill all players!"
       Detective-Title: "&bROLE: DETECTIVE"
       Detective-Subtitle: "&eFind and kill the murderer!"
+      Medic-Title: "&dROLE: Medic"
+      Medic-Subtitle: "&eFind and heal the innocent!"
       Innocent-Title: "&eROLE: INNOCENT"
       Innocent-Subtitle: "&eStay alive as long as possible!"
     Bonus-Score: "&e+%score% score (%action%)"
@@ -177,6 +180,7 @@ In-Game:
       #for murderer or detective
       Win-Game: "for winning the game"
       Detective-Reward: "for %amount% innocents survived"
+      Medic-Reward: "for %amount% innocents survived"
       Innocent-Kill: "for killing innocent"
     Picked-Up-Gold: "&ePicked up gold!"
     Previous-Role-Left-Title: "&cPrevious %role% has left!"

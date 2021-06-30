@@ -25,6 +25,7 @@ import com.pepej.murdermystery.ConfigPreferences;
 import com.pepej.murdermystery.MurderMystery;
 import com.pepej.murdermystery.api.StatsStorage;
 import com.pepej.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
+import com.pepej.murdermystery.arena.corpse.Corpse;
 import com.pepej.murdermystery.arena.role.Role;
 import com.pepej.murdermystery.handlers.ChatManager;
 import com.pepej.murdermystery.handlers.gui.Confirmation;
@@ -68,6 +69,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -149,7 +151,6 @@ public class ArenaEvents implements Listener {
         gui.show(e.getPlayer());
 
     }
-
 
     @EventHandler
     public void onArmorStandEject(EntityDismountEvent e) {
@@ -249,6 +250,7 @@ public class ArenaEvents implements Listener {
         }
     }
 
+
     @EventHandler
     public void onArrowPickup(PlayerPickupArrowEvent e) {
         if (ArenaRegistry.isInArena(e.getPlayer())) {
@@ -305,7 +307,47 @@ public class ArenaEvents implements Listener {
         }
         ArenaUtils.applyBow(user);
     }
+    @EventHandler
+    public void onClickCorpys(CorpseClickEvent e) {
+        Player p = e.getClicker();
+        User user = plugin.getUserManager().getUser((Player) p);
+        User tryp = plugin.getUserManager().getUser(Bukkit.getPlayer(e.getCorpse().getCorpseName()));
+        if (!ArenaUtils.areInSameArena(Bukkit.getPlayer(e.getCorpse().getCorpseName()), p)) {
+            return;
+        }
+        if(Role.isRole(Role.MEDIC, p)) {
+            if(tryp.getArena().getPlayers().contains(tryp.getPlayer())) {
+                if (tryp.isSpectator()) {
+                    tryp.getPlayer().teleport(e.getCorpse().getOrigLocation());
 
+                    tryp.setSpectator(false);
+                    tryp.getPlayer().getInventory().clear();
+                    e.getCorpse().destroyCorpseFromEveryone();
+                    p.sendMessage("Вы воскресили!");
+                    for(Player ps : user.getArena().getPlayers()) {
+                        ps.showPlayer(tryp.getPlayer());
+                    }
+                    tryp.getPlayer().setAllowFlight(false);
+                    if(user.getArena().getDetectiveList().contains(tryp.getPlayer())) {
+                        user.getArena().getDetectiveList().remove(tryp.getPlayer());
+
+                    }
+                    if(user.getArena().getMedicList().contains(tryp.getPlayer())) {
+
+                        user.getArena().removeFromMedicList(tryp.getPlayer());
+                    }
+                    //user.getArena().detectives = 0;
+                   // user.getArena().setCharacter(Arena.CharacterType.FAKE_DETECTIVE, tryp.getPlayer());
+                    //  plugin.getUserManager().getUser(tryp).setStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC, 1);
+                } else {
+                    // p.sendMessage("Игрок вышел из игры, вы его не возратите в игру, либо он уже находится в иной игре!");
+                }
+            }
+            else {
+                p.sendMessage("Игрок вышел из игры!!!");
+            }
+        }
+    }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMurdererDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) {
@@ -359,13 +401,13 @@ public class ArenaEvents implements Listener {
         }
 
         if (Role.isRole(Role.MURDERER, victim)) {
-            plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
-            plugin.getEconomy().depositPlayer(attacker, 100);
-            ChatManager.sendMessage(attacker, "&6Вы получили &a100&c монет за убийство маньяка!");
+        //    plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
+         //   plugin.getEconomy().depositPlayer(attacker, 100);
+         //  ChatManager.sendMessage(attacker, "&6Вы получили &a100&c монет за убийство маньяка!");
         } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
-            plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
-            plugin.getEconomy().depositPlayer(attacker, 75);
-            ChatManager.sendMessage(attacker, "&6Вы получили &a75 &6монет за убийство детектива");
+          //  plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
+           // plugin.getEconomy().depositPlayer(attacker, 75);
+          //  ChatManager.sendMessage(attacker, "&6Вы получили &a75 &6монет за убийство детектива");
         }
         killPlayer(victim, ArenaRegistry.getArena(victim));
         User user = plugin.getUserManager().getUser(attacker);

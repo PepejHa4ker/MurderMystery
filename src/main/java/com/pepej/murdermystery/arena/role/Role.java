@@ -33,6 +33,7 @@ public enum Role {
    * Detective or fake detective role
    */
   ANY_DETECTIVE,
+
   /**
    * Detective role, he must kill murderer
    */
@@ -42,6 +43,10 @@ public enum Role {
    * detective by default
    */
   FAKE_DETECTIVE,
+  /**
+   * Medic player role, must heal players and survive to win
+   */
+  MEDIC,
   /**
    * Innocent player role, must survive to win
    */
@@ -79,10 +84,15 @@ public enum Role {
           return false;
         }
         return arena.getMurdererList().contains(player);
+      case MEDIC:
+        if (!arena.isCharacterSet(Arena.CharacterType.MEDIC)) {
+          return false;
+        }
+        return arena.getMedicList().contains(player);
       case ANY_DETECTIVE:
         return isRole(Role.DETECTIVE, player) || isRole(Role.FAKE_DETECTIVE, player);
       case INNOCENT:
-        return !isRole(Role.MURDERER, player) && !isRole(Role.ANY_DETECTIVE, player);
+        return !isRole(Role.MEDIC, player) && !isRole(Role.MURDERER, player) && !isRole(Role.ANY_DETECTIVE, player);
       default:
         return false;
     }

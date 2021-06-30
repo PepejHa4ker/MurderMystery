@@ -71,6 +71,9 @@ public class UserManager {
         if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         }
+        if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC) <= 0) {
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC, 1);
+        }
     }
 
     public void removeUser(User user) {

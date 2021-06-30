@@ -112,6 +112,7 @@ public class StatsStorage {
      */
     public enum StatisticType {
         CONTRIBUTION_DETECTIVE("contribdetective", true, ""),
+        CONTRIBUTION_MEDIC("contribmedic", true, ""),
         CONTRIBUTION_MURDERER("contribmurderer", true, ""), DEATHS("deaths", true, "Смертей"), GAMES_PLAYED("gamesplayed", true, "Игр сыграно"), HIGHEST_SCORE("highestscore", true, "Очков"),
         KILLS("kills", true, "Убийств"), LOSES("loses", true, "Поражений"), WINS("wins", true, "Побед"), LOCAL_CURRENT_PRAY("local_pray", false, "Молитва"), LOCAL_GOLD("gold", false, "Золота"), LOCAL_KILLS("local_kills", false, "Убийств"),
         LOCAL_PRAISES("local_praises", false, "Молитв"), LOCAL_SCORE("local_score", false, "Очков"), KARMA("karma", true, "Кармы");

@@ -151,7 +151,12 @@ public class ScoreboardManager {
                 formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
             } else if (Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
                 formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
-            } else {
+            }
+            else if (Role.isRole(Role.MEDIC, user.getPlayer())) {
+                formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Medic"));
+            }
+            else {
+
                 formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
             }
         }

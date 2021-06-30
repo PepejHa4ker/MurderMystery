@@ -82,8 +82,10 @@ public class Arena extends BukkitRunnable {
     final List<SpecialBlock> specialBlocks = new ArrayList<>();
     final List<Player> allMurderer = new ArrayList<>();
     final List<Player> allDetectives = new ArrayList<>();
-    int murderers = 0;
-    int detectives = 0;
+    final List<Player> allMedics = new ArrayList<>();
+    public int murderers = 0;
+    public int detectives = 0;
+    public int medics = 0;
     int spawnGoldTimer = 0;
     int spawnGoldTime = 0;
 
@@ -131,6 +133,7 @@ public class Arena extends BukkitRunnable {
         if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
             return;
         }
+
         corpses.add(corpse);
     }
 
@@ -162,14 +165,14 @@ public class Arena extends BukkitRunnable {
                         gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
                     }
                     Bukkit.getOnlinePlayers()
-                          .stream()
-                          .filter(p -> !this.getPlayers().contains(p))
-                          .collect(Collectors.toSet())
-                          .forEach(player -> new TextComponentBuilder("&6Арена &a" + this.getFormattedArenaName() + " &6скоро начнётся! &7(кликни)")
-                                  .hoverMessage("&eКликните, чтобы присоединиться!")
-                                  .clickCommand("/mm join " + ChatColor.stripColor(this.getMapName()))
-                                  .create()
-                                  .send(player));
+                            .stream()
+                            .filter(p -> !this.getPlayers().contains(p))
+                            .collect(Collectors.toSet())
+                            .forEach(player -> new TextComponentBuilder("&6Арена &a" + this.getFormattedArenaName() + " &6скоро начнётся! &7(кликни)")
+                                    .hoverMessage("&eКликните, чтобы присоединиться!")
+                                    .clickCommand("/mm join " + ChatColor.stripColor(this.getMapName()))
+                                    .create()
+                                    .send(player));
                     ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
                     setArenaState(ArenaState.STARTING);
                     setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
@@ -211,16 +214,18 @@ public class Arena extends BukkitRunnable {
                 }
                 int totalMurderer = 0;
                 int totalDetective = 0;
+                int totalMedic = 0;
                 for (Player p : getPlayers()) {
                     User user = plugin.getUserManager().getUser(p);
                     totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
                     totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
+                    totalMedic += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC);
                 }
                 if (!hideChances) {
                     for (Player p : getPlayers()) {
                         User user = plugin.getUserManager().getUser(p);
                         try {
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
+                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective, totalMedic)));
                         } catch (NumberFormatException ignored) {
                         }
                     }
@@ -230,14 +235,14 @@ public class Arena extends BukkitRunnable {
                     Bukkit.getPluginManager().callEvent(gameStartEvent);
                     setArenaState(ArenaState.IN_GAME);
                     Bukkit.getOnlinePlayers()
-                          .stream()
-                          .filter(p -> !this.getPlayers().contains(p))
-                          .collect(Collectors.toSet())
-                          .forEach(player -> new TextComponentBuilder("&6Арена " + this.getFormattedArenaName() + " &6Была только что запущена! &7(кликни)")
-                                  .hoverMessage("&eКликните, чтобы присоединиться!")
-                                  .clickCommand("/mm join " + ChatColor.stripColor(this.getMapName()))
-                                  .create()
-                                  .send(player));
+                            .stream()
+                            .filter(p -> !this.getPlayers().contains(p))
+                            .collect(Collectors.toSet())
+                            .forEach(player -> new TextComponentBuilder("&6Арена " + this.getFormattedArenaName() + " &6Была только что запущена! &7(кликни)")
+                                    .hoverMessage("&eКликните, чтобы присоединиться!")
+                                    .clickCommand("/mm join " + ChatColor.stripColor(this.getMapName()))
+                                    .create()
+                                    .send(player));
                     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                         gameBar.setProgress(1.0);
                     }
@@ -269,10 +274,12 @@ public class Arena extends BukkitRunnable {
 
                     Map<User, Double> murdererChances = new HashMap<>();
                     Map<User, Double> detectiveChances = new HashMap<>();
+                    Map<User, Double> medicChances = new HashMap<>();
                     for (Player p : getPlayers()) {
                         User user = plugin.getUserManager().getUser(p);
                         murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
                         detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
+                        medicChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC) / (double) totalMedic) * 100.0);
                     }
                     Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
                             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -280,19 +287,26 @@ public class Arena extends BukkitRunnable {
                     Set<Player> playersToSet = new HashSet<>(getPlayers());
                     int maxmurderer = 1;
                     int maxdetectives = 1;
+                    int maxmedics = 1;
                     if (murderers > 1 && getPlayers().size() > murderers) {
                         maxmurderer = murderers;
                     }
                     if (detectives > 1 && getPlayers().size() > detectives) {
                         maxdetectives = detectives;
                     }
-                    if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
+                    if (medics > 1 && getPlayers().size() > medics) {
+                        maxmedics = medics;
+                    }
+                    if (getPlayers().size() - (maxmurderer + maxdetectives + maxmedics) < 1) {
                         ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
                         //Make sure to have one innocent!
                         if (maxdetectives > 1) {
                             maxdetectives--;
-                        } else if (maxmurderer > 1) {
+                        }  if (maxmurderer > 1) {
                             maxmurderer--;
+                        }
+                        if (maxmedics > 1) {
+                            maxmedics--;
                         }
                     }
 
@@ -305,6 +319,7 @@ public class Arena extends BukkitRunnable {
                         murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
                                 ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
                         detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
+                        medicChances.remove(sortedMurderer.keySet().toArray()[i]);
                     }
                     Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
                     for (int i = 0; i < (maxdetectives); i++) {
@@ -317,8 +332,20 @@ public class Arena extends BukkitRunnable {
                         playersToSet.remove(detective);
                         ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
                         ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+                        medicChances.remove(sortedDetective.keySet().toArray()[i]);
                     }
+                    Map<User, Double> sortedMedic = medicChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                    for (int i = 0; i < (maxmedics); i++) {
+                        Player medic = ((User) sortedMedic.keySet().toArray()[i]).getPlayer();
+                        setCharacter(CharacterType.MEDIC, medic);
+                        allMedics.add(medic);
+                        plugin.getUserManager().getUser(medic).setStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC, 1);
+                        medic.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Medic-Title"),
+                                ChatManager.colorMessage("In-Game.Messages.Role-Set.Medic-Subtitle"), 5, 40, 5);
+                        playersToSet.remove(medic);
+                        ItemPosition.setItem(medic, ItemPosition.BOW, new ItemStack(Material.GHAST_TEAR, 1));
 
+                    }
                     for (Player p : playersToSet) {
                         p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
 
@@ -369,7 +396,7 @@ public class Arena extends BukkitRunnable {
                 //every 30 secs survive reward
                 if (getTimer() % 30 == 0) {
                     for (Player p : getPlayersLeft()) {
-                        if (Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p) && !plugin.getUserManager().getUser(p).isSpectator()) {
+                        if (Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.MEDIC, p)  || Role.isRole(Role.ANY_DETECTIVE, p) && !plugin.getUserManager().getUser(p).isSpectator()) {
                             ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
                         }
                     }
@@ -490,13 +517,13 @@ public class Arena extends BukkitRunnable {
             case RESTARTING:
                 canForceStart = true;
                 ChatEvents.getSaid()
-                          .stream()
-                          .filter(uuid -> this.getPlayers()
-                                              .stream()
-                                              .map(Player::getUniqueId)
-                                              .collect(Collectors.toSet())
-                                              .contains(uuid))
-                          .forEach(uuid -> ChatEvents.getSaid().remove(uuid));
+                        .stream()
+                        .filter(uuid -> this.getPlayers()
+                                .stream()
+                                .map(Player::getUniqueId)
+                                .collect(Collectors.toSet())
+                                .contains(uuid))
+                        .forEach(uuid -> ChatEvents.getSaid().remove(uuid));
                 setArenaState(ArenaState.WAITING_FOR_PLAYERS);
                 getPlayers().clear();
                 if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -515,10 +542,11 @@ public class Arena extends BukkitRunnable {
 
     }
 
-    private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
+    private String formatRoleChance(User user, int murdererPts, int detectivePts, int pts) throws NumberFormatException {
         String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
         message = StringUtils.replace(message, "%murderer_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
         message = StringUtils.replace(message, "%detective_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
+        message = StringUtils.replace(message, "%medic_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MEDIC) / (double) pts) * 100.0, 2) + "%");
         return message;
     }
 
@@ -993,7 +1021,9 @@ public class Arena extends BukkitRunnable {
     public List<Player> getDetectiveList() {
         return allDetectives;
     }
-
+    public List<Player> getMedicList() {
+        return allMedics;
+    }
     public void addToMurdererList(Player player) {
         allMurderer.add(player);
     }
@@ -1001,7 +1031,9 @@ public class Arena extends BukkitRunnable {
     public void removeFromMurdererList(Player player) {
         allMurderer.remove(player);
     }
-
+    public void removeFromMedicList(Player player) {
+        allMedics.remove(player);
+    }
     public boolean lastAliveMurderer() {
         return aliveMurderer() == 1;
     }
@@ -1059,7 +1091,7 @@ public class Arena extends BukkitRunnable {
     }
 
     public enum CharacterType {
-        MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+        MURDERER, DETECTIVE, FAKE_DETECTIVE, MEDIC, HERO
     }
 
 }

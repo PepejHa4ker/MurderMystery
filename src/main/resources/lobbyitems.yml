@@ -2,8 +2,31 @@
 # Probably you will only translate displayname and lore so don't mess with it.
 
 Leave:
-  displayname: "&c&lReturn to Lobby &7(Right Click)"
+  displayname: '&c&lReturn to Lobby &7(Right Click)'
   lore:
-    - "&7Right-click to leave to the lobby"
+  - '&7Right-click to leave to the lobby'
   material-name: BED
   slot: 8
+Start:
+  data: 0
+  displayname: §aНачать игру
+  lore:
+  - |-
+    §7Нажмите для начала игры
+    (требуется {player} для начала игры)
+  material-name: DIAMOND
+  slot: 4
+Menu:
+  data: 0
+  displayname: §6Меню
+  lore:
+  - §7Нажмите для открытия!
+  material-name: CHEST
+  slot: 0
+Perks:
+  data: 0
+  displayname: §5Способности
+  lore:
+  - §7Нажмите для открытия!
+  material-name: EYE_OF_ENDER
+  slot: 1

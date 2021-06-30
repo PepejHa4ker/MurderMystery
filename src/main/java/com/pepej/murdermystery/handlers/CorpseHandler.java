@@ -67,7 +67,7 @@ public class CorpseHandler implements Listener {
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       hologram.delete();
       Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20 * 20);
-    }, 15 * 20);
+    }, 5 * 20);
   }
 
   @EventHandler
